@@ -20,7 +20,7 @@ import beast.core.Input.Validate;
  */
 @Description("Data Structure for multiple Languages")
 public class CognateSet extends Alignment {
-	public Input<Language> rootInput = new Input<Language>("root", "inital language", Validate.OPTIONAL);
+	public Input<Language> rootInput = new Input<Language>("root", "inital language", Validate.REQUIRED);
 	/** List of languages */ 
     protected ArrayList<Language> languageList;
     /** Length of languages, only used in SD model. */

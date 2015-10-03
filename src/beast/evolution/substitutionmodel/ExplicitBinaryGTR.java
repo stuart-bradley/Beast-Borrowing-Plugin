@@ -3,6 +3,7 @@ package beast.evolution.substitutionmodel;
 import beast.core.Description;
 import beast.core.Input;
 import beast.evolution.alignment.Language;
+import beast.evolution.datatype.Binary;
 import beast.evolution.datatype.DataType;
 import beast.evolution.tree.Node;
 import beast.util.Randomizer;
@@ -28,6 +29,13 @@ public class ExplicitBinaryGTR  extends SubstitutionModel.Base {
 	
 	/** Binary rate matrix */
 	protected double[] rateMatrix = new double[4];
+	
+	public ExplicitBinaryGTR(double r1, double r0) {
+		rateMatrix[0] = r1 * -1.0;
+		rateMatrix[1] = r1;
+		rateMatrix[2] = r0;
+		rateMatrix[3] = r0 * -1.0;
+	}
 	
 	/*
 	 * Creates full rate matrix from input.
@@ -57,15 +65,18 @@ public class ExplicitBinaryGTR  extends SubstitutionModel.Base {
 	public Language mutate_GTR(Language l, double T) {
         Language newLang = new Language(l.getLanguage());
         for (int i = 0; i < newLang.getLanguage().size(); i++) {
-        	int currentTrait = l.getLanguage().get(i);
+        	int currentTrait = newLang.getLanguage().get(i);
         	double rate = getRate(currentTrait);
         	// Mutations are exponentially distributed.
-        	double t = Randomizer.nextExponential(-rate);
+        	double t = Randomizer.nextExponential(-1.0*rate);
         	while (t < T) {
+        		currentTrait = newLang.getLanguage().get(i);
+        		rate = getRate(currentTrait);
         		// In binary model, a mutation switches trait.
         		newLang.getLanguage().set(i, 1 - currentTrait);
         		// Record mutation event in old language.
         		l.addMutation(t, newLang.getLanguage());
+        		t += Randomizer.nextExponential(-1.0*rate);
         	}
         }
         return newLang;
@@ -110,6 +121,9 @@ public class ExplicitBinaryGTR  extends SubstitutionModel.Base {
 	 */
 	@Override
 	public boolean canHandleDataType(DataType dataType) {
-		return true;
+		   if (dataType instanceof Binary) {
+		     return true;
+		   }
+		   return true;
 	}
 }

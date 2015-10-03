@@ -32,6 +32,11 @@ public class ExplicitBinaryStochasticDollo extends SubstitutionModel.Base {
 	/** Birth and Death rates */ 
 	protected double b,d;
 	
+	public ExplicitBinaryStochasticDollo(double birth, double death) {
+		this.b = birth;
+		this.d = death;
+	}
+	
 	/*
 	 * Checks birth and death rates are acceptable.
 	 * @see beast.evolution.substitutionmodel.SubstitutionModel.Base#initAndValidate()
@@ -59,11 +64,11 @@ public class ExplicitBinaryStochasticDollo extends SubstitutionModel.Base {
     	double[] probs = new double[2];
     	// Checks whether births have occurred elsewhere in the tree - and adds dead (0) traits accordingly.
     	if (c.getStolloLength() > newLang.getLanguage().size()) {
+    		ArrayList<Integer> curr_seq = newLang.getLanguage();
     		for (int i = 0; i < c.getStolloLength() - newLang.getLanguage().size(); i++) {
-    			ArrayList<Integer> curr_seq = newLang.getLanguage();
         		curr_seq.add(0);
-        		newLang.setLanguage(curr_seq); 
     		}
+    		newLang.setLanguage(curr_seq); 
     	}
     	// Mutation proper.
     	double t = Randomizer.nextExponential(b+d*newLang.getBirths());
@@ -123,6 +128,6 @@ public class ExplicitBinaryStochasticDollo extends SubstitutionModel.Base {
 	 */
 	@Override
 	public boolean canHandleDataType(DataType dataType) {
-		return false;
+		return true;
 	}
 }

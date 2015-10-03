@@ -22,7 +22,7 @@ import beast.core.Input;
  * a brand new purpose.
  */
 @Description("Single Language for the Language Package")
-public class Language extends BEASTObject {
+public class Language extends Sequence {
 	public Input<String> dataInput = new Input<String>("value", "language data, encoded as a string of integers representing the absence (0) or presence of cogantes.", Input.Validate.REQUIRED);
 	
 	/** Internal representation of the language */
