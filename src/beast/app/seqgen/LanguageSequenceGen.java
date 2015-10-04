@@ -7,7 +7,6 @@ import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.evolution.alignment.CognateSet;
 import beast.evolution.alignment.Language;
-import beast.evolution.branchratemodel.BranchRateModel;
 import beast.evolution.substitutionmodel.SubstitutionModel;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
@@ -19,6 +18,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	public Input<SubstitutionModel.Base> m_subModelInput = new Input<SubstitutionModel.Base>("subModel", "subsitution model for tree", Validate.REQUIRED);
 	public Input<Integer> m_treeHeightInput = new Input<Integer>("treeHeight", "number of leaves for the tree", Validate.REQUIRED);
 	public Input<Double> m_treeBranchRateInput = new Input<Double>("treeBranchRate", "rate of tree branching", Validate.REQUIRED);
+	public Input<Double> m_borrowingRateInput = new Input<Double>("borrowingRate", "rate of borrowing", Validate.OPTIONAL);
 	public Input<String> m_outputFileNameInput = new Input<String>(
             "outputFileName",
             "If provided, simulated alignment is written to this file rather "
@@ -29,6 +29,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
     protected SubstitutionModel.Base m_subModel;
     protected Integer m_treeHeight;
     protected Double m_treeBranchRate;
+    protected Double m_borrowingRate;
     protected String m_outputFileName;
     protected Integer iterations;
     
@@ -38,6 +39,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		m_subModel = m_subModelInput.get();
 		m_treeHeight = m_treeHeightInput.get();
 		m_treeBranchRate = m_treeBranchRateInput.get();
+		m_borrowingRate = m_borrowingRateInput.get();
 		m_outputFileName = m_outputFileNameInput.get();
 		iterations = iterationsInput.get();
 	}
@@ -63,7 +65,10 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		Node rootNode = new Node("root");
 		rootNode.setMetaData("language", cognateSet.getLanguage(0));
 		rootNode.setHeight(0);
+		
 		Tree tree = new Tree(rootNode);
+		tree = randomTree(tree, m_treeHeight, m_treeBranchRate);
+		
 		return cognateSet;
 	}
 	
@@ -72,24 +77,29 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		ArrayList<Node> newLeaves = new ArrayList<Node>();
 		currLeaves.add(rootTree.getRoot());
 		Node childLeft, childRight;
-		while (rootTree.getLeafNodeCount() < numLeaves) {
-			System.out.println(currLeaves.toString());
-			currLeaves = newLeaves;
-			newLeaves = new ArrayList<Node>();
+		
+		while (currLeaves.size() < numLeaves) {
 			for (Node parent : currLeaves) {
 				childLeft = new Node();
 				childRight = new Node();
+				
 				// Left child.
 				double t = Randomizer.nextExponential(branchRate);
-				childLeft.setHeight(parent.getHeight() + t);
 				childLeft.setParent(parent);
+				parent.addChild(childLeft);
+				childLeft.setHeight(parent.getHeight()+t);
 				newLeaves.add(childLeft);
+				rootTree.addNode(childLeft);
 				// Right child.
 				t = Randomizer.nextExponential(branchRate);
-				childRight.setHeight(parent.getHeight() + t);
 				childRight.setParent(parent);
+				parent.addChild(childRight);
+				childRight.setHeight(parent.getHeight()+t);
 				newLeaves.add(childRight);
+				rootTree.addNode(childRight);
 			}
+			currLeaves = new ArrayList<Node>(newLeaves);
+			newLeaves = new ArrayList<Node>();
 		}
 		return rootTree;
 	}

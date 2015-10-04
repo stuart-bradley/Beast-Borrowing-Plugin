@@ -3,7 +3,6 @@ import java.util.ArrayList;
 import beast.app.seqgen.LanguageSequenceGen;
 import beast.evolution.alignment.CognateSet;
 import beast.evolution.alignment.Language;
-import beast.evolution.datatype.Binary;
 import beast.evolution.substitutionmodel.ExplicitBinaryGTR;
 import beast.evolution.substitutionmodel.ExplicitBinaryStochasticDollo;
 import beast.evolution.tree.Node;
@@ -32,16 +31,24 @@ public class TestingClass {
 		Language l2 = new Language(seq);
 		c = new CognateSet(l2);
 		System.out.println(l2.getLanguage());
+		System.out.println(c.getStolloLength());
 		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5);
 		Language sdLang = sd_mod.mutate_SD(l2,c, 10);
 		System.out.println(sdLang.getLanguage());
+		System.out.println(c.getStolloLength());
 		
 		System.out.println("Tree generation test");
+		c = new CognateSet(l);
+		System.out.println(c);
 		LanguageSequenceGen test = new LanguageSequenceGen();
 		Node rootNode = new Node();
 		rootNode.setMetaData("language", c.getLanguage(0));
 		rootNode.setHeight(0);
 		Tree tree = new Tree(rootNode);
-		test.randomTree(tree, 2, 0.6);
+		tree = test.randomTree(tree, 4, 0.6);
+		tree.getRoot().setMetaData("lang", c.getLanguage(0));
+		gtr_mod.mutateOverTree(tree, c);
+		System.out.println();
+		System.out.println(c);
 	}
 }

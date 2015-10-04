@@ -1,11 +1,16 @@
 package beast.evolution.substitutionmodel;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import beast.core.Description;
 import beast.core.Input;
+import beast.evolution.alignment.CognateSet;
 import beast.evolution.alignment.Language;
 import beast.evolution.datatype.Binary;
 import beast.evolution.datatype.DataType;
 import beast.evolution.tree.Node;
+import beast.evolution.tree.Tree;
 import beast.util.Randomizer;
 
 /*
@@ -63,7 +68,8 @@ public class ExplicitBinaryGTR  extends SubstitutionModel.Base {
 	 * @return newLang mutated Language
 	 */
 	public Language mutate_GTR(Language l, double T) {
-        Language newLang = new Language(l.getLanguage());
+		ArrayList<Integer> s = new ArrayList<Integer>(l.getLanguage());
+        Language newLang = new Language(s);
         for (int i = 0; i < newLang.getLanguage().size(); i++) {
         	int currentTrait = newLang.getLanguage().get(i);
         	double rate = getRate(currentTrait);
@@ -95,6 +101,34 @@ public class ExplicitBinaryGTR  extends SubstitutionModel.Base {
     		rate = rateMatrix[3];
     	}
 		return rate;
+	}
+	
+	/*
+	 * Mutates down a already generated tree.
+	 * @param base Tree with starting language in root.
+	 * @param c CognateSet, gets updated as languages are created.
+	 * @return base Tree with languages added.
+	 */
+	public Tree mutateOverTree(Tree base, CognateSet c) {
+		ArrayList<Node> currParents = new ArrayList<Node>();
+		ArrayList<Node> newParents = new ArrayList<Node>();
+		currParents.add(base.getRoot());
+		while (currParents.size() > 0) {
+			for (Node parent : currParents) {
+				List<Node> children = parent.getChildren();
+				for (Node child : children) {
+					double T = child.getHeight() - parent.getHeight();
+					Language parentLang = (Language) parent.getMetaData("lang");
+					Language newLang = mutate_GTR(parentLang, T);
+					child.setMetaData("lang", newLang);
+					c.addLanguage(newLang);
+					newParents.add(child);
+				}
+			}
+			currParents = new ArrayList<Node>(newParents);
+			newParents = new ArrayList<Node>();
+		}
+		return base;
 	}
 	
 	/*

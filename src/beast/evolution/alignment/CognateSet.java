@@ -50,6 +50,10 @@ public class CognateSet extends Alignment {
     	return this.languageList.get(index);
     }
     
+    public void addLanguage(Language l) {
+    	this.languageList.add(l);
+    }
+    
     /*
 	 * Auto-Generated Getters/Setters
 	 */
@@ -68,5 +72,14 @@ public class CognateSet extends Alignment {
     
     public void setStolloLength(int i) {
     	this.stolloLength = i;
+    }
+    
+    public String toString() {
+    	String st = "";
+    	for (Language l : languageList) {
+    		st += l.getLanguage().toString();
+    		st += "\n";
+    	}
+    	return st;
     }
 }
