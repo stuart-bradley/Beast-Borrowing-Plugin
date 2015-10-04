@@ -1,3 +1,5 @@
+package test.beast.app.seqgen;
+
 import java.util.ArrayList;
 
 import beast.app.seqgen.LanguageSequenceGen;
@@ -8,37 +10,55 @@ import beast.evolution.substitutionmodel.ExplicitBinaryStochasticDollo;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 
-public class TestingClass {
-	public static void main(String [ ] args){
+public class BeastBorrowingPluginTest {
+	public static void main(String[] args) {
 		run();
 	}
-	
+
 	private static void run() {
+		// Base Seq generation.
 		ArrayList<Integer> seq = new ArrayList<Integer>();
 		for (int i = 0; i < 5; i++) {
 			seq.add(1);
 		}
+
+		GTRTest(seq);
+		SDTest(seq);
+		TreeGenTest(seq);
+
+	}
+
+	private static void GTRTest(ArrayList<Integer> seq) {
 		Language l = new Language(seq);
-		CognateSet c = new CognateSet(l);
-		
+
 		System.out.println("GTR Test");
 		System.out.println(l.getLanguage());
+
 		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.5);
 		Language gtrLang = gtr_mod.mutate_GTR(l, 10);
 		System.out.println(gtrLang.getLanguage());
-		
-		System.out.println("SD Test");
+	}
+
+	private static void SDTest(ArrayList<Integer> seq) {
+
 		Language l2 = new Language(seq);
-		c = new CognateSet(l2);
+		CognateSet c = new CognateSet(l2);
+
+		System.out.println("SD Test");
 		System.out.println(l2.getLanguage());
 		System.out.println(c.getStolloLength());
 		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5);
-		Language sdLang = sd_mod.mutate_SD(l2,c, 10);
+		Language sdLang = sd_mod.mutate_SD(l2, c, 10);
 		System.out.println(sdLang.getLanguage());
 		System.out.println(c.getStolloLength());
-		
+	}
+
+	private static void TreeGenTest(ArrayList<Integer> seq) {
+		Language l = new Language(seq);
+		CognateSet c = new CognateSet(l);
+		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.5);
+
 		System.out.println("Tree generation test");
-		c = new CognateSet(l);
 		System.out.println(c);
 		LanguageSequenceGen test = new LanguageSequenceGen();
 		Node rootNode = new Node();
