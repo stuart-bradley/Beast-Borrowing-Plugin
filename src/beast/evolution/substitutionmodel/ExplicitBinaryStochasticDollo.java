@@ -2,6 +2,7 @@ package beast.evolution.substitutionmodel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
@@ -138,34 +139,77 @@ public class ExplicitBinaryStochasticDollo extends SubstitutionModel.Base {
 	
 	
 	public Tree mutateOverTreeBorrowing(Tree base, CognateSet c, Double borrow, Double z) {
-		Node[] nodes = base.getNodesAsArray();
-		double[] probs = new double[3];
-	    Arrays.sort(nodes, new Comparator<Node>() {
-	        @Override
-	        public int compare(Node o1, Node o2) {
-	            return new Double (o1.getHeight()).compareTo(o2.getHeight());
-	        }
-	    });	
-	    
-	    Double treeHeight = nodes[nodes.length-1].getHeight();
+		Double treeHeight = getTreeHeight(base);
 	    ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
 	    Double totalRate = totalRate(aliveNodes, borrow);
     	Double t = Randomizer.nextExponential(totalRate);
+    	Node ranNode, ranNode2;
+    	Language nodeLang, nodeLang2 ,newNodeLang;
+    	ArrayList<Integer> s;
+    	int idx;
+    	double[] probs = new double[3];
     	while (t < treeHeight) {
     		probs = SDBorrowingProbs(aliveNodes, borrow);
     		Integer choice = Randomizer.randomChoice(probs);
     		switch(choice){
     		// Birth.
     		case 0 :
-    			System.out.println("Birth");
+    			idx = Randomizer.nextInt(aliveNodes.size());
+    			ranNode = aliveNodes.get(idx);
+    			nodeLang = (Language) ranNode.getMetaData("lang");
+        		s = new ArrayList<Integer>(nodeLang.getLanguage());
+        		s.add(1);
+		        newNodeLang = new Language(s);
+		        setSubTreeLanguages(ranNode, newNodeLang);
+        		// Increase the number of cognate classes for later languages.
+        		c.setStolloLength(c.getStolloLength() + 1);
     			break;
     		// Death.
     		case 1 :
-    			System.out.println("Death");
+    			idx = Randomizer.nextInt(aliveNodes.size());
+    			ranNode = aliveNodes.get(idx);
+    			nodeLang = (Language) ranNode.getMetaData("lang");
+        		// Find random alive trait, and kill it.
+        		while (true) {
+        			idx = Randomizer.nextInt(nodeLang.getLanguage().size());
+        			if (nodeLang.getLanguage().get(idx) != 0) {
+        				s = new ArrayList<Integer>(nodeLang.getLanguage());
+        		        newNodeLang = new Language(s);
+        		        newNodeLang.getLanguage().set(idx, 0);
+        		        setSubTreeLanguages(ranNode, newNodeLang);
+        				break;
+        			}
+        		}
+    			ranNode.setMetaData("lang", nodeLang);
     			break;
     		// Borrowing.
     		case 2 :
-    			System.out.println("Borrow");
+    			idx = Randomizer.nextInt(aliveNodes.size());
+    			ranNode = aliveNodes.get(idx);
+    			nodeLang = (Language) ranNode.getMetaData("lang");
+    			idx = Randomizer.nextInt(aliveNodes.size());
+    			ranNode2 = aliveNodes.get(idx);
+    			nodeLang2 = (Language) ranNode2.getMetaData("lang");
+    			if (nodeLang.getLanguage() == nodeLang2.getLanguage()) {
+    				break;
+    			} else if (localDist(ranNode, ranNode2, z) == false) {
+    				break;
+    			} else {
+    				for (Integer i : getRandLangIndex(nodeLang)) {
+    					try {
+    					if (nodeLang.getLanguage().get(i) == 1 && nodeLang2.getLanguage().get(i) == 0) {
+    						System.out.println("borrow");
+    						s = new ArrayList<Integer>(nodeLang2.getLanguage());
+            		        newNodeLang = new Language(s);
+            		        newNodeLang.getLanguage().set(i, 1);
+            		        setSubTreeLanguages(ranNode2, newNodeLang);
+    						break;
+    					}
+    					} catch (IndexOutOfBoundsException e) {
+    						continue;
+    					}
+    				}
+    			}
     			break;
     		}
     		aliveNodes = getAliveNodes(base, t);
@@ -176,6 +220,60 @@ public class ExplicitBinaryStochasticDollo extends SubstitutionModel.Base {
 		return base;
 	}
 	
+	private ArrayList<Integer> getRandLangIndex(Language l) {
+		ArrayList<Integer> randInts = new ArrayList<Integer>();
+		for (int i = 0; i < l.getLanguage().size(); i++) {
+			randInts.add(i);
+		}
+		
+		Collections.shuffle(randInts);
+		
+		return randInts;
+		
+	}
+	
+	public boolean localDist(Node L1, Node L2, Double z) {
+		if (z == 0) {
+			return true;
+		}
+		Node parent1, parent2;
+		Double dist1 = 0.0, dist2 = 0.0;
+		while (dist1 <= z && dist2 <= z) {
+			parent1 = L1.getParent();
+			parent2 = L1.getParent();
+			
+			if (parent1 == parent2) {
+				return true;
+			}
+			
+			dist1 = L1.getHeight() - parent1.getHeight();
+			dist2 = L2.getHeight() - parent2.getHeight();
+			
+			L1 = parent1;
+			L2 = parent2;
+		}
+		return false;
+	}
+	
+	private Double getTreeHeight(Tree base) {
+		Node[] nodes = base.getNodesAsArray();
+	    Arrays.sort(nodes, new Comparator<Node>() {
+	        @Override
+	        public int compare(Node o1, Node o2) {
+	            return new Double (o1.getHeight()).compareTo(o2.getHeight());
+	        }
+	    });	
+	    
+	    return nodes[nodes.length-1].getHeight();
+	}
+	
+	private void setSubTreeLanguages(Node subRoot, Language newLang) {
+		subRoot.setMetaData("lang", newLang);
+		for (Node n : subRoot.getAllChildNodes()) {
+			n.setMetaData("lang", newLang);
+		}
+	}
+	
 	private double[] SDBorrowingProbs(ArrayList<Node> aliveNodes, Double borrow) {
 		double[] probs = new double[3];
 		Double birth = 0.0, death = 0.0, bo = 0.0;
@@ -184,9 +282,10 @@ public class ExplicitBinaryStochasticDollo extends SubstitutionModel.Base {
 			death += d*((Language) n.getMetaData("lang")).getBirths();
 			bo += ((Language) n.getMetaData("lang")).getBirths();
 		}
-		probs[0] = (birth*b)/(death+d*borrow*bo); //Birth
-		probs[1] = (death)/(birth*b + d*borrow*bo); //Death
-		probs[2] = (d*borrow*bo)/(birth*b+death); //Borrow
+		Double tR = totalRate(aliveNodes,borrow);
+		probs[0] = (birth*b)/tR; //Birth
+		probs[1] = (death)/tR; //Death
+		probs[2] = (d*borrow*bo)/tR; //Borrow
 		return probs;
 	}
 	

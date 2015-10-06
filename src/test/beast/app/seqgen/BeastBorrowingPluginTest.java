@@ -9,6 +9,7 @@ import beast.evolution.substitutionmodel.ExplicitBinaryGTR;
 import beast.evolution.substitutionmodel.ExplicitBinaryStochasticDollo;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
+import beast.util.Randomizer;
 
 public class BeastBorrowingPluginTest {
 	public static void main(String[] args) {
@@ -84,7 +85,18 @@ public class BeastBorrowingPluginTest {
 		rootNode.setMetaData("lang", c.getLanguage(0));
 		rootNode.setHeight(0);
 		Tree tree = new Tree(rootNode);
-		tree = test.randomTree(tree, 4, 0.6);
-		sd_mod.mutateOverTreeBorrowing(tree, c, 1.2, 0.6);
+		tree = test.randomTree(tree, 8, 0.6);
+		sd_mod.mutateOverTreeBorrowing(tree, c, 1.2, 0.0);
+		printTree(tree);
+	}
+	
+	private static void printTree(Tree base) {
+		System.out.println("Printing Tree");
+		System.out.println("Root:");
+		System.out.println(((Language) base.getRoot().getMetaData("lang")).getLanguage());
+		
+		for (Node node : base.listNodesPostOrder(base.getRoot(), null)) {
+			System.out.println(((Language) node.getMetaData("lang")).getLanguage());
+		}
 	}
 }
