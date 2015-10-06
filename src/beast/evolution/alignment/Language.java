@@ -2,8 +2,6 @@ package beast.evolution.alignment;
 
 import java.util.ArrayList;
 import java.util.TreeMap;
-
-import beast.core.BEASTObject;
 import beast.core.Description;
 import beast.core.Input;
 

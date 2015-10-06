@@ -1,6 +1,8 @@
 package beast.evolution.substitutionmodel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 
 import beast.core.Description;
@@ -132,6 +134,98 @@ public class ExplicitBinaryStochasticDollo extends SubstitutionModel.Base {
 			newParents = new ArrayList<Node>();
 		}
 		return base;
+	}
+	
+	
+	public Tree mutateOverTreeBorrowing(Tree base, CognateSet c, Double borrow, Double z) {
+		Node[] nodes = base.getNodesAsArray();
+		double[] probs = new double[3];
+	    Arrays.sort(nodes, new Comparator<Node>() {
+	        @Override
+	        public int compare(Node o1, Node o2) {
+	            return new Double (o1.getHeight()).compareTo(o2.getHeight());
+	        }
+	    });	
+	    
+	    Double treeHeight = nodes[nodes.length-1].getHeight();
+	    ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
+	    Double totalRate = totalRate(aliveNodes, borrow);
+    	Double t = Randomizer.nextExponential(totalRate);
+    	while (t < treeHeight) {
+    		probs = SDBorrowingProbs(aliveNodes, borrow);
+    		Integer choice = Randomizer.randomChoice(probs);
+    		switch(choice){
+    		// Birth.
+    		case 0 :
+    			System.out.println("Birth");
+    			break;
+    		// Death.
+    		case 1 :
+    			System.out.println("Death");
+    			break;
+    		// Borrowing.
+    		case 2 :
+    			System.out.println("Borrow");
+    			break;
+    		}
+    		aliveNodes = getAliveNodes(base, t);
+    		totalRate = totalRate(aliveNodes, borrow);
+        	t += Randomizer.nextExponential(totalRate);
+    	}
+	    
+		return base;
+	}
+	
+	private double[] SDBorrowingProbs(ArrayList<Node> aliveNodes, Double borrow) {
+		double[] probs = new double[3];
+		Double birth = 0.0, death = 0.0, bo = 0.0;
+		for (Node n : aliveNodes) {
+			birth += 1;
+			death += d*((Language) n.getMetaData("lang")).getBirths();
+			bo += ((Language) n.getMetaData("lang")).getBirths();
+		}
+		probs[0] = (birth*b)/(death+d*borrow*bo); //Birth
+		probs[1] = (death)/(birth*b + d*borrow*bo); //Death
+		probs[2] = (d*borrow*bo)/(birth*b+death); //Borrow
+		return probs;
+	}
+	
+	private Double totalRate (ArrayList<Node> aliveNodes, Double borrow) {
+		Double totalRate = aliveNodes.size()*b;
+		Double birthSum = 0.0;
+		for (Node n : aliveNodes) {
+			totalRate += d*((Language) n.getMetaData("lang")).getBirths();
+			birthSum += ((Language) n.getMetaData("lang")).getBirths();
+		}
+		totalRate += d*borrow*birthSum;
+		return totalRate;
+	}
+	
+	private ArrayList<Node> getAliveNodes(Tree base, Double t) {
+		ArrayList<Node> aliveNodes = new ArrayList<Node>();
+		
+		Node root = base.getRoot();
+		for (Node child : root.getChildren()) {
+			if (child.getHeight() >= t) {
+				aliveNodes.add(child);
+			} else {
+				aliveNodes.addAll(aliveNodes(child, t));
+			}
+		}
+
+		return aliveNodes;
+	}
+	
+	private ArrayList<Node> aliveNodes(Node curr, Double t) {
+		ArrayList<Node> aN = new ArrayList<Node>();
+		for (Node child : curr.getChildren()) {
+			if (child.getHeight() >= t) {
+				aN.add(child);
+			} else {
+				aN.addAll(aliveNodes(child, t));
+			}
+		}
+		return aN;
 	}
 	
 	

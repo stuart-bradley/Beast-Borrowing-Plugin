@@ -63,7 +63,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		CognateSet cognateSet = new CognateSet(root);
 		cognateSet.setID("LanguageSequenceSimulator");
 		Node rootNode = new Node("root");
-		rootNode.setMetaData("language", cognateSet.getLanguage(0));
+		rootNode.setMetaData("lang", cognateSet.getLanguage(0));
 		rootNode.setHeight(0);
 		
 		Tree tree = new Tree(rootNode);
@@ -76,6 +76,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		ArrayList<Node> currLeaves = new ArrayList<Node>(); 
 		ArrayList<Node> newLeaves = new ArrayList<Node>();
 		currLeaves.add(rootTree.getRoot());
+		Language rootLang = (Language) rootTree.getRoot().getMetaData("lang");
 		Node childLeft, childRight;
 		
 		while (currLeaves.size() < numLeaves) {
@@ -88,6 +89,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 				childLeft.setParent(parent);
 				parent.addChild(childLeft);
 				childLeft.setHeight(parent.getHeight()+t);
+				childLeft.setMetaData("lang", rootLang);
 				newLeaves.add(childLeft);
 				rootTree.addNode(childLeft);
 				// Right child.
@@ -95,6 +97,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 				childRight.setParent(parent);
 				parent.addChild(childRight);
 				childRight.setHeight(parent.getHeight()+t);
+				childRight.setMetaData("lang", rootLang);
 				newLeaves.add(childRight);
 				rootTree.addNode(childRight);
 			}
