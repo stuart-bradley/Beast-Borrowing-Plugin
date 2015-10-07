@@ -138,6 +138,14 @@ public class ExplicitBinaryStochasticDollo extends SubstitutionModel.Base {
 	}
 	
 	
+	/*
+	 * Mutates down a tree, includes global and local borrowing.
+	 * @param base Tree with starting language in root.
+	 * @param c CognateSet gets updated at the end, once all languages are created.
+	 * @param borrow borrowing rate.
+	 * @param z local borrowing rate, 0.0 rate implies global borrowing. 
+	 * @return base Tree with languages added. 
+	 */
 	public Tree mutateOverTreeBorrowing(Tree base, CognateSet c, Double borrow, Double z) {
 		Double treeHeight = getTreeHeight(base);
 	    ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
@@ -198,7 +206,6 @@ public class ExplicitBinaryStochasticDollo extends SubstitutionModel.Base {
     				for (Integer i : getRandLangIndex(nodeLang)) {
     					try {
     					if (nodeLang.getLanguage().get(i) == 1 && nodeLang2.getLanguage().get(i) == 0) {
-    						System.out.println("borrow");
     						s = new ArrayList<Integer>(nodeLang2.getLanguage());
             		        newNodeLang = new Language(s);
             		        newNodeLang.getLanguage().set(i, 1);

@@ -92,8 +92,6 @@ public class BeastBorrowingPluginTest {
 	
 	private static void printTree(Tree base) {
 		System.out.println("Printing Tree");
-		System.out.println("Root:");
-		System.out.println(((Language) base.getRoot().getMetaData("lang")).getLanguage());
 		
 		for (Node node : base.listNodesPostOrder(base.getRoot(), null)) {
 			System.out.println(((Language) node.getMetaData("lang")).getLanguage());
