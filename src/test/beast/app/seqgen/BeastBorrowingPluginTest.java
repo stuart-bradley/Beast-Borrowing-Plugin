@@ -23,9 +23,9 @@ public class BeastBorrowingPluginTest {
 			seq.add(1);
 		}
 
-		//GTRTest(seq);
-		//SDTest(seq);
-		//TreeGenTest(seq);
+		GTRTest(seq);
+		SDTest(seq);
+		TreeGenTest(seq);
 		TreeBorrowingTest(seq);
 
 	}
@@ -65,7 +65,7 @@ public class BeastBorrowingPluginTest {
 		System.out.println(c);
 		LanguageSequenceGen test = new LanguageSequenceGen();
 		Node rootNode = new Node();
-		rootNode.setMetaData("language", c.getLanguage(0));
+		rootNode.setMetaData("lang", c.getLanguage(0));
 		rootNode.setHeight(0);
 		Tree tree = new Tree(rootNode);
 		tree = test.randomTree(tree, 4, 0.6);
