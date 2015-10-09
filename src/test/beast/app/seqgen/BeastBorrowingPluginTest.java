@@ -1,5 +1,7 @@
 package test.beast.app.seqgen;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import beast.app.seqgen.LanguageSequenceGen;
@@ -74,12 +76,12 @@ public class BeastBorrowingPluginTest {
 		System.out.println();
 		System.out.println(c);
 	}
-	
+
 	private static void TreeBorrowingTest(ArrayList<Integer> seq) {
 		Language l = new Language(seq);
 		CognateSet c = new CognateSet(l);
 		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.7, 0.3);
-		
+
 		System.out.println("Tree Borrowing Test");
 		LanguageSequenceGen test = new LanguageSequenceGen();
 		Node rootNode = new Node();
@@ -90,12 +92,38 @@ public class BeastBorrowingPluginTest {
 		sd_mod.mutateOverTreeBorrowing(tree, c, 1.2, 0.0);
 		printTree(tree);
 	}
-	
+
 	private static void printTree(Tree base) {
 		System.out.println("Printing Tree");
-		
+
 		for (Node node : base.listNodesPostOrder(base.getRoot(), null)) {
 			System.out.println(((Language) node.getMetaData("lang")).getLanguage());
+		}
+	}
+
+	private static <T> void listToCSV(ArrayList<T> l, String fileName) {
+		final String NEW_LINE_SEPARATOR = "\n";
+		FileWriter fW = null;
+
+		try {
+			fW = new FileWriter(fileName);
+			for ( T i : l) {
+				fW.append(String.valueOf(i));
+				fW.append(NEW_LINE_SEPARATOR);
+			}
+
+		} catch (Exception e) {
+			System.out.println("Error in CsvFileWriter !!!");
+			e.printStackTrace();
+		} finally {
+			try {
+				fW.flush();
+				fW.close();
+			} catch (IOException e) {
+				System.out.println("Error while flushing/closing fileWriter !!!");
+				e.printStackTrace();
+			}
+
 		}
 	}
 }
