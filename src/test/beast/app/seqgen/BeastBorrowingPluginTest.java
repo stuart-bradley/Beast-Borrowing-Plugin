@@ -37,7 +37,7 @@ public class BeastBorrowingPluginTest {
 		System.out.println("GTR Test");
 		System.out.println(l.getLanguage());
 
-		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.5);
+		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
 		Language gtrLang = gtr_mod.mutateLang(l, c, 10);
 		System.out.println(gtrLang.getLanguage());
 	}
@@ -59,7 +59,7 @@ public class BeastBorrowingPluginTest {
 	private static void TreeGenTest(ArrayList<Integer> seq) {
 		Language l = new Language(seq);
 		CognateSet c = new CognateSet(l);
-		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.5);
+		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
 
 		System.out.println("Tree generation test");
 		System.out.println(c);

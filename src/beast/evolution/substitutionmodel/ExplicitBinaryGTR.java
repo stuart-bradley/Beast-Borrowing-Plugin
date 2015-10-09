@@ -31,17 +31,13 @@ import beast.util.Randomizer;
 @Description("Binary GTR Model for Languages with recorded mutation events")
 public class ExplicitBinaryGTR  extends LanguageSubsitutionModel {
 	/** Backward and forward substitution rates. */
-	public Input<Double> rate01Input = new Input<Double>("rate01", "substitution rate for 0 to 1 (birth), default = 0.5");
-	public Input<Double> rate10Input = new Input<Double>("rate10", "substitution rate for 1 to 0 (death), default = 0.5");
+	public Input<Double> rateInput = new Input<Double>("rate01", "substitution rate, default = 0.5");
 	
 	/** Binary rate matrix */
-	protected double[] rateMatrix = new double[4];
+	protected double rate;
 	
-	public ExplicitBinaryGTR(double r1, double r0) {
-		rateMatrix[0] = r1 * -1.0;
-		rateMatrix[1] = r1;
-		rateMatrix[2] = r0;
-		rateMatrix[3] = r0 * -1.0;
+	public ExplicitBinaryGTR(double r) {
+		this.rate = r;
 	}
 	
 	/*
@@ -51,13 +47,7 @@ public class ExplicitBinaryGTR  extends LanguageSubsitutionModel {
 	 */
 	@Override
 	public void initAndValidate() {
-		double rate01 = rate01Input.get();
-		double rate10 = rate10Input.get();
-
-		rateMatrix[0] = rate01 * -1.0;
-		rateMatrix[1] = rate01;
-		rateMatrix[2] = rate10;
-		rateMatrix[3] = rate10 * -1.0;
+		this.rate = rateInput.get();
 	}
 	
 	/*
@@ -71,35 +61,18 @@ public class ExplicitBinaryGTR  extends LanguageSubsitutionModel {
         Language newLang = new Language(s);
         for (int i = 0; i < newLang.getLanguage().size(); i++) {
         	int currentTrait = newLang.getLanguage().get(i);
-        	double rate = getRate(currentTrait);
         	// Mutations are exponentially distributed.
-        	double t = Randomizer.nextExponential(-1.0*rate);
+        	double t = Randomizer.nextExponential(rate);
         	while (t < T) {
         		currentTrait = newLang.getLanguage().get(i);
-        		rate = getRate(currentTrait);
         		// In binary model, a mutation switches trait.
         		newLang.getLanguage().set(i, 1 - currentTrait);
         		// Record mutation event in old language.
         		l.addMutation(t, newLang.getLanguage());
-        		t += Randomizer.nextExponential(-1.0*rate);
+        		t += Randomizer.nextExponential(rate);
         	}
         }
         return newLang;
-	}
-	
-	/*
-	 * Returns (negative) mutation rate.
-	 * @param currentTrait 0 or 1 
-	 * @return (negative) rate from rateMatrix
-	 */
-	private double getRate(int currentTrait) {
-		double rate;
-		if (currentTrait == 0) {
-    		rate = rateMatrix[0];
-    	} else {
-    		rate = rateMatrix[3];
-    	}
-		return rate;
 	}
 	
 	/*
