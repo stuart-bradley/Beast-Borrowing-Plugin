@@ -29,7 +29,7 @@ import beast.util.Randomizer;
  * when birth events occur
  */
 @Description("Binary Stochastic-Dollo model for Languages with recorded mutation events")
-public class ExplicitBinaryStochasticDollo extends SubstitutionModel.Base {
+public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	/** Backward and forward substitution rates. */
 	public Input<Double> rate01Input = new Input<Double>("rate01", "substitution rate for 0 to 1 (birth), default = 0.5");
 	public Input<Double> rate10Input = new Input<Double>("rate10", "substitution rate for 1 to 0 (death), default = 0.5");
@@ -48,13 +48,9 @@ public class ExplicitBinaryStochasticDollo extends SubstitutionModel.Base {
 	 * @exception checks rates are below 1.
 	 */
 	@Override
-	public void initAndValidate() throws Exception {
+	public void initAndValidate() {
 		double b = rate01Input.get();
 		double d = rate10Input.get();
-		
-		if (b > 1 || d > 1) {
-			throw new Exception("Rates should be equal to or below 1.");
-		}
 	}
 	
 	/*
@@ -64,7 +60,7 @@ public class ExplicitBinaryStochasticDollo extends SubstitutionModel.Base {
 	 * @param T Mutation time.
 	 * @return newLang Mutated language.
 	 */
-	public Language mutate_SD(Language l, CognateSet c ,double T) {
+	public Language mutateLang(Language l, CognateSet c ,double T) {
 		ArrayList<Integer> s = new ArrayList<Integer>(l.getLanguage());
         Language newLang = new Language(s);
     	double[] probs = new double[2];
@@ -125,7 +121,7 @@ public class ExplicitBinaryStochasticDollo extends SubstitutionModel.Base {
 				for (Node child : children) {
 					double T = child.getHeight() - parent.getHeight();
 					Language parentLang = (Language) parent.getMetaData("lang");
-					Language newLang = mutate_SD(parentLang, c, T);
+					Language newLang = mutateLang(parentLang, c, T);
 					child.setMetaData("lang", newLang);
 					c.addLanguage(newLang);
 					newParents.add(child);
@@ -227,59 +223,7 @@ public class ExplicitBinaryStochasticDollo extends SubstitutionModel.Base {
 		return base;
 	}
 	
-	private ArrayList<Integer> getRandLangIndex(Language l) {
-		ArrayList<Integer> randInts = new ArrayList<Integer>();
-		for (int i = 0; i < l.getLanguage().size(); i++) {
-			randInts.add(i);
-		}
-		
-		Collections.shuffle(randInts);
-		
-		return randInts;
-		
-	}
 	
-	public boolean localDist(Node L1, Node L2, Double z) {
-		if (z == 0) {
-			return true;
-		}
-		Node parent1, parent2;
-		Double dist1 = 0.0, dist2 = 0.0;
-		while (dist1 <= z && dist2 <= z) {
-			parent1 = L1.getParent();
-			parent2 = L1.getParent();
-			
-			if (parent1 == parent2) {
-				return true;
-			}
-			
-			dist1 = L1.getHeight() - parent1.getHeight();
-			dist2 = L2.getHeight() - parent2.getHeight();
-			
-			L1 = parent1;
-			L2 = parent2;
-		}
-		return false;
-	}
-	
-	private Double getTreeHeight(Tree base) {
-		Node[] nodes = base.getNodesAsArray();
-	    Arrays.sort(nodes, new Comparator<Node>() {
-	        @Override
-	        public int compare(Node o1, Node o2) {
-	            return new Double (o1.getHeight()).compareTo(o2.getHeight());
-	        }
-	    });	
-	    
-	    return nodes[nodes.length-1].getHeight();
-	}
-	
-	private void setSubTreeLanguages(Node subRoot, Language newLang) {
-		subRoot.setMetaData("lang", newLang);
-		for (Node n : subRoot.getAllChildNodes()) {
-			n.setMetaData("lang", newLang);
-		}
-	}
 	
 	private double[] SDBorrowingProbs(ArrayList<Node> aliveNodes, Double borrow) {
 		double[] probs = new double[3];
@@ -305,60 +249,5 @@ public class ExplicitBinaryStochasticDollo extends SubstitutionModel.Base {
 		}
 		totalRate += d*borrow*birthSum;
 		return totalRate;
-	}
-	
-	private ArrayList<Node> getAliveNodes(Tree base, Double t) {
-		ArrayList<Node> aliveNodes = new ArrayList<Node>();
-		
-		Node root = base.getRoot();
-		for (Node child : root.getChildren()) {
-			if (child.getHeight() >= t) {
-				aliveNodes.add(child);
-			} else {
-				aliveNodes.addAll(aliveNodes(child, t));
-			}
-		}
-
-		return aliveNodes;
-	}
-	
-	private ArrayList<Node> aliveNodes(Node curr, Double t) {
-		ArrayList<Node> aN = new ArrayList<Node>();
-		for (Node child : curr.getChildren()) {
-			if (child.getHeight() >= t) {
-				aN.add(child);
-			} else {
-				aN.addAll(aliveNodes(child, t));
-			}
-		}
-		return aN;
-	}
-	
-	
-	/*
-	 * Returns nothing, because mutations are explicit. 
-	 * @see beast.evolution.substitutionmodel.SubstitutionModel#getTransitionProbabilities(beast.evolution.tree.Node, double, double, double, double[])
-	 */
-	@Override
-	public void getTransitionProbabilities(Node node, double fStartTime, double fEndTime, double fRate,
-			double[] matrix) {	
-	}
-	
-	/*
-	 * No EigenDecomposition is required.
-	 * @see beast.evolution.substitutionmodel.SubstitutionModel#getEigenDecomposition(beast.evolution.tree.Node)
-	 */
-	@Override
-	public EigenDecomposition getEigenDecomposition(Node node) {
-		return null;
-	}
-	
-	/*
-	 * TO-DO: Figure out what the hell this does.
-	 * @see beast.evolution.substitutionmodel.SubstitutionModel#canHandleDataType(beast.evolution.datatype.DataType)
-	 */
-	@Override
-	public boolean canHandleDataType(DataType dataType) {
-		return true;
 	}
 }

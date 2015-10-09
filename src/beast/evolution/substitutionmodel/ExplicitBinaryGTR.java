@@ -29,7 +29,7 @@ import beast.util.Randomizer;
  * i is i - 1
  */
 @Description("Binary GTR Model for Languages with recorded mutation events")
-public class ExplicitBinaryGTR  extends SubstitutionModel.Base {
+public class ExplicitBinaryGTR  extends LanguageSubsitutionModel {
 	/** Backward and forward substitution rates. */
 	public Input<Double> rate01Input = new Input<Double>("rate01", "substitution rate for 0 to 1 (birth), default = 0.5");
 	public Input<Double> rate10Input = new Input<Double>("rate10", "substitution rate for 1 to 0 (death), default = 0.5");
@@ -50,13 +50,10 @@ public class ExplicitBinaryGTR  extends SubstitutionModel.Base {
 	 * @exception checks rates are below 1.
 	 */
 	@Override
-	public void initAndValidate() throws Exception {
+	public void initAndValidate() {
 		double rate01 = rate01Input.get();
 		double rate10 = rate10Input.get();
-		
-		if (rate01 > 1 || rate10 > 1) {
-			throw new Exception("Rates should be equal to or below 1.");
-		}
+
 		rateMatrix[0] = rate01 * -1.0;
 		rateMatrix[1] = rate01;
 		rateMatrix[2] = rate10;
@@ -69,7 +66,7 @@ public class ExplicitBinaryGTR  extends SubstitutionModel.Base {
 	 * @param T total mutation time
 	 * @return newLang mutated Language
 	 */
-	public Language mutate_GTR(Language l, double T) {
+	public Language mutateLang(Language l, CognateSet c, double T) {
 		ArrayList<Integer> s = new ArrayList<Integer>(l.getLanguage());
         Language newLang = new Language(s);
         for (int i = 0; i < newLang.getLanguage().size(); i++) {
@@ -121,7 +118,7 @@ public class ExplicitBinaryGTR  extends SubstitutionModel.Base {
 				for (Node child : children) {
 					double T = child.getHeight() - parent.getHeight();
 					Language parentLang = (Language) parent.getMetaData("lang");
-					Language newLang = mutate_GTR(parentLang, T);
+					Language newLang = mutateLang(parentLang, c, T);
 					child.setMetaData("lang", newLang);
 					c.addLanguage(newLang);
 					newParents.add(child);
@@ -132,34 +129,10 @@ public class ExplicitBinaryGTR  extends SubstitutionModel.Base {
 		}
 		return base;
 	}
-	
-	/*
-	 * Returns nothing, because mutations are explicit. 
-	 * @see beast.evolution.substitutionmodel.SubstitutionModel#getTransitionProbabilities(beast.evolution.tree.Node, double, double, double, double[])
-	 */
+
 	@Override
-	public void getTransitionProbabilities(Node node, double fStartTime, double fEndTime, double fRate,
-			double[] matrix) {	
-	}
-	
-	/*
-	 * No EigenDecomposition is required.
-	 * @see beast.evolution.substitutionmodel.SubstitutionModel#getEigenDecomposition(beast.evolution.tree.Node)
-	 */
-	@Override
-	public EigenDecomposition getEigenDecomposition(Node node) {
+	public Tree mutateOverTreeBorrowing(Tree base, CognateSet c, Double borrow, Double z) {
+		// TODO Auto-generated method stub
 		return null;
-	}
-	
-	/*
-	 * TO-DO: Figure out what the hell this does.
-	 * @see beast.evolution.substitutionmodel.SubstitutionModel#canHandleDataType(beast.evolution.datatype.DataType)
-	 */
-	@Override
-	public boolean canHandleDataType(DataType dataType) {
-		   if (dataType instanceof Binary) {
-		     return true;
-		   }
-		   return true;
 	}
 }
