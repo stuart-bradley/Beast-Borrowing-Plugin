@@ -105,7 +105,64 @@ public class ExplicitBinaryGTR  extends LanguageSubsitutionModel {
 
 	@Override
 	public Tree mutateOverTreeBorrowing(Tree base, CognateSet c, Double borrow, Double z) {
-		// TODO Auto-generated method stub
-		return null;
+		Double treeHeight = getTreeHeight(base);
+	    ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
+	    Double totalRate = rate*(borrow+1);
+    	Double t = Randomizer.nextExponential(totalRate);
+    	Node ranNode, ranNode2;
+    	Language nodeLang, nodeLang2 ,newNodeLang;
+    	ArrayList<Integer> s;
+    	int idx;
+    	double[] probs = new double[2];
+    	probs[0] = rate/totalRate;
+    	probs[1] = borrow/totalRate;
+    	while (t < treeHeight) {
+    		Integer choice = Randomizer.randomChoice(probs);
+    		switch(choice) {
+    		// Mutate.
+    		case 0: 
+    			idx = Randomizer.nextInt(aliveNodes.size());
+    			ranNode = aliveNodes.get(idx);
+    			nodeLang = (Language) ranNode.getMetaData("lang");
+    			int pos = Randomizer.nextInt(nodeLang.getLanguage().size());
+				s = new ArrayList<Integer>(nodeLang.getLanguage());
+		        newNodeLang = new Language(s);
+		        int currentTrait = newNodeLang.getLanguage().get(pos);
+		        newNodeLang.getLanguage().set(pos, 1 - currentTrait);
+		        setSubTreeLanguages(ranNode, newNodeLang);
+    			break;
+    		// Borrow.
+    		case 1:
+    			idx = Randomizer.nextInt(aliveNodes.size());
+    			ranNode = aliveNodes.get(idx);
+    			nodeLang = (Language) ranNode.getMetaData("lang");
+    			idx = Randomizer.nextInt(aliveNodes.size());
+    			ranNode2 = aliveNodes.get(idx);
+    			nodeLang2 = (Language) ranNode2.getMetaData("lang");
+    			if (nodeLang.getLanguage() == nodeLang2.getLanguage()) {
+    				break;
+    			} else if (localDist(ranNode, ranNode2, z) == false) {
+    				break;
+    			} else {
+    				for (Integer i : getRandLangIndex(nodeLang)) {
+    					try {
+    					if (nodeLang.getLanguage().get(i) == 1 && nodeLang2.getLanguage().get(i) == 0) {
+    						s = new ArrayList<Integer>(nodeLang2.getLanguage());
+            		        newNodeLang = new Language(s);
+            		        newNodeLang.getLanguage().set(i, 1);
+            		        setSubTreeLanguages(ranNode2, newNodeLang);
+    						break;
+    					}
+    					} catch (IndexOutOfBoundsException e) {
+    						continue;
+    					}
+    				}
+    			}
+    			break;
+    		}
+    		aliveNodes = getAliveNodes(base, t);
+    		t += Randomizer.nextExponential(totalRate);
+    	}
+		return base;
 	}
 }

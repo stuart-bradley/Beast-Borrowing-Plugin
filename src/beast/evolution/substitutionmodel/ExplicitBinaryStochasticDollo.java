@@ -174,9 +174,8 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
     			ranNode = aliveNodes.get(idx);
     			nodeLang = (Language) ranNode.getMetaData("lang");
         		// Find random alive trait, and kill it.
-        		while (true) {
-        			idx = Randomizer.nextInt(nodeLang.getLanguage().size());
-        			if (nodeLang.getLanguage().get(idx) != 0) {
+    			for (Integer i : getRandLangIndex(nodeLang)) {
+        			if (nodeLang.getLanguage().get(i) != 0) {
         				s = new ArrayList<Integer>(nodeLang.getLanguage());
         		        newNodeLang = new Language(s);
         		        newNodeLang.getLanguage().set(idx, 0);
