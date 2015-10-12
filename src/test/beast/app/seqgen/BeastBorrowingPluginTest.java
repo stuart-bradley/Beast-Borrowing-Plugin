@@ -3,6 +3,7 @@ package test.beast.app.seqgen;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import beast.app.seqgen.LanguageSequenceGen;
 import beast.evolution.alignment.CognateSet;
@@ -25,11 +26,13 @@ public class BeastBorrowingPluginTest {
 			seq.add(1);
 		}
 
-		GTRTest(seq);
-		SDTest(seq);
-		TreeGenTest(seq);
-		TreeSDBorrowingTest(seq);
-		TreeGTRBorrowingTest(seq);
+		//GTRTest(seq);
+		//SDTest(seq);
+		//TreeGenTest(seq);
+		//TreeSDBorrowingTest(seq);
+		//TreeGTRBorrowingTest(seq);
+		
+		SDTreeValidation();
 
 	}
 
@@ -108,6 +111,68 @@ public class BeastBorrowingPluginTest {
 		tree = test.randomTree(tree, 8, 0.6);
 		gtr_mod.mutateOverTreeBorrowing(tree, c, 1.2, 0.0);
 		printTree(tree);
+	}
+	
+	private static void GTRValidation() {
+		Integer[] data = new Integer[] {0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0};
+		ArrayList<Integer> births = new ArrayList<Integer>();
+		for (int i = 0; i < 100000; i++) {
+			System.out.println(i);
+			Language l = new Language(new ArrayList<Integer>(Arrays.asList(data)));
+			CognateSet c = new CognateSet(l);
+			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
+			Language gtrLang = gtr_mod.mutateLang(l, c, 100);
+			births.add(gtrLang.getBirths());
+		}
+		listToCSV(births, "C:/Users/Stuart/Google Drive/University/Year 5 - Honours/Thesis/R_Code/gtr.csv");
+	}
+	
+	private static void SDValidation() {
+		ArrayList<Integer> births = new ArrayList<Integer>();
+		for (int i = 0; i < 100000; i++) {
+			System.out.println(i);
+			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5);
+			Double traits = Randomizer.nextPoisson(sd_mod.getB()/sd_mod.getD());
+			ArrayList<Integer> seq = new ArrayList<Integer>();
+			for (int j=0; j < traits; j++) {
+				seq.add(1);
+			}
+			Language l = new Language(seq);
+			CognateSet c = new CognateSet(l);
+			Language sdLang = sd_mod.mutateLang(l, c, 100);
+			births.add(sdLang.getBirths());
+		}
+		listToCSV(births, "C:/Users/Stuart/Google Drive/University/Year 5 - Honours/Thesis/R_Code/sd.csv");
+	}
+	
+	private static void SDTreeValidation() {
+		ArrayList<Integer> births = new ArrayList<Integer>();
+		
+		for (int i = 0; i < 100000; i++) {
+			System.out.println(i);
+			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5);
+			Double traits = Randomizer.nextPoisson(sd_mod.getB()/sd_mod.getD());
+			ArrayList<Integer> seq = new ArrayList<Integer>();
+			for (int j=0; j < traits; j++) {
+				seq.add(1);
+			}
+			Language l = new Language(seq);
+			CognateSet c = new CognateSet(l);
+			LanguageSequenceGen test = new LanguageSequenceGen();
+			Node rootNode = new Node();
+			rootNode.setMetaData("lang", c.getLanguage(0));
+			rootNode.setHeight(0);
+			Tree tree = new Tree(rootNode);
+			tree = test.randomTree(tree, 8, 0.6);
+			tree = sd_mod.mutateOverTree(tree, c);
+			Integer b = 0;
+			for (Node n : tree.getExternalNodes()) {
+				Language l2 = (Language) n.getMetaData("lang");
+				b += l2.getBirths();
+			}
+			births.add(b);
+		}
+		listToCSV(births, "C:/Users/Stuart/Google Drive/University/Year 5 - Honours/Thesis/R_Code/sdtree.csv");
 	}
 
 	private static void printTree(Tree base) {

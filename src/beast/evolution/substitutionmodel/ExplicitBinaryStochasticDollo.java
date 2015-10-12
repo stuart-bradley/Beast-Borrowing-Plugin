@@ -35,11 +35,12 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	public Input<Double> rate10Input = new Input<Double>("rate10", "substitution rate for 1 to 0 (death), default = 0.5");
 	
 	/** Birth and Death rates */ 
-	protected double b,d;
+	private double b;
+	private double d;
 	
 	public ExplicitBinaryStochasticDollo(double birth, double death) {
-		this.b = birth;
-		this.d = death;
+		this.setB(birth);
+		this.setD(death);
 	}
 	
 	/*
@@ -73,11 +74,11 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
     		newLang.setLanguage(curr_seq); 
     	}
     	// Mutation proper.
-    	double t = Randomizer.nextExponential(b+d*newLang.getBirths());
+    	double t = Randomizer.nextExponential(getB()+getD()*newLang.getBirths());
     	while (t < T) { 
     		// Set probabilities for language.
-        	probs[0] = d*newLang.getBirths()/(b+d*newLang.getBirths());
-        	probs[1] = b/(b+d*newLang.getBirths());
+        	probs[0] = getD()*newLang.getBirths()/(getB()+getD()*newLang.getBirths());
+        	probs[1] = getB()/(getB()+getD()*newLang.getBirths());
         	// If death.
         	if (Randomizer.randomChoice(probs) == 0) {
         		int randomNum;
@@ -98,7 +99,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
         		// Increase the number of cognate classes for later languages.
         		c.setStolloLength(c.getStolloLength() + 1);
         	}
-        	t += Randomizer.nextExponential(b+d*newLang.getBirths());
+        	t += Randomizer.nextExponential(getB()+getD()*newLang.getBirths());
         	// Record mutation.
         	l.addMutation(t, newLang.getLanguage());
     	}
@@ -229,24 +230,40 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		Double birth = 0.0, death = 0.0, bo = 0.0;
 		for (Node n : aliveNodes) {
 			birth += 1;
-			death += d*((Language) n.getMetaData("lang")).getBirths();
+			death += getD()*((Language) n.getMetaData("lang")).getBirths();
 			bo += ((Language) n.getMetaData("lang")).getBirths();
 		}
 		Double tR = totalRate(aliveNodes,borrow);
-		probs[0] = (birth*b)/tR; //Birth
+		probs[0] = (birth*getB())/tR; //Birth
 		probs[1] = (death)/tR; //Death
-		probs[2] = (d*borrow*bo)/tR; //Borrow
+		probs[2] = (getD()*borrow*bo)/tR; //Borrow
 		return probs;
 	}
 	
 	private Double totalRate (ArrayList<Node> aliveNodes, Double borrow) {
-		Double totalRate = aliveNodes.size()*b;
+		Double totalRate = aliveNodes.size()*getB();
 		Double birthSum = 0.0;
 		for (Node n : aliveNodes) {
-			totalRate += d*((Language) n.getMetaData("lang")).getBirths();
+			totalRate += getD()*((Language) n.getMetaData("lang")).getBirths();
 			birthSum += ((Language) n.getMetaData("lang")).getBirths();
 		}
-		totalRate += d*borrow*birthSum;
+		totalRate += getD()*borrow*birthSum;
 		return totalRate;
+	}
+
+	public double getB() {
+		return b;
+	}
+
+	public void setB(double b) {
+		this.b = b;
+	}
+
+	public double getD() {
+		return d;
+	}
+
+	public void setD(double d) {
+		this.d = d;
 	}
 }
