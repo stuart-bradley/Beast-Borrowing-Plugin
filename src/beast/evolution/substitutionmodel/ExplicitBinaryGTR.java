@@ -1,16 +1,12 @@
 package beast.evolution.substitutionmodel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import beast.core.Description;
 import beast.core.Input;
 import beast.evolution.alignment.CognateSet;
 import beast.evolution.alignment.Language;
-import beast.evolution.datatype.Binary;
-import beast.evolution.datatype.DataType;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.util.Randomizer;
@@ -107,16 +103,15 @@ public class ExplicitBinaryGTR  extends LanguageSubsitutionModel {
 	public Tree mutateOverTreeBorrowing(Tree base, CognateSet c, Double borrow, Double z) {
 		Double treeHeight = getTreeHeight(base);
 	    ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
-	    Double totalRate = rate*(borrow+1);
+	    Double totalRate = totalRate(aliveNodes, borrow);
     	Double t = Randomizer.nextExponential(totalRate);
     	Node ranNode, ranNode2;
     	Language nodeLang, nodeLang2 ,newNodeLang;
     	ArrayList<Integer> s;
     	int idx;
-    	double[] probs = new double[2];
-    	probs[0] = rate/totalRate;
-    	probs[1] = borrow/totalRate;
+    	double[] probs;
     	while (t < treeHeight) {
+    		probs = BorrowingProbs(aliveNodes, borrow);
     		Integer choice = Randomizer.randomChoice(probs);
     		switch(choice) {
     		// Mutate.
@@ -164,5 +159,17 @@ public class ExplicitBinaryGTR  extends LanguageSubsitutionModel {
     		t += Randomizer.nextExponential(totalRate);
     	}
 		return base;
+	}
+
+	protected double[] BorrowingProbs(ArrayList<Node> aliveNodes, Double borrow) {
+		Double totalRate = totalRate(aliveNodes, borrow);
+    	double[] probs = new double[2];
+    	probs[0] = rate/totalRate;
+    	probs[1] = borrow/totalRate;
+    	return probs;
+	}
+
+	protected Double totalRate(ArrayList<Node> aliveNodes, Double borrow) {
+		return rate*(borrow+1);
 	}
 }

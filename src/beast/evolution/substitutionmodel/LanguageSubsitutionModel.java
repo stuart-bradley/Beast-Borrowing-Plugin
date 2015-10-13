@@ -17,7 +17,8 @@ public abstract class LanguageSubsitutionModel extends SubstitutionModel.Base {
 	public abstract Language mutateLang(Language l, CognateSet c, double T);
 	public abstract Tree mutateOverTree(Tree base, CognateSet c);
 	public abstract Tree mutateOverTreeBorrowing(Tree base, CognateSet c, Double borrow, Double z);
-	
+	protected abstract double[] BorrowingProbs(ArrayList<Node> aliveNodes, Double borrow);
+	protected abstract Double totalRate (ArrayList<Node> aliveNodes, Double borrow);
 	
 	protected ArrayList<Integer> getRandLangIndex(Language l) {
 		ArrayList<Integer> randInts = new ArrayList<Integer>();

@@ -1,16 +1,12 @@
 package beast.evolution.substitutionmodel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import beast.core.Description;
 import beast.core.Input;
 import beast.evolution.alignment.CognateSet;
 import beast.evolution.alignment.Language;
-import beast.evolution.datatype.DataType;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.util.Randomizer;
@@ -50,8 +46,8 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 */
 	@Override
 	public void initAndValidate() {
-		double b = rate01Input.get();
-		double d = rate10Input.get();
+		this.b = rate01Input.get();
+		this.d = rate10Input.get();
 	}
 	
 	/*
@@ -154,7 +150,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
     	int idx;
     	double[] probs = new double[3];
     	while (t < treeHeight) {
-    		probs = SDBorrowingProbs(aliveNodes, borrow);
+    		probs = BorrowingProbs(aliveNodes, borrow);
     		Integer choice = Randomizer.randomChoice(probs);
     		switch(choice){
     		// Birth.
@@ -225,7 +221,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	
 	
 	
-	private double[] SDBorrowingProbs(ArrayList<Node> aliveNodes, Double borrow) {
+	protected double[] BorrowingProbs(ArrayList<Node> aliveNodes, Double borrow) {
 		double[] probs = new double[3];
 		Double birth = 0.0, death = 0.0, bo = 0.0;
 		for (Node n : aliveNodes) {
@@ -240,7 +236,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		return probs;
 	}
 	
-	private Double totalRate (ArrayList<Node> aliveNodes, Double borrow) {
+	protected Double totalRate (ArrayList<Node> aliveNodes, Double borrow) {
 		Double totalRate = aliveNodes.size()*getB();
 		Double birthSum = 0.0;
 		for (Node n : aliveNodes) {
