@@ -172,7 +172,8 @@ public class BeastBorrowingPluginTest {
 			}
 			births.add(b);
 		}
-		listToCSV(births, "C:/Users/Stuart/Google Drive/University/Year 5 - Honours/Thesis/R_Code/sdtree.csv");
+		//listToCSV(births, "C:/Users/Stuart/Google Drive/University/Year 5 - Honours/Thesis/R_Code/sdtree.csv");
+		listToCSV(births, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/sdtree.csv");
 	}
 
 	private static void printTree(Tree base) {
