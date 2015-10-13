@@ -42,7 +42,6 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	/*
 	 * Checks birth and death rates are acceptable.
 	 * @see beast.evolution.substitutionmodel.SubstitutionModel.Base#initAndValidate()
-	 * @exception checks rates are below 1.
 	 */
 	@Override
 	public void initAndValidate() {
@@ -220,13 +219,21 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	}
 	
 	
-	
+	/*
+	 * Probabilities for different events.
+	 * @param aliveNodes, see aliveNodes(base, t).
+	 * @param borrow borrowing rate.
+	 * @return double[], array of probabilities.
+	 */
 	protected double[] BorrowingProbs(ArrayList<Node> aliveNodes, Double borrow) {
 		double[] probs = new double[3];
 		Double birth = 0.0, death = 0.0, bo = 0.0;
 		for (Node n : aliveNodes) {
+			// lambda*k.size()
 			birth += 1;
+			// mu*k1 + ... + mu*kn
 			death += getD()*((Language) n.getMetaData("lang")).getBirths();
+			// b*(k1 + ... + kn)
 			bo += ((Language) n.getMetaData("lang")).getBirths();
 		}
 		Double tR = totalRate(aliveNodes,borrow);
@@ -236,6 +243,12 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		return probs;
 	}
 	
+	/*
+	 * Total rate of mutation.
+	 * @param aliveNodes, see aliveNodes(base, t).
+	 * @param borrow borrowing rate.
+	 * @return Double, total rate,
+	 */
 	protected Double totalRate (ArrayList<Node> aliveNodes, Double borrow) {
 		Double totalRate = aliveNodes.size()*getB();
 		Double birthSum = 0.0;
@@ -246,6 +259,10 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		totalRate += getD()*borrow*birthSum;
 		return totalRate;
 	}
+	
+	/*
+	 * Auto-generated getters/setters.
+	 */
 
 	public double getB() {
 		return b;

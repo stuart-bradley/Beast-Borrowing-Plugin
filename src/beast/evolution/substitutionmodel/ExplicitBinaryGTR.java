@@ -39,7 +39,6 @@ public class ExplicitBinaryGTR  extends LanguageSubsitutionModel {
 	/*
 	 * Creates full rate matrix from input.
 	 * @see beast.evolution.substitutionmodel.SubstitutionModel.Base#initAndValidate()
-	 * @exception checks rates are below 1.
 	 */
 	@Override
 	public void initAndValidate() {
@@ -99,7 +98,14 @@ public class ExplicitBinaryGTR  extends LanguageSubsitutionModel {
 		return base;
 	}
 
-	@Override
+	/*
+	 * Mutates down a tree, includes global and local borrowing.
+	 * @param base Tree with starting language in root.
+	 * @param c CognateSet gets updated at the end, once all languages are created.
+	 * @param borrow borrowing rate.
+	 * @param z local borrowing rate, 0.0 rate implies global borrowing. 
+	 * @return base Tree with languages added. 
+	 */
 	public Tree mutateOverTreeBorrowing(Tree base, CognateSet c, Double borrow, Double z) {
 		Double treeHeight = getTreeHeight(base);
 	    ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
@@ -160,7 +166,13 @@ public class ExplicitBinaryGTR  extends LanguageSubsitutionModel {
     	}
 		return base;
 	}
-
+	
+	/*
+	 * Probabilities for different events.
+	 * @param aliveNodes, see aliveNodes(base, t).
+	 * @param borrow borrowing rate.
+	 * @return double[], array of probabilities.
+	 */
 	protected double[] BorrowingProbs(ArrayList<Node> aliveNodes, Double borrow) {
 		Double totalRate = totalRate(aliveNodes, borrow);
     	double[] probs = new double[2];
@@ -168,7 +180,13 @@ public class ExplicitBinaryGTR  extends LanguageSubsitutionModel {
     	probs[1] = borrow/totalRate;
     	return probs;
 	}
-
+	
+	/*
+	 * Total rate of mutation.
+	 * @param aliveNodes, see aliveNodes(base, t).
+	 * @param borrow borrowing rate.
+	 * @return Double, total rate,
+	 */
 	protected Double totalRate(ArrayList<Node> aliveNodes, Double borrow) {
 		return rate*(borrow+1);
 	}
