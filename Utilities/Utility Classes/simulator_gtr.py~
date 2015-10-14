@@ -22,7 +22,6 @@ rm = RateMatrix([0,1], [[-0.5,0.5],[0.5,-0.5]])
 d_1_1 = []
 d_2_1 = []
 for i in range(100000):
-	print i
 	#Lan = Language(seq=[0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0])
 	#set_l = CognateSet(langs=[Lan])
 	#d_1_1.append(set_l.mutate_language_GTR_timed(set_l.language_list[0], rm, 100).sequence.count(1))

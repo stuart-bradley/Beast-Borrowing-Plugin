@@ -32,7 +32,7 @@ public class BeastBorrowingPluginTest {
 		//TreeSDBorrowingTest(seq);
 		//TreeGTRBorrowingTest(seq);
 		
-		SDTreeValidation();
+		GTRValidation();
 
 	}
 
@@ -124,7 +124,8 @@ public class BeastBorrowingPluginTest {
 			Language gtrLang = gtr_mod.mutateLang(l, c, 100);
 			births.add(gtrLang.getBirths());
 		}
-		listToCSV(births, "C:/Users/Stuart/Google Drive/University/Year 5 - Honours/Thesis/R_Code/gtr.csv");
+		//listToCSV(births, "C:/Users/Stuart/Google Drive/University/Year 5 - Honours/Thesis/R_Code/gtr.csv");
+		listToCSV(births, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr.csv");
 	}
 	
 	private static void SDValidation() {
@@ -142,7 +143,9 @@ public class BeastBorrowingPluginTest {
 			Language sdLang = sd_mod.mutateLang(l, c, 100);
 			births.add(sdLang.getBirths());
 		}
-		listToCSV(births, "C:/Users/Stuart/Google Drive/University/Year 5 - Honours/Thesis/R_Code/sd.csv");
+		//listToCSV(births, "C:/Users/Stuart/Google Drive/University/Year 5 - Honours/Thesis/R_Code/sd.csv");
+		listToCSV(births, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/sd.csv");
+
 	}
 	
 	private static void SDTreeValidation() {
