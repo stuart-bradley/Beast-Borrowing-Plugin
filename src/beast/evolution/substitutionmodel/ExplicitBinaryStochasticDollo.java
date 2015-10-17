@@ -196,7 +196,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
     			} else {
     				for (Integer i : getRandLangIndex(nodeLang)) {
     					try {
-    					if (nodeLang.getLanguage().get(i) == 1 && nodeLang2.getLanguage().get(i) == 0) {
+    					if (nodeLang.getLanguage().get(i) == 1) {
     						s = new ArrayList<Integer>(nodeLang2.getLanguage());
             		        newNodeLang = new Language(s);
             		        newNodeLang.getLanguage().set(i, 1);
@@ -227,17 +227,15 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 */
 	protected double[] BorrowingProbs(ArrayList<Node> aliveNodes, Double borrow) {
 		double[] probs = new double[3];
-		Double birth = 0.0, death = 0.0, bo = 0.0;
+		Double death = 0.0, bo = 0.0;
 		for (Node n : aliveNodes) {
-			// lambda*k.size()
-			birth += 1;
 			// mu*k1 + ... + mu*kn
 			death += getD()*((Language) n.getMetaData("lang")).getBirths();
 			// b*(k1 + ... + kn)
 			bo += ((Language) n.getMetaData("lang")).getBirths();
 		}
 		Double tR = totalRate(aliveNodes,borrow);
-		probs[0] = (birth*getB())/tR; //Birth
+		probs[0] = (aliveNodes.size()*getB())/tR; //Birth
 		probs[1] = (death)/tR; //Death
 		probs[2] = (getD()*borrow*bo)/tR; //Borrow
 		return probs;

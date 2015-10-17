@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Random;
 
 import beast.app.seqgen.LanguageSequenceGen;
 import beast.evolution.alignment.CognateSet;
@@ -32,7 +33,8 @@ public class BeastBorrowingPluginTest {
 		//TreeSDBorrowingTest(seq);
 		//TreeGTRBorrowingTest(seq);
 		
-		GTRValidation();
+		//GTRTreeValidation();
+		SDTreeValidation();
 
 	}
 
@@ -114,18 +116,21 @@ public class BeastBorrowingPluginTest {
 	}
 	
 	private static void GTRValidation() {
-		Integer[] data = new Integer[] {0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 0, 1, 0, 1, 0, 0};
 		ArrayList<Integer> births = new ArrayList<Integer>();
 		for (int i = 0; i < 100000; i++) {
 			System.out.println(i);
-			Language l = new Language(new ArrayList<Integer>(Arrays.asList(data)));
+			ArrayList<Integer> seq = new ArrayList<Integer>();
+			for (int j = 0; j < 20; j++) {
+				seq.add(Randomizer.nextInt(2));
+			}
+			Language l = new Language(seq);
 			CognateSet c = new CognateSet(l);
 			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
 			Language gtrLang = gtr_mod.mutateLang(l, c, 100);
 			births.add(gtrLang.getBirths());
 		}
 		//listToCSV(births, "C:/Users/Stuart/Google Drive/University/Year 5 - Honours/Thesis/R_Code/gtr.csv");
-		listToCSV(births, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr.csv");
+		listToCSV(births, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr.csv");
 	}
 	
 	private static void SDValidation() {
@@ -133,31 +138,25 @@ public class BeastBorrowingPluginTest {
 		for (int i = 0; i < 100000; i++) {
 			System.out.println(i);
 			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5);
-			Double traits = Randomizer.nextPoisson(sd_mod.getB()/sd_mod.getD());
 			ArrayList<Integer> seq = new ArrayList<Integer>();
-			for (int j=0; j < traits; j++) {
-				seq.add(1);
-			}
 			Language l = new Language(seq);
 			CognateSet c = new CognateSet(l);
 			Language sdLang = sd_mod.mutateLang(l, c, 100);
 			births.add(sdLang.getBirths());
 		}
-		//listToCSV(births, "C:/Users/Stuart/Google Drive/University/Year 5 - Honours/Thesis/R_Code/sd.csv");
-		listToCSV(births, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/sd.csv");
+		listToCSV(births, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/sd.csv");
+		//listToCSV(births, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/sd.csv");
 
 	}
 	
-	private static void SDTreeValidation() {
+	private static void GTRTreeValidation() {
 		ArrayList<Integer> births = new ArrayList<Integer>();
-		
 		for (int i = 0; i < 100000; i++) {
 			System.out.println(i);
-			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5);
-			Double traits = Randomizer.nextPoisson(sd_mod.getB()/sd_mod.getD());
+			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
 			ArrayList<Integer> seq = new ArrayList<Integer>();
-			for (int j=0; j < traits; j++) {
-				seq.add(1);
+			for (int j = 0; j < 20; j++) {
+				seq.add(Randomizer.nextInt(2));
 			}
 			Language l = new Language(seq);
 			CognateSet c = new CognateSet(l);
@@ -167,16 +166,41 @@ public class BeastBorrowingPluginTest {
 			rootNode.setHeight(0);
 			Tree tree = new Tree(rootNode);
 			tree = test.randomTree(tree, 8, 0.6);
-			tree = sd_mod.mutateOverTree(tree, c);
-			Integer b = 0;
+			tree = gtr_mod.mutateOverTree(tree, c);
 			for (Node n : tree.getExternalNodes()) {
 				Language l2 = (Language) n.getMetaData("lang");
-				b += l2.getBirths();
+				births.add(l2.getBirths());
 			}
-			births.add(b);
+			
 		}
-		//listToCSV(births, "C:/Users/Stuart/Google Drive/University/Year 5 - Honours/Thesis/R_Code/sdtree.csv");
-		listToCSV(births, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/sdtree.csv");
+		listToCSV(births, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtrtree.csv");
+		//listToCSV(births, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/sdtree.csv");
+	}
+	
+	private static void SDTreeValidation() {
+		ArrayList<Integer> births = new ArrayList<Integer>();
+		
+		for (int i = 0; i < 100000; i++) {
+			System.out.println(i);
+			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5);
+			ArrayList<Integer> seq = new ArrayList<Integer>();
+			Language l = new Language(seq);
+			CognateSet c = new CognateSet(l);
+			LanguageSequenceGen test = new LanguageSequenceGen();
+			Node rootNode = new Node();
+			rootNode.setMetaData("lang", c.getLanguage(0));
+			rootNode.setHeight(0);
+			Tree tree = new Tree(rootNode);
+			tree = test.randomTree(tree, 8, 0.005);
+			tree = sd_mod.mutateOverTree(tree, c);
+			for (Node n : tree.getExternalNodes()) {
+				Language l2 = (Language) n.getMetaData("lang");
+				births.add(l2.getBirths());
+			}
+			
+		}
+		listToCSV(births, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/sdtree.csv");
+		//listToCSV(births, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/sdtree.csv");
 	}
 
 	private static void printTree(Tree base) {

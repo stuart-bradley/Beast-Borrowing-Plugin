@@ -147,7 +147,7 @@ public class ExplicitBinaryGTR  extends LanguageSubsitutionModel {
     			} else {
     				for (Integer i : getRandLangIndex(nodeLang)) {
     					try {
-    					if (nodeLang.getLanguage().get(i) == 1 && nodeLang2.getLanguage().get(i) == 0) {
+    					if (nodeLang.getLanguage().get(i) == 1) {
     						s = new ArrayList<Integer>(nodeLang2.getLanguage());
             		        newNodeLang = new Language(s);
             		        newNodeLang.getLanguage().set(i, 1);
@@ -162,6 +162,7 @@ public class ExplicitBinaryGTR  extends LanguageSubsitutionModel {
     			break;
     		}
     		aliveNodes = getAliveNodes(base, t);
+    		totalRate = totalRate(aliveNodes, borrow);
     		t += Randomizer.nextExponential(totalRate);
     	}
 		return base;
@@ -176,12 +177,14 @@ public class ExplicitBinaryGTR  extends LanguageSubsitutionModel {
 	protected double[] BorrowingProbs(ArrayList<Node> aliveNodes, Double borrow) {
 		Double totalRate = totalRate(aliveNodes, borrow);
 		Double borrowSum = 0.0;
+		Double mutateSum = 0.0;
 		for (Node n : aliveNodes) {
 			borrowSum += ((Language) n.getMetaData("lang")).getBirths();
+			mutateSum += ((Language) n.getMetaData("lang")).getLanguage().size();
 		}
     	double[] probs = new double[2];
-    	probs[0] = rate/totalRate;
-    	probs[1] = borrow*borrowSum/totalRate;
+    	probs[0] = rate*mutateSum/totalRate;
+    	probs[1] = borrow*rate*borrowSum/totalRate;
     	return probs;
 	}
 	
@@ -193,9 +196,11 @@ public class ExplicitBinaryGTR  extends LanguageSubsitutionModel {
 	 */
 	protected Double totalRate(ArrayList<Node> aliveNodes, Double borrow) {
 		Double borrowSum = 0.0;
+		Double mutateSum = 0.0;
 		for (Node n : aliveNodes) {
 			borrowSum += ((Language) n.getMetaData("lang")).getBirths();
+			mutateSum += ((Language) n.getMetaData("lang")).getLanguage().size();
 		}
-		return rate*rate*borrow*borrowSum;
+		return rate*mutateSum+borrow*rate*borrowSum;
 	}
 }
