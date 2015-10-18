@@ -118,7 +118,7 @@ public class ExplicitBinaryGTR  extends LanguageSubsitutionModel {
     	double[] probs;
     	while (t < treeHeight) {
     		probs = BorrowingProbs(aliveNodes, borrow);
-    		Integer choice = Randomizer.randomChoice(probs);
+    		Integer choice = Randomizer.randomChoicePDF(probs);
     		switch(choice) {
     		// Mutate.
     		case 0: 

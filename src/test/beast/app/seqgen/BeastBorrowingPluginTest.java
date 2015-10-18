@@ -33,8 +33,9 @@ public class BeastBorrowingPluginTest {
 		//TreeSDBorrowingTest(seq);
 		//TreeGTRBorrowingTest(seq);
 		
-		//GTRTreeValidation();
-		SDTreeValidation();
+		GTRTreeBorrowingValidation();
+		//SDTreeValidation();
+
 
 	}
 
@@ -96,7 +97,6 @@ public class BeastBorrowingPluginTest {
 		Tree tree = new Tree(rootNode);
 		tree = test.randomTree(tree, 8, 0.6);
 		sd_mod.mutateOverTreeBorrowing(tree, c, 1.2, 0.0);
-		printTree(tree);
 	}
 	
 	private static void TreeGTRBorrowingTest(ArrayList<Integer> seq) {
@@ -112,7 +112,6 @@ public class BeastBorrowingPluginTest {
 		Tree tree = new Tree(rootNode);
 		tree = test.randomTree(tree, 8, 0.6);
 		gtr_mod.mutateOverTreeBorrowing(tree, c, 1.2, 0.0);
-		printTree(tree);
 	}
 	
 	private static void GTRValidation() {
@@ -200,6 +199,34 @@ public class BeastBorrowingPluginTest {
 			
 		}
 		listToCSV(births, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/sdtree.csv");
+		//listToCSV(births, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/sdtree.csv");
+	}
+	
+	private static void GTRTreeBorrowingValidation() {
+		ArrayList<Integer> births = new ArrayList<Integer>();
+		for (int i = 0; i < 100000; i++) {
+			System.out.println(i);
+			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
+			ArrayList<Integer> seq = new ArrayList<Integer>();
+			for (int j = 0; j < 20; j++) {
+				seq.add(Randomizer.nextInt(2));
+			}
+			Language l = new Language(seq);
+			CognateSet c = new CognateSet(l);
+			LanguageSequenceGen test = new LanguageSequenceGen();
+			Node rootNode = new Node();
+			rootNode.setMetaData("lang", c.getLanguage(0));
+			rootNode.setHeight(0);
+			Tree tree = new Tree(rootNode);
+			tree = test.randomTree(tree, 2, 0.1);
+			tree = gtr_mod.mutateOverTreeBorrowing(tree, c, 0.5, 0.0);
+			for (Node n : tree.getExternalNodes()) {
+				Language l2 = (Language) n.getMetaData("lang");
+				births.add(l2.getBirths());
+			}
+			
+		}
+		listToCSV(births, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtrborrowtree.csv");
 		//listToCSV(births, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/sdtree.csv");
 	}
 

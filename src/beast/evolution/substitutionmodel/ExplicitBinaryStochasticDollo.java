@@ -150,7 +150,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
     	double[] probs = new double[3];
     	while (t < treeHeight) {
     		probs = BorrowingProbs(aliveNodes, borrow);
-    		Integer choice = Randomizer.randomChoice(probs);
+    		Integer choice = Randomizer.randomChoicePDF(probs);
     		switch(choice){
     		// Birth.
     		case 0 :

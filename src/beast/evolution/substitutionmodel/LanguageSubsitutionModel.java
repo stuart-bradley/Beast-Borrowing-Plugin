@@ -109,7 +109,7 @@ public abstract class LanguageSubsitutionModel extends SubstitutionModel.Base {
 	 */
 	protected boolean localDist(Node L1, Node L2, Double z) {
 		// If z is 0, global borrowing is in effect.
-		if (z == 0) {
+		if (z == 0.0) {
 			return true;
 		}
 		Node parent1, parent2;
