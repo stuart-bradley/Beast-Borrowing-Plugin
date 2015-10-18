@@ -33,8 +33,10 @@ public class BeastBorrowingPluginTest {
 		//TreeSDBorrowingTest(seq);
 		//TreeGTRBorrowingTest(seq);
 		
-		GTRTreeBorrowingValidation();
+		//GTRTreeBorrowingValidation();
 		//SDTreeValidation();
+		
+		SeqGenTest();
 
 
 	}
@@ -228,6 +230,11 @@ public class BeastBorrowingPluginTest {
 		}
 		listToCSV(births, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtrborrowtree.csv");
 		//listToCSV(births, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/sdtree.csv");
+	}
+	
+	private static void SeqGenTest() {
+		String[] args = {};
+		LanguageSequenceGen.main(args);
 	}
 
 	private static void printTree(Tree base) {

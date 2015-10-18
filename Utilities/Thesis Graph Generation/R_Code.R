@@ -43,7 +43,19 @@ trans.mat <- matrix(c(
 , 4,4, byrow = TRUE)
 
 # GTR Whole Tree Borrowing Validation
-plot(density(rbinom(200000,20,0.57), adjust=10), col="green",lwd=2, 
+library(DTMCPack)
+trans.mat <- matrix(c(
+  0,1,0,0,
+  0.6666667,0,0,0.3333333,
+  0,0,0,1,
+  0,0.3333333,0.6666667,0
+)
+, 4,4, byrow = TRUE)
+statdistr(trans.mat)
+plot(density(rbinom(200000,20,0.515), adjust=10), col="green",lwd=2, 
      main="Simulation of 100,000 language evolutions under the GTR model", xlab="Number of cogantes", xlim=range(0:20))
 lines(density(gtrborrowtree$V1, adjust=10), col="blue", lwd=2)
 legend('topright',c("Binomial Distribution","Algorithm 1"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
+
+
+, 2,2, byrow = TRUE)
