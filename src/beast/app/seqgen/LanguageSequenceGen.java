@@ -105,7 +105,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 				newLeaves.add(childLeft);
 				rootTree.addNode(childLeft);
 				// Right child.
-				t = Randomizer.nextExponential(branchRate);
+				//t = Randomizer.nextExponential(branchRate);
 				childRight.setParent(parent);
 				parent.addChild(childRight);
 				childRight.setHeight(parent.getHeight()+t);

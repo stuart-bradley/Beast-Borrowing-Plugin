@@ -123,33 +123,45 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	 */
 	public Tree mutateOverTreeBorrowing(Tree base, CognateSet c, Double borrow, Double z) {
 		Double treeHeight = getTreeHeight(base);
+		// Get root node.
 		ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
+		// Get first event.
 		Double totalRate = totalRate(aliveNodes, borrow);
 		Double t = Randomizer.nextExponential(totalRate);
-		Node ranNode, ranNode2;
-		Language nodeLang, nodeLang2, newNodeLang;
+		// Variable declarations.
+		Node ranNode = null, ranNode2 = null;
+		Language nodeLang = null, nodeLang2 = null, newNodeLang;
 		ArrayList<Integer> s;
 		int idx;
 		double[] probs;
 		while (t < treeHeight) {
+			// Return array of event probabilities and pick one.
 			probs = BorrowingProbs(aliveNodes, borrow);
 			Integer choice = Randomizer.randomChoicePDF(probs);
 			switch (choice) {
 			// Mutate.
 			case 0:
+				// Pick a random node at time t.
 				idx = Randomizer.nextInt(aliveNodes.size());
 				ranNode = aliveNodes.get(idx);
 				nodeLang = (Language) ranNode.getMetaData("lang");
+				// Pick a random position in language.
 				int pos = Randomizer.nextInt(nodeLang.getLanguage().size());
 				s = new ArrayList<Integer>(nodeLang.getLanguage());
 				newNodeLang = new Language(s);
 				int currentTrait = newNodeLang.getLanguage().get(pos);
+				// Flip the bit at the random position.
 				newNodeLang.getLanguage().set(pos, 1 - currentTrait);
 				setSubTreeLanguages(ranNode, newNodeLang);
 				break;
 			// Borrow.
 			case 1:
-				while (aliveNodes.size() > 1) {
+				// Borrowing only occurs if there are multiple languages.
+				if (aliveNodes.size() < 2) {
+					break;
+				}
+				// Pick two distinct languages at random.
+				while (true) {
 					idx = Randomizer.nextInt(aliveNodes.size());
 					ranNode = aliveNodes.get(idx);
 					nodeLang = (Language) ranNode.getMetaData("lang");
@@ -159,23 +171,22 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 					if (ranNode != ranNode2) {
 						break;
 					}
+				}
+				// Check they're close enough together.
 				if (localDist(ranNode, ranNode2, z) == false) {
 					break;
 				} else {
+					// Randomly iterate through language and find a 1.
 					for (Integer i : getRandLangIndex(nodeLang)) {
-						try {
-							if (nodeLang.getLanguage().get(i) == 1) {
-								s = new ArrayList<Integer>(nodeLang2.getLanguage());
-								newNodeLang = new Language(s);
-								newNodeLang.getLanguage().set(i, 1);
-								setSubTreeLanguages(ranNode2, newNodeLang);
-								break;
-							}
-						} catch (IndexOutOfBoundsException e) {
-							continue;
+						if (nodeLang.getLanguage().get(i) == 1) {
+							// Give the 1 to the receiving language.
+							s = new ArrayList<Integer>(nodeLang2.getLanguage());
+							newNodeLang = new Language(s);
+							newNodeLang.getLanguage().set(i, 1);
+							setSubTreeLanguages(ranNode2, newNodeLang);
+							break;
 						}
 					}
-				}
 				}
 				break;
 			}

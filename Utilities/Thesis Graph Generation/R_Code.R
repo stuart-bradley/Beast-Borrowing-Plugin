@@ -9,7 +9,11 @@ sd <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Uti
 gtrtree <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtrtree.csv", quote="\"")
 sdtree <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/sdtree.csv", quote="\"")
 
-gtrborrowtree <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtrborrowtree.csv", quote="\"")
+gtr00 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr00.csv", quote="\"")
+gtr01 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr01.csv", quote="\"")
+gtr10 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr10.csv", quote="\"")
+gtr11 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr11.csv", quote="\"")
+all <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/all.csv", quote="\"")
 
 # GTR Lineage Validation
 plot(density(rbinom(100000,20,0.5), adjust=10), col="green",lwd=2, 
@@ -37,7 +41,8 @@ legend('topright',c("Poisson Distribution","SD Algorithm"), lty=c(1,1), lwd=c(2,
 par(mfrow=c(1, 1))
 
 # GTR Whole Tree Borrowing Validation
-plot(density(rbinom(200000,20,0.5), adjust=10), col="green",lwd=2, 
+p = c(0.2857,0.2857,0.2857,0.1429)
+plot(density(rmultinom(400000,20,p), adjust=10), col="green",lwd=2, 
      main="Simulation of 100,000 language evolutions under the GTR model", xlab="Number of cogantes", xlim=range(0:20))
-lines(density(gtrborrowtree$V1, adjust=10), col="blue", lwd=2)
+lines(density(all$V1, adjust=10), col="blue", lwd=2)
 legend('topright',c("Binomial Distribution","Algorithm 1"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))

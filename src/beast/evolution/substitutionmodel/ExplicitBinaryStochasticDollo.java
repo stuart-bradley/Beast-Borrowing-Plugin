@@ -161,8 +161,8 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
 		Double totalRate = totalRate(aliveNodes, borrow);
 		Double t = Randomizer.nextExponential(totalRate);
-		Node ranNode, ranNode2;
-		Language nodeLang, nodeLang2, newNodeLang;
+		Node ranNode = null, ranNode2 = null;
+		Language nodeLang = null, nodeLang2 = null, newNodeLang;
 		ArrayList<Integer> s;
 		int idx;
 		double[] probs = new double[3];
@@ -201,7 +201,10 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 				break;
 			// Borrowing.
 			case 2:
-				while (aliveNodes.size() > 1) {
+				if (aliveNodes.size() < 2) {
+					break;
+				}
+				while (true) {
 					idx = Randomizer.nextInt(aliveNodes.size());
 					ranNode = aliveNodes.get(idx);
 					nodeLang = (Language) ranNode.getMetaData("lang");
@@ -211,29 +214,29 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 					if (ranNode != ranNode2) {
 						break;
 					}
-					if (localDist(ranNode, ranNode2, z) == false) {
-						break;
-					} else {
-						for (Integer i : getRandLangIndex(nodeLang)) {
-							try {
-								if (nodeLang.getLanguage().get(i) == 1) {
-									s = new ArrayList<Integer>(nodeLang2.getLanguage());
-									newNodeLang = new Language(s);
-									newNodeLang.getLanguage().set(i, 1);
-									setSubTreeLanguages(ranNode2, newNodeLang);
-									break;
-								}
-							} catch (IndexOutOfBoundsException e) {
-								continue;
+				}
+				if (localDist(ranNode, ranNode2, z) == false) {
+					break;
+				} else {
+					for (Integer i : getRandLangIndex(nodeLang)) {
+						try {
+							if (nodeLang.getLanguage().get(i) == 1) {
+								s = new ArrayList<Integer>(nodeLang2.getLanguage());
+								newNodeLang = new Language(s);
+								newNodeLang.getLanguage().set(i, 1);
+								setSubTreeLanguages(ranNode2, newNodeLang);
+								break;
 							}
+						} catch (IndexOutOfBoundsException e) {
+							continue;
 						}
 					}
-					break;
 				}
-				aliveNodes = getAliveNodes(base, t);
-				totalRate = totalRate(aliveNodes, borrow);
-				t += Randomizer.nextExponential(totalRate);
+				break;
 			}
+			aliveNodes = getAliveNodes(base, t);
+			totalRate = totalRate(aliveNodes, borrow);
+			t += Randomizer.nextExponential(totalRate);
 		}
 		return base;
 	}

@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import beast.app.seqgen.LanguageSequenceGen;
@@ -206,10 +207,14 @@ public class BeastBorrowingPluginTest {
 	
 	private static void GTRTreeBorrowingValidation() {
 		Tree tree = null;
-		ArrayList<Integer> births = new ArrayList<Integer>();
+		ArrayList<Integer> zeroZero = new ArrayList<Integer>();
+		ArrayList<Integer> zeroOne = new ArrayList<Integer>();
+		ArrayList<Integer> oneZero = new ArrayList<Integer>();
+		ArrayList<Integer> oneOne = new ArrayList<Integer>();
+		ArrayList<Integer> all = new ArrayList<Integer>();
 		for (int i = 0; i < 100000; i++) {
 			System.out.println(i);
-			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.7);
+			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
 			ArrayList<Integer> seq = new ArrayList<Integer>();
 			for (int j = 0; j < 20; j++) {
 				seq.add(Randomizer.nextInt(2));
@@ -222,15 +227,41 @@ public class BeastBorrowingPluginTest {
 			rootNode.setHeight(0);
 			tree = new Tree(rootNode);
 			tree = test.randomTree(tree, 2, 0.1);
-			tree = gtr_mod.mutateOverTreeBorrowing(tree, c, 0.3, 0.0);
-			for (Node n : tree.getExternalNodes()) {
-				Language l2 = (Language) n.getMetaData("lang");
-				births.add(l2.getBirths());
+			tree = gtr_mod.mutateOverTreeBorrowing(tree, c, 0.5, 0.0);
+			List<Node> ext = tree.getExternalNodes();
+			ArrayList<Integer> l1 = ((Language) ext.get(0).getMetaData("lang")).getLanguage();
+			ArrayList<Integer> l2 = ((Language) ext.get(1).getMetaData("lang")).getLanguage();
+			int zeroZeroInt = 0;
+			int zeroOneInt = 0;
+			int oneZeroInt = 0;
+			int oneOneInt = 0;
+			for (int j = 0; j < 20; j++) {
+				if (l1.get(j) == 0 && l2.get(j) == 0) {
+					zeroZeroInt += 1;
+				} else if (l1.get(j) == 0 && l2.get(j) == 1) {
+					zeroOneInt += 1;
+				} else if (l1.get(j) == 1 && l2.get(j) == 0) {
+					oneZeroInt += 1;
+				} else {
+					oneOneInt += 1;
+				}
 			}
+			zeroZero.add(zeroZeroInt);
+			all.add(zeroZeroInt);
+			zeroOne.add(zeroOneInt);
+			all.add(zeroOneInt);
+			oneZero.add(oneZeroInt);
+			all.add(oneZeroInt);
+			oneOne.add(oneOneInt);
+			all.add(oneOneInt);
+			
 			
 		}
-		listToCSV(births, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtrborrowtree.csv");
-		//listToCSV(births, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/sdtree.csv");
+		listToCSV(all, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/all.csv");
+		listToCSV(zeroZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr00.csv");
+		listToCSV(zeroOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr01.csv");
+		listToCSV(oneZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr10.csv");
+		listToCSV(oneOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr11.csv");
 	}
 	
 	private static void SeqGenTest() {
