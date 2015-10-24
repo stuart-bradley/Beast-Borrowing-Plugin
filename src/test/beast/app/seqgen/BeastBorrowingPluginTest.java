@@ -33,10 +33,10 @@ public class BeastBorrowingPluginTest {
 		//TreeSDBorrowingTest(seq);
 		//TreeGTRBorrowingTest(seq);
 		
-		//GTRTreeBorrowingValidation();
+		GTRTreeBorrowingValidation();
 		//SDTreeValidation();
 		
-		SeqGenTest();
+		//SeqGenTest();
 
 
 	}
@@ -205,10 +205,11 @@ public class BeastBorrowingPluginTest {
 	}
 	
 	private static void GTRTreeBorrowingValidation() {
+		Tree tree = null;
 		ArrayList<Integer> births = new ArrayList<Integer>();
 		for (int i = 0; i < 100000; i++) {
 			System.out.println(i);
-			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
+			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.7);
 			ArrayList<Integer> seq = new ArrayList<Integer>();
 			for (int j = 0; j < 20; j++) {
 				seq.add(Randomizer.nextInt(2));
@@ -219,9 +220,9 @@ public class BeastBorrowingPluginTest {
 			Node rootNode = new Node();
 			rootNode.setMetaData("lang", c.getLanguage(0));
 			rootNode.setHeight(0);
-			Tree tree = new Tree(rootNode);
+			tree = new Tree(rootNode);
 			tree = test.randomTree(tree, 2, 0.1);
-			tree = gtr_mod.mutateOverTreeBorrowing(tree, c, 0.5, 0.0);
+			tree = gtr_mod.mutateOverTreeBorrowing(tree, c, 0.3, 0.0);
 			for (Node n : tree.getExternalNodes()) {
 				Language l2 = (Language) n.getMetaData("lang");
 				births.add(l2.getBirths());

@@ -9,6 +9,8 @@ sd <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Uti
 gtrtree <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtrtree.csv", quote="\"")
 sdtree <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/sdtree.csv", quote="\"")
 
+gtrborrowtree <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtrborrowtree.csv", quote="\"")
+
 # GTR Lineage Validation
 plot(density(rbinom(100000,20,0.5), adjust=10), col="green",lwd=2, 
      main="Simulation of 100,000 language evolutions under the GTR model", xlab="Number of cogantes", xlim=range(0:20))
@@ -34,28 +36,8 @@ lines(density(sdtree$V1, adjust=10), col="blue", lwd=2)
 legend('topright',c("Poisson Distribution","SD Algorithm"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
 par(mfrow=c(1, 1))
 
-trans.mat <- matrix(c(
-  0,1,0,0,
-  0.5,0,0.25,0.25,
-  0,0,0,1,
-  0.25,0.25,0.5,0
-)
-, 4,4, byrow = TRUE)
-
 # GTR Whole Tree Borrowing Validation
-library(DTMCPack)
-trans.mat <- matrix(c(
-  0,1,0,0,
-  0.6666667,0,0,0.3333333,
-  0,0,0,1,
-  0,0.3333333,0.6666667,0
-)
-, 4,4, byrow = TRUE)
-statdistr(trans.mat)
-plot(density(rbinom(200000,20,0.515), adjust=10), col="green",lwd=2, 
+plot(density(rbinom(200000,20,0.5), adjust=10), col="green",lwd=2, 
      main="Simulation of 100,000 language evolutions under the GTR model", xlab="Number of cogantes", xlim=range(0:20))
 lines(density(gtrborrowtree$V1, adjust=10), col="blue", lwd=2)
 legend('topright',c("Binomial Distribution","Algorithm 1"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
-
-
-, 2,2, byrow = TRUE)
