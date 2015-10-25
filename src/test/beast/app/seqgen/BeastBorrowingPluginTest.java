@@ -34,10 +34,10 @@ public class BeastBorrowingPluginTest {
 		//TreeSDBorrowingTest(seq);
 		//TreeGTRBorrowingTest(seq);
 		
-		GTRTreeBorrowingValidation();
+		//GTRTreeBorrowingValidation();
 		//SDTreeValidation();
 		
-		//SeqGenTest();
+		SeqGenTest();
 
 
 	}
@@ -265,7 +265,7 @@ public class BeastBorrowingPluginTest {
 	}
 	
 	private static void SeqGenTest() {
-		String[] args = {};
+		String[] args = {"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/testLangSeqGen.xml","100","C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/output.xml"};
 		LanguageSequenceGen.main(args);
 	}
 

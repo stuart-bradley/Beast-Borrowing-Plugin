@@ -119,23 +119,6 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		return rootTree;
 	}
 	
-	/**
-     * find a treelikelihood object among the plug-ins by recursively inspecting plug-ins *
-     */
-    static TreeLikelihood getTreeLikelihood(BEASTInterface plugin) throws Exception {
-        for (BEASTInterface plugin2 : plugin.listActivePlugins()) {
-            if (plugin2 instanceof TreeLikelihood) {
-                return (TreeLikelihood) plugin2;
-            } else {
-                TreeLikelihood likelihood = getTreeLikelihood(plugin2);
-                if (likelihood != null) {
-                    return likelihood;
-                }
-            }
-        }
-        return null;
-    }
-	
 	public static void printUsageAndExit() {
         System.out.println("Usage: java " + SequenceSimulator.class.getName() + " <beast file> <nr of instantiations> [<output file>]");
         System.out.println("simulates from a treelikelihood specified in the beast file.");
@@ -171,17 +154,12 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	            // parse the xml
 	            XMLParser parser = new XMLParser();
 	            BEASTInterface plugin = parser.parseFragment(sXML, true);
-
-	            // find relevant objects from the model
-	            TreeLikelihood treeLikelihood = getTreeLikelihood(plugin);
-	            if (treeLikelihood == null) {
-	                throw new Exception("No treelikelihood found in file. Giving up now.");
-	            }
-	            Language root = ((Input<Language>) treeLikelihood.getInput("root")).get();
-	            Tree tree = ((Input<Tree>) treeLikelihood.getInput("tree")).get();
-	            SubstitutionModel pSubModel = ((Input<SubstitutionModel>) treeLikelihood.getInput("subsitutionModel")).get();
-	            Double pBorrowingRate = ((Input<Double>) treeLikelihood.getInput("borrowingRate")).get();
-	            Double pBorrowingRateZ = ((Input<Double>) treeLikelihood.getInput("borrowingRateZ")).get();
+	            
+	            Language root = ((Input<Language>) plugin.getInput("root")).get();
+	            Tree tree = ((Input<Tree>) plugin.getInput("tree")).get();
+	            SubstitutionModel pSubModel = ((Input<SubstitutionModel>) plugin.getInput("subModel")).get();
+	            Double pBorrowingRate = ((Input<Double>) plugin.getInput("borrowingRate")).get();
+	            Double pBorrowingRateZ = ((Input<Double>) plugin.getInput("borrowingRateZ")).get();
 
 	            // feed to sequence simulator and generate leaves
 	            LanguageSequenceGen treeSimulator = new LanguageSequenceGen();

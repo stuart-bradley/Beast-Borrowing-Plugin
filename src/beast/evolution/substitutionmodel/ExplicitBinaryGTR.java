@@ -216,7 +216,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		}
 		double[] probs = new double[2];
 		probs[0] = rate * mutateSum / totalRate;
-		probs[1] = borrow * rate * borrowSum / totalRate;
+		probs[1] = (borrow+1) * rate * borrowSum / totalRate;
 		return probs;
 	}
 
@@ -236,6 +236,6 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 			borrowSum += ((Language) n.getMetaData("lang")).getBirths();
 			mutateSum += ((Language) n.getMetaData("lang")).getLanguage().size();
 		}
-		return rate * mutateSum + borrow * rate * borrowSum;
+		return rate * mutateSum + (borrow+1) * rate * borrowSum;
 	}
 }

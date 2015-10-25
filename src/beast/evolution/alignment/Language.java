@@ -21,12 +21,14 @@ import beast.core.Input;
  */
 @Description("Single Language for the Language Package")
 public class Language extends Sequence {
-	public Input<String> dataInput = new Input<String>("value", "language data, encoded as a string of integers representing the absence (0) or presence of cogantes.", Input.Validate.REQUIRED);
 	
 	/** Internal representation of the language */
-	protected ArrayList<Integer> language;
+	protected ArrayList<Integer> language = new ArrayList<Integer>();
 	/** List of mutations on language, excludes initial state */ 
 	protected TreeMap<Double, ArrayList<Integer>> mutations = new TreeMap<Double, ArrayList<Integer>>();
+	
+	public Language() throws Exception {
+	}
 	
 	public Language(ArrayList<Integer> lang) {
         this.language = lang;
