@@ -34,10 +34,10 @@ public class BeastBorrowingPluginTest {
 		//TreeSDBorrowingTest(seq);
 		//TreeGTRBorrowingTest(seq);
 		
-		//GTRTreeBorrowingValidation();
+		GTRTreeBorrowingValidation();
 		//SDTreeValidation();
 		
-		SeqGenTest();
+		//SeqGenTest();
 
 
 	}
@@ -216,7 +216,7 @@ public class BeastBorrowingPluginTest {
 			System.out.println(i);
 			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
 			ArrayList<Integer> seq = new ArrayList<Integer>();
-			for (int j = 0; j < 20; j++) {
+			for (int j = 0; j < 100; j++) {
 				seq.add(Randomizer.nextInt(2));
 			}
 			Language l = new Language(seq);

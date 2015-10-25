@@ -41,8 +41,9 @@ legend('topright',c("Poisson Distribution","SD Algorithm"), lty=c(1,1), lwd=c(2,
 par(mfrow=c(1, 1))
 
 # GTR Whole Tree Borrowing Validation
-p = c(0.2857,0.2857,0.2857,0.1429)
+p = c(0.2222,0.2222,0.2222,0.3333)
 plot(density(rmultinom(400000,20,p), adjust=10), col="green",lwd=2, 
-     main="Simulation of 100,000 language evolutions under the GTR model", xlab="Number of cogantes", xlim=range(0:20))
-lines(density(all$V1, adjust=10), col="blue", lwd=2)
-legend('topright',c("Binomial Distribution","Algorithm 1"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
+     main="Simulation of 100,000 language evolutions under the GTR borrowing model", xlab="Number of cogantes", xlim=range(0:20))
+p = c(mean(gtr00$V1)/20,mean(gtr01$V1)/20,mean(gtr10$V1)/20,mean(gtr11$V1)/20)
+lines(density(rmultinom(400000,20,p), adjust=10), col="blue", lwd=2)
+legend('topright',c("Multinomial Distribution","GTR Borrowing Algorithm"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
