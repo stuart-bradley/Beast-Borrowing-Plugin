@@ -13,7 +13,15 @@ gtr00 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/
 gtr01 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr01.csv", quote="\"")
 gtr10 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr10.csv", quote="\"")
 gtr11 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr11.csv", quote="\"")
-all <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/all.csv", quote="\"")
+
+gtr000 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr000.csv", quote="\"")
+gtr100 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr100.csv", quote="\"")
+gtr010 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr010.csv", quote="\"")
+gtr001 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr001.csv", quote="\"")
+gtr110 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr110.csv", quote="\"")
+gtr101 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr101.csv", quote="\"")
+gtr011 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr011.csv", quote="\"")
+gtr111 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr111.csv", quote="\"")
 
 # GTR Lineage Validation
 plot(density(rbinom(100000,20,0.5), adjust=10), col="green",lwd=2, 
@@ -40,10 +48,18 @@ lines(density(sdtree$V1, adjust=10), col="blue", lwd=2)
 legend('topright',c("Poisson Distribution","SD Algorithm"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
 par(mfrow=c(1, 1))
 
-# GTR Whole Tree Borrowing Validation
+# GTR Whole Tree Borrowing Validation (2 Languages)
 p = c(0.2222,0.2222,0.2222,0.3333)
 plot(density(rmultinom(400000,20,p), adjust=10), col="green",lwd=2, 
      main="Simulation of 100,000 language evolutions under the GTR borrowing model", xlab="Number of cogantes", xlim=range(0:20))
 p = c(mean(gtr00$V1)/20,mean(gtr01$V1)/20,mean(gtr10$V1)/20,mean(gtr11$V1)/20)
 lines(density(rmultinom(400000,20,p), adjust=10), col="blue", lwd=2)
-legend('topright',c("Multinomial Distribution","GTR Borrowing Algorithm"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
+legend('topright',c("Multinomial Distribution","GTR Borrowing Algorithm (2 Languages)"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
+
+# GTR Whole Tree Borrowing Validation (3 Languages)
+p = c(0.0930,0.0930,0.0930,0.0930,0.1395,0.1395,0.1395,0.2093)
+plot(density(rmultinom(400000,20,p), adjust=10), col="green",lwd=2, 
+     main="Simulation of 100,000 language evolutions under the GTR borrowing model", xlab="Number of cogantes", xlim=range(0:20))
+p = c(mean(gtr000$V1)/20,mean(gtr100$V1)/20,mean(gtr010$V1)/20,mean(gtr001$V1)/20,mean(gtr110$V1)/20,mean(gtr101$V1)/20,mean(gtr011$V1)/20,mean(gtr111$V1)/20)
+lines(density(rmultinom(400000,20,p), adjust=10), col="blue", lwd=2)
+legend('topright',c("Multinomial Distribution","GTR Borrowing Algorithm (3 Languages)"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))

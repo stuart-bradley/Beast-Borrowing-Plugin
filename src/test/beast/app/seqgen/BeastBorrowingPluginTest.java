@@ -34,9 +34,8 @@ public class BeastBorrowingPluginTest {
 		//TreeSDBorrowingTest(seq);
 		//TreeGTRBorrowingTest(seq);
 		
-		GTRTreeBorrowingValidation();
 		//SDTreeValidation();
-		
+		GTRTreeBorrowingValidationThreeLanguages();
 		//SeqGenTest();
 
 
@@ -205,13 +204,12 @@ public class BeastBorrowingPluginTest {
 		//listToCSV(births, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/sdtree.csv");
 	}
 	
-	private static void GTRTreeBorrowingValidation() {
+	private static void GTRTreeBorrowingValidationTwoLanguages() {
 		Tree tree = null;
 		ArrayList<Integer> zeroZero = new ArrayList<Integer>();
 		ArrayList<Integer> zeroOne = new ArrayList<Integer>();
 		ArrayList<Integer> oneZero = new ArrayList<Integer>();
 		ArrayList<Integer> oneOne = new ArrayList<Integer>();
-		ArrayList<Integer> all = new ArrayList<Integer>();
 		for (int i = 0; i < 100000; i++) {
 			System.out.println(i);
 			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
@@ -247,21 +245,90 @@ public class BeastBorrowingPluginTest {
 				}
 			}
 			zeroZero.add(zeroZeroInt);
-			all.add(zeroZeroInt);
 			zeroOne.add(zeroOneInt);
-			all.add(zeroOneInt);
 			oneZero.add(oneZeroInt);
-			all.add(oneZeroInt);
 			oneOne.add(oneOneInt);
-			all.add(oneOneInt);
-			
-			
 		}
-		listToCSV(all, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/all.csv");
 		listToCSV(zeroZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr00.csv");
 		listToCSV(zeroOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr01.csv");
 		listToCSV(oneZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr10.csv");
 		listToCSV(oneOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr11.csv");
+	}
+	
+	private static void GTRTreeBorrowingValidationThreeLanguages() {
+		Tree tree = null;
+		ArrayList<Integer> zeroZeroZero = new ArrayList<Integer>();
+		ArrayList<Integer> oneZeroZero = new ArrayList<Integer>();
+		ArrayList<Integer> zeroOneZero = new ArrayList<Integer>();
+		ArrayList<Integer> zeroZeroOne = new ArrayList<Integer>();
+		ArrayList<Integer> oneOneZero = new ArrayList<Integer>();
+		ArrayList<Integer> oneZeroOne = new ArrayList<Integer>();
+		ArrayList<Integer> zeroOneOne = new ArrayList<Integer>();
+		ArrayList<Integer> oneOneOne = new ArrayList<Integer>();
+		for (int i = 0; i < 100000; i++) {
+			System.out.println(i);
+			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
+			ArrayList<Integer> seq = new ArrayList<Integer>();
+			for (int j = 0; j < 100; j++) {
+				seq.add(Randomizer.nextInt(2));
+			}
+			Language l = new Language(seq);
+			CognateSet c = new CognateSet(l);
+			LanguageSequenceGen test = new LanguageSequenceGen();
+			Node rootNode = new Node();
+			rootNode.setMetaData("lang", c.getLanguage(0));
+			rootNode.setHeight(0);
+			tree = new Tree(rootNode);
+			tree = test.randomTree(tree, 3, 0.1);
+			tree = gtr_mod.mutateOverTreeBorrowing(tree, c, 0.5, 0.0);
+			List<Node> ext = tree.getExternalNodes();
+			ArrayList<Integer> l1 = ((Language) ext.get(0).getMetaData("lang")).getLanguage();
+			ArrayList<Integer> l2 = ((Language) ext.get(1).getMetaData("lang")).getLanguage();
+			ArrayList<Integer> l3 = ((Language) ext.get(2).getMetaData("lang")).getLanguage();
+			Integer zeroZeroZeroInt = 0;
+			Integer oneZeroZeroInt = 0;
+			Integer zeroOneZeroInt = 0;
+			Integer zeroZeroOneInt = 0;
+			Integer oneOneZeroInt = 0;
+			Integer oneZeroOneInt = 0;
+			Integer zeroOneOneInt = 0;
+			Integer oneOneOneInt = 0;
+			for (int j = 0; j < 20; j++) {
+				if (l1.get(j) == 0 && l2.get(j) == 0 && l3.get(j) == 0) {
+					zeroZeroZeroInt += 1;
+				} else if (l1.get(j) == 1 && l2.get(j) == 0 && l3.get(j) == 0) {
+					oneZeroZeroInt += 1;
+				} else if (l1.get(j) == 0 && l2.get(j) == 1 && l3.get(j) == 0) {
+					zeroOneZeroInt += 1;
+				} else if (l1.get(j) == 0 && l2.get(j) == 0 && l3.get(j) == 1) {
+					zeroZeroOneInt += 1;
+				} else if (l1.get(j) == 1 && l2.get(j) == 1 && l3.get(j) == 0) {
+					oneOneZeroInt += 1;
+				} else if (l1.get(j) == 1 && l2.get(j) == 0 && l3.get(j) == 1) {
+					oneZeroOneInt += 1;
+				} else if (l1.get(j) == 0 && l2.get(j) == 1 && l3.get(j) == 1) {
+					zeroOneOneInt += 1;
+				} else if (l1.get(j) == 1 && l2.get(j) == 1 && l3.get(j) == 1) {
+					oneOneOneInt += 1;
+				}
+			}
+			zeroZeroZero.add(zeroZeroZeroInt);
+			oneZeroZero.add(oneZeroZeroInt);
+			zeroOneZero.add(zeroOneZeroInt);
+			zeroZeroOne.add(zeroZeroOneInt);
+			oneOneZero.add(oneOneZeroInt);
+			oneZeroOne.add(oneZeroOneInt);
+			zeroOneOne.add(zeroOneOneInt);
+			oneOneOne.add(oneOneOneInt);
+		}
+		listToCSV(zeroZeroZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr000.csv");
+		listToCSV(oneZeroZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr100.csv");
+		listToCSV(zeroOneZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr010.csv");
+		listToCSV(zeroZeroOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr001.csv");
+		listToCSV(oneOneZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr110.csv");
+		listToCSV(oneZeroOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr101.csv");
+		listToCSV(zeroOneOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr011.csv");
+		listToCSV(oneOneOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr111.csv");
 	}
 	
 	private static void SeqGenTest() {
