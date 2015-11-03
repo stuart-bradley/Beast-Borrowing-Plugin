@@ -74,12 +74,11 @@ public class BeastBorrowingPluginTest {
 
 		System.out.println("Tree generation test");
 		System.out.println(c);
-		LanguageSequenceGen test = new LanguageSequenceGen();
 		Node rootNode = new Node();
 		rootNode.setMetaData("lang", c.getLanguage(0));
 		rootNode.setHeight(0);
 		Tree tree = new Tree(rootNode);
-		tree = test.randomTree(tree, 4, 0.6);
+		tree = randomTree(tree, 4, 0.6);
 		tree.getRoot().setMetaData("lang", c.getLanguage(0));
 		gtr_mod.mutateOverTree(tree, c);
 		System.out.println();
@@ -92,12 +91,11 @@ public class BeastBorrowingPluginTest {
 		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.7, 0.3);
 
 		System.out.println("Tree SD Borrowing Test");
-		LanguageSequenceGen test = new LanguageSequenceGen();
 		Node rootNode = new Node();
 		rootNode.setMetaData("lang", c.getLanguage(0));
 		rootNode.setHeight(0);
 		Tree tree = new Tree(rootNode);
-		tree = test.randomTree(tree, 8, 0.6);
+		tree = randomTree(tree, 8, 0.6);
 		sd_mod.mutateOverTreeBorrowing(tree, c, 1.2, 0.0);
 	}
 	
@@ -107,12 +105,11 @@ public class BeastBorrowingPluginTest {
 		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
 
 		System.out.println("Tree GTR Borrowing Test");
-		LanguageSequenceGen test = new LanguageSequenceGen();
 		Node rootNode = new Node();
 		rootNode.setMetaData("lang", c.getLanguage(0));
 		rootNode.setHeight(0);
 		Tree tree = new Tree(rootNode);
-		tree = test.randomTree(tree, 8, 0.6);
+		tree = randomTree(tree, 8, 0.6);
 		gtr_mod.mutateOverTreeBorrowing(tree, c, 1.2, 0.0);
 	}
 	
@@ -161,12 +158,11 @@ public class BeastBorrowingPluginTest {
 			}
 			Language l = new Language(seq);
 			CognateSet c = new CognateSet(l);
-			LanguageSequenceGen test = new LanguageSequenceGen();
 			Node rootNode = new Node();
 			rootNode.setMetaData("lang", c.getLanguage(0));
 			rootNode.setHeight(0);
 			Tree tree = new Tree(rootNode);
-			tree = test.randomTree(tree, 8, 0.6);
+			tree = randomTree(tree, 8, 0.6);
 			tree = gtr_mod.mutateOverTree(tree, c);
 			for (Node n : tree.getExternalNodes()) {
 				Language l2 = (Language) n.getMetaData("lang");
@@ -187,12 +183,11 @@ public class BeastBorrowingPluginTest {
 			ArrayList<Integer> seq = new ArrayList<Integer>();
 			Language l = new Language(seq);
 			CognateSet c = new CognateSet(l);
-			LanguageSequenceGen test = new LanguageSequenceGen();
 			Node rootNode = new Node();
 			rootNode.setMetaData("lang", c.getLanguage(0));
 			rootNode.setHeight(0);
 			Tree tree = new Tree(rootNode);
-			tree = test.randomTree(tree, 8, 0.005);
+			tree = randomTree(tree, 8, 0.005);
 			tree = sd_mod.mutateOverTree(tree, c);
 			for (Node n : tree.getExternalNodes()) {
 				Language l2 = (Language) n.getMetaData("lang");
@@ -219,12 +214,11 @@ public class BeastBorrowingPluginTest {
 			}
 			Language l = new Language(seq);
 			CognateSet c = new CognateSet(l);
-			LanguageSequenceGen test = new LanguageSequenceGen();
 			Node rootNode = new Node();
 			rootNode.setMetaData("lang", c.getLanguage(0));
 			rootNode.setHeight(0);
 			tree = new Tree(rootNode);
-			tree = test.randomTree(tree, 2, 0.1);
+			tree = randomTree(tree, 2, 0.1);
 			tree = gtr_mod.mutateOverTreeBorrowing(tree, c, 0.5, 0.0);
 			List<Node> ext = tree.getExternalNodes();
 			ArrayList<Integer> l1 = ((Language) ext.get(0).getMetaData("lang")).getLanguage();
@@ -274,12 +268,11 @@ public class BeastBorrowingPluginTest {
 			}
 			Language l = new Language(seq);
 			CognateSet c = new CognateSet(l);
-			LanguageSequenceGen test = new LanguageSequenceGen();
 			Node rootNode = new Node();
 			rootNode.setMetaData("lang", c.getLanguage(0));
 			rootNode.setHeight(0);
 			tree = new Tree(rootNode);
-			tree = test.randomTree(tree, 3, 0.1);
+			tree = randomTree(tree, 3, 0.1);
 			tree = gtr_mod.mutateOverTreeBorrowing(tree, c, 0.5, 0.0);
 			List<Node> ext = tree.getExternalNodes();
 			ArrayList<Integer> l1 = ((Language) ext.get(0).getMetaData("lang")).getLanguage();
@@ -368,5 +361,40 @@ public class BeastBorrowingPluginTest {
 			}
 
 		}
+	}
+	
+	private static Tree randomTree(Tree rootTree, Integer numLeaves, Double branchRate) {
+		ArrayList<Node> currLeaves = new ArrayList<Node>(); 
+		ArrayList<Node> newLeaves = new ArrayList<Node>();
+		currLeaves.add(rootTree.getRoot());
+		Language rootLang = (Language) rootTree.getRoot().getMetaData("lang");
+		Node childLeft, childRight;
+		
+		while (currLeaves.size() < numLeaves) {
+			for (Node parent : currLeaves) {
+				childLeft = new Node();
+				childRight = new Node();
+				
+				// Left child.
+				double t = Randomizer.nextExponential(branchRate);
+				childLeft.setParent(parent);
+				parent.addChild(childLeft);
+				childLeft.setHeight(parent.getHeight()+t);
+				childLeft.setMetaData("lang", rootLang);
+				newLeaves.add(childLeft);
+				rootTree.addNode(childLeft);
+				// Right child.
+				//t = Randomizer.nextExponential(branchRate);
+				childRight.setParent(parent);
+				parent.addChild(childRight);
+				childRight.setHeight(parent.getHeight()+t);
+				childRight.setMetaData("lang", rootLang);
+				newLeaves.add(childRight);
+				rootTree.addNode(childRight);
+			}
+			currLeaves = new ArrayList<Node>(newLeaves);
+			newLeaves = new ArrayList<Node>();
+		}
+		return rootTree;
 	}
 }

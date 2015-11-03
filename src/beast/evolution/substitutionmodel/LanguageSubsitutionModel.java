@@ -5,6 +5,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
+import beast.core.CalculationNode;
 import beast.core.Description;
 import beast.evolution.alignment.CognateSet;
 import beast.evolution.alignment.Language;
@@ -24,11 +25,12 @@ import beast.evolution.tree.Tree;
  * 
  */
 @Description("Abstract class for language mutation models")
-public abstract class LanguageSubsitutionModel extends SubstitutionModel.Base {
+public abstract class LanguageSubsitutionModel extends CalculationNode {
 	
 	/*
 	 * ABSTRACT METHODS
 	 */
+	
 	
 	/*
 	 * BEAST Object required class.
@@ -198,32 +200,5 @@ public abstract class LanguageSubsitutionModel extends SubstitutionModel.Base {
 			}
 		}
 		return aN;
-	}
-	
-	/*
-	 * Returns nothing, because mutations are explicit. 
-	 * @see beast.evolution.substitutionmodel.SubstitutionModel#getTransitionProbabilities(beast.evolution.tree.Node, double, double, double, double[])
-	 */
-	@Override
-	public void getTransitionProbabilities(Node node, double fStartTime, double fEndTime, double fRate,
-			double[] matrix) {	
-	}
-	
-	/*
-	 * No EigenDecomposition is required.
-	 * @see beast.evolution.substitutionmodel.SubstitutionModel#getEigenDecomposition(beast.evolution.tree.Node)
-	 */
-	@Override
-	public EigenDecomposition getEigenDecomposition(Node node) {
-		return null;
-	}
-	
-	/*
-	 * TO-DO: Figure out what the hell this does.
-	 * @see beast.evolution.substitutionmodel.SubstitutionModel#canHandleDataType(beast.evolution.datatype.DataType)
-	 */
-	@Override
-	public boolean canHandleDataType(DataType dataType) {
-		return true;
 	}
 }

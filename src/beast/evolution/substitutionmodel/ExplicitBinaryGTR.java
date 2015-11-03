@@ -7,6 +7,7 @@ import beast.core.Description;
 import beast.core.Input;
 import beast.evolution.alignment.CognateSet;
 import beast.evolution.alignment.Language;
+import beast.evolution.datatype.DataType;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.util.Randomizer;
@@ -27,10 +28,14 @@ import beast.util.Randomizer;
 @Description("Binary GTR Model for Languages with recorded mutation events")
 public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	/** Backward and forward substitution rates. */
-	public Input<Double> rateInput = new Input<Double>("rate01", "substitution rate, default = 0.5");
+	public Input<Double> rateInput = new Input<Double>("rate", "substitution rate, default = 0.5");
 
 	/** Binary rate matrix */
 	protected double rate;
+	
+
+	public ExplicitBinaryGTR() throws Exception {
+	}
 
 	public ExplicitBinaryGTR(double r) {
 		this.rate = r;

@@ -7,6 +7,7 @@ import beast.core.Description;
 import beast.core.Input;
 import beast.evolution.alignment.CognateSet;
 import beast.evolution.alignment.Language;
+import beast.evolution.datatype.DataType;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.util.Randomizer;
@@ -27,14 +28,17 @@ import beast.util.Randomizer;
 @Description("Binary Stochastic-Dollo model for Languages with recorded mutation events")
 public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	/** Backward and forward substitution rates. */
-	public Input<Double> rate01Input = new Input<Double>("rate01",
+	public Input<Double> rate01Input = new Input<Double>("birth",
 			"substitution rate for 0 to 1 (birth), default = 0.5");
-	public Input<Double> rate10Input = new Input<Double>("rate10",
+	public Input<Double> rate10Input = new Input<Double>("death",
 			"substitution rate for 1 to 0 (death), default = 0.5");
 
 	/** Birth and Death rates */
 	private double b;
 	private double d;
+	
+	public ExplicitBinaryStochasticDollo() throws Exception {
+	}
 
 	public ExplicitBinaryStochasticDollo(double birth, double death) {
 		this.setB(birth);
