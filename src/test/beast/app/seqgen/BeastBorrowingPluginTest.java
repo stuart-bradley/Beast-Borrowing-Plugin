@@ -24,18 +24,18 @@ public class BeastBorrowingPluginTest {
 	private static void run() {
 		// Base Seq generation.
 		ArrayList<Integer> seq = new ArrayList<Integer>();
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 10; i++) {
 			seq.add(1);
 		}
 
 		//GTRTest(seq);
 		//SDTest(seq);
 		//TreeGenTest(seq);
-		//TreeSDBorrowingTest(seq);
+		TreeSDBorrowingTest(seq);
 		//TreeGTRBorrowingTest(seq);
 		
 		//SDTreeValidation();
-		GTRTreeBorrowingValidationThreeLanguages();
+		//SDTreeBorrowingValidation();
 		//SeqGenTest();
 
 
@@ -86,17 +86,27 @@ public class BeastBorrowingPluginTest {
 	}
 
 	private static void TreeSDBorrowingTest(ArrayList<Integer> seq) {
+		seq = new ArrayList<Integer>();
+		double pos = Randomizer.nextPoisson(10.0);
+		for (int j = 0; j < pos; j++) {
+			seq.add(1);
+		}
 		Language l = new Language(seq);
 		CognateSet c = new CognateSet(l);
-		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.7, 0.3);
+
+		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.0022314355, 0.00022314355);
 
 		System.out.println("Tree SD Borrowing Test");
 		Node rootNode = new Node();
 		rootNode.setMetaData("lang", c.getLanguage(0));
 		rootNode.setHeight(0);
 		Tree tree = new Tree(rootNode);
-		tree = randomTree(tree, 8, 0.6);
-		sd_mod.mutateOverTreeBorrowing(tree, c, 1.2, 0.0);
+		tree = randomTree(tree, 8, 0.01);
+		sd_mod.mutateOverTreeBorrowing(tree, c, 0.1, 0.0);
+		for (Node n : tree.getExternalNodes()) {
+			Language l2 = (Language) n.getMetaData("lang");
+			System.out.println(l2.getLanguage());
+		}
 	}
 	
 	private static void TreeGTRBorrowingTest(ArrayList<Integer> seq) {
@@ -177,9 +187,9 @@ public class BeastBorrowingPluginTest {
 	private static void SDTreeValidation() {
 		ArrayList<Integer> births = new ArrayList<Integer>();
 		
-		for (int i = 0; i < 100000; i++) {
+		for (int i = 0; i < 1000; i++) {
 			System.out.println(i);
-			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5);
+			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.000, 0.5);
 			ArrayList<Integer> seq = new ArrayList<Integer>();
 			Language l = new Language(seq);
 			CognateSet c = new CognateSet(l);
@@ -263,7 +273,7 @@ public class BeastBorrowingPluginTest {
 			System.out.println(i);
 			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
 			ArrayList<Integer> seq = new ArrayList<Integer>();
-			for (int j = 0; j < 100; j++) {
+			for (int j = 0; j < 10000; j++) {
 				seq.add(Randomizer.nextInt(2));
 			}
 			Language l = new Language(seq);
@@ -322,6 +332,33 @@ public class BeastBorrowingPluginTest {
 		listToCSV(oneZeroOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr101.csv");
 		listToCSV(zeroOneOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr011.csv");
 		listToCSV(oneOneOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr111.csv");
+	}
+	
+	private static void SDTreeBorrowingValidation() {
+		Tree tree = null;
+		ArrayList<Integer> births = new ArrayList<Integer>();
+		for (int i = 0; i < 1000; i++) {
+			System.out.println(i);
+			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.0022314355, 0.00022314355);
+			ArrayList<Integer> seq = new ArrayList<Integer>();
+			Integer pos =  (int) Randomizer.nextPoisson(10.0);
+			for (int j = 0; j < pos; j++) {
+				seq.add(1);
+			}
+			Language l = new Language(seq);
+			CognateSet c = new CognateSet(l);
+			Node rootNode = new Node();
+			rootNode.setMetaData("lang", c.getLanguage(0));
+			rootNode.setHeight(0);
+			tree = new Tree(rootNode);
+			tree = randomTree(tree, 8, 0.01);
+			tree = sd_mod.mutateOverTreeBorrowing(tree, c, 0.1, 0.0);
+			for (Node n : tree.getExternalNodes()) {
+				Language l2 = (Language) n.getMetaData("lang");
+				births.add(l2.getBirths());
+			}
+		}
+		listToCSV(births, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/sdtreeborrowing.csv");
 	}
 	
 	private static void SeqGenTest() {

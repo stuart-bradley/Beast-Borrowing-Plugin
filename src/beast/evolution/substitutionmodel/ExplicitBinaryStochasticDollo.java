@@ -196,7 +196,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 					if (nodeLang.getLanguage().get(i) != 0) {
 						s = new ArrayList<Integer>(nodeLang.getLanguage());
 						newNodeLang = new Language(s);
-						newNodeLang.getLanguage().set(idx, 0);
+						newNodeLang.getLanguage().set(i, 0);
 						setSubTreeLanguages(ranNode, newNodeLang);
 						break;
 					}
