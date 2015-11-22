@@ -69,6 +69,6 @@ legend('topright',c("Multinomial Distribution","GTR Borrowing Algorithm (3 Langu
 
 # SD Whole Tree Borrowing Validation 
 plot(density(traitLabOut$V1, adjust=10), col="green",lwd=2, 
-     main="Simulation of 1000 language evolutions TraitLab and SD Algorithm", xlab="Number of birthed traits", xlim=range(0:20))
+     main="Simulation of 1000 language evolutions TraitLab and Algorithm 8", xlab="Number of birthed traits", xlim=range(0:20))
 lines(density(sdtreeborrowing$V1, adjust=10), col="blue", lwd=2)
-legend('topright',c("TraitLab","SD Algorithm"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
+legend('topright',c("TraitLab","Algorithm 8"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))

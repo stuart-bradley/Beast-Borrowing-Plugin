@@ -1,6 +1,7 @@
 package beast.evolution.substitutionmodel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import beast.core.Description;
@@ -73,15 +74,6 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		ArrayList<Integer> s = new ArrayList<Integer>(l.getLanguage());
 		Language newLang = new Language(s);
 		double[] probs = new double[2];
-		// Checks whether births have occurred elsewhere in the tree - and adds
-		// dead (0) traits accordingly.
-		if (c.getStolloLength() > newLang.getLanguage().size()) {
-			ArrayList<Integer> curr_seq = newLang.getLanguage();
-			for (int i = 0; i < c.getStolloLength() - newLang.getLanguage().size(); i++) {
-				curr_seq.add(0);
-			}
-			newLang.setLanguage(curr_seq);
-		}
 		// Mutation proper.
 		double t = Randomizer.nextExponential(getB() + getD() * newLang.getBirths());
 		while (t < T) {
@@ -105,8 +97,6 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 				ArrayList<Integer> curr_seq = newLang.getLanguage();
 				curr_seq.add(1);
 				newLang.setLanguage(curr_seq);
-				// Increase the number of cognate classes for later languages.
-				c.setStolloLength(c.getStolloLength() + 1);
 			}
 			t += Randomizer.nextExponential(getB() + getD() * newLang.getBirths());
 			// Record mutation.
@@ -138,6 +128,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 					child.setMetaData("lang", newLang);
 					c.addLanguage(newLang);
 					newParents.add(child);
+					addEmptyTrait(base, child);
 				}
 			}
 			currParents = new ArrayList<Node>(newParents);
@@ -183,8 +174,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 				s.add(1);
 				newNodeLang = new Language(s);
 				setSubTreeLanguages(ranNode, newNodeLang);
-				// Increase the number of cognate classes for later languages.
-				c.setStolloLength(c.getStolloLength() + 1);
+				addEmptyTrait(base, ranNode);
 				break;
 			// Death.
 			case 1:
@@ -277,7 +267,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 * 
 	 * @param borrow borrowing rate.
 	 * 
-	 * @return Double, total rate,
+	 * @return Double, total rate.
 	 */
 	protected Double totalRate(ArrayList<Node> aliveNodes, Double borrow) {
 		Double totalRate = aliveNodes.size() * getB();
@@ -288,6 +278,36 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		}
 		totalRate += getD() * borrow * birthSum;
 		return totalRate;
+	}
+	
+	/*
+	 * Adds empty traits to other languages when a birth occurs.
+	 * 
+	 * @param t Tree.
+	 * 
+	 * @param newNodeLang, Language with mutated languages.  
+	 * 
+	 */
+	protected void addEmptyTrait(Tree t, Node newLangNode) {
+		// Get all nodes in two lists.
+		List<Node> children = newLangNode.getAllChildNodes();
+		// Find nodes that aren't children (or trait lang).
+		List<Node> allNodes = t.getInternalNodes();
+		allNodes.addAll(t.getExternalNodes());
+		allNodes.removeAll(children);
+		allNodes.remove(newLangNode);
+		
+		// Calculate number of [new] mutations in new language.
+		Language newLang = (Language) newLangNode.getMetaData("lang");
+		for (Node n : allNodes) {
+				Language nLang = (Language) n.getMetaData("lang");
+				ArrayList<Integer> s = nLang.getLanguage();
+				Language newNodeLang = new Language(s);
+				while (newNodeLang.getLanguage().size() < newLang.getLanguage().size()) {
+					newNodeLang.getLanguage().add(0);
+				}
+				n.setMetaData("lang", newNodeLang);
+		}
 	}
 
 	/*

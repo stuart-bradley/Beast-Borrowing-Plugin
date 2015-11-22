@@ -24,14 +24,14 @@ public class BeastBorrowingPluginTest {
 	private static void run() {
 		// Base Seq generation.
 		ArrayList<Integer> seq = new ArrayList<Integer>();
-		for (int i = 0; i < 10; i++) {
+		for (int i = 0; i < 5; i++) {
 			seq.add(1);
 		}
 
 		//GTRTest(seq);
 		//SDTest(seq);
-		//TreeGenTest(seq);
-		TreeSDBorrowingTest(seq);
+		TreeGenTest(seq);
+		//TreeSDBorrowingTest(seq);
 		//TreeGTRBorrowingTest(seq);
 		
 		//SDTreeValidation();
@@ -70,7 +70,7 @@ public class BeastBorrowingPluginTest {
 	private static void TreeGenTest(ArrayList<Integer> seq) {
 		Language l = new Language(seq);
 		CognateSet c = new CognateSet(l);
-		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
+		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5);
 
 		System.out.println("Tree generation test");
 		System.out.println(c);
@@ -80,7 +80,7 @@ public class BeastBorrowingPluginTest {
 		Tree tree = new Tree(rootNode);
 		tree = randomTree(tree, 4, 0.6);
 		tree.getRoot().setMetaData("lang", c.getLanguage(0));
-		gtr_mod.mutateOverTree(tree, c);
+		sd_mod.mutateOverTree(tree, c);
 		System.out.println();
 		System.out.println(c);
 	}
@@ -88,7 +88,7 @@ public class BeastBorrowingPluginTest {
 	private static void TreeSDBorrowingTest(ArrayList<Integer> seq) {
 		seq = new ArrayList<Integer>();
 		double pos = Randomizer.nextPoisson(10.0);
-		for (int j = 0; j < pos; j++) {
+		for (int j = 0; j < 5; j++) {
 			seq.add(1);
 		}
 		Language l = new Language(seq);
@@ -101,7 +101,7 @@ public class BeastBorrowingPluginTest {
 		rootNode.setMetaData("lang", c.getLanguage(0));
 		rootNode.setHeight(0);
 		Tree tree = new Tree(rootNode);
-		tree = randomTree(tree, 8, 0.01);
+		tree = randomTree(tree, 4, 0.01);
 		sd_mod.mutateOverTreeBorrowing(tree, c, 0.1, 0.0);
 		for (Node n : tree.getExternalNodes()) {
 			Language l2 = (Language) n.getMetaData("lang");
