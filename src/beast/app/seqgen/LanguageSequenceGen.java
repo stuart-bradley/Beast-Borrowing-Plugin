@@ -11,14 +11,14 @@ import beast.core.BEASTInterface;
 import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.evolution.alignment.Alignment;
-import beast.evolution.alignment.Language;
+import beast.evolution.alignment.Sequence;
 import beast.evolution.substitutionmodel.LanguageSubsitutionModel;
 import beast.evolution.tree.Tree;
 import beast.util.XMLParser;
 import beast.util.XMLProducer;
 
 public class LanguageSequenceGen extends beast.core.Runnable {
-	public Input<Language> m_rootInput = new Input<Language>("root", "inital language", Validate.REQUIRED);
+	public Input<Sequence> m_rootInput = new Input<Sequence>("root", "inital language", Validate.REQUIRED);
 	public Input<Object> m_subModelInput = new Input<Object>("subModel", "subsitution model for tree", Validate.REQUIRED);
 	public Input<Tree> m_treeInput = new Input<Tree>("tree", "phylogenetic beast.tree with sequence data in the leafs", Validate.REQUIRED);
 	public Input<Double> m_borrowingRateInput = new Input<Double>("borrowingRate", "rate of borrowing", 0.0);
@@ -30,7 +30,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	public Input<List<MergeDataWith>> mergeListInput = new Input<List<MergeDataWith>>("merge", "specifies template used to merge the generated alignment with", new ArrayList<MergeDataWith>());
     public Input<Integer> iterationsInput = new Input<Integer>("iterations","number of times the data is generated", 1);
 	
-    protected Language root;
+    protected Sequence root;
     protected LanguageSubsitutionModel m_subModel;
     protected Tree m_tree;
     protected Double m_borrowingRate;
@@ -114,7 +114,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	            XMLParser parser = new XMLParser();
 	            BEASTInterface plugin = parser.parseFragment(sXML, true);
 	            
-	            Language root = ((Input<Language>) plugin.getInput("root")).get();
+	            Sequence root = ((Input<Sequence>) plugin.getInput("root")).get();
 	            Tree tree = ((Input<Tree>) plugin.getInput("tree")).get();
 	            LanguageSubsitutionModel pSubModel = ((Input<LanguageSubsitutionModel>) plugin.getInput("subModel")).get();
 	            Double pBorrowingRate = ((Input<Double>) plugin.getInput("borrowingRate")).get();
