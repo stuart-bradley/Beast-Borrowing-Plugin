@@ -5,7 +5,7 @@ import java.util.List;
 
 import beast.core.Description;
 import beast.core.Input;
-import beast.evolution.alignment.Language;
+import beast.evolution.alignment.Sequence;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.util.Randomizer;
@@ -60,19 +60,17 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	 * 
 	 * @return newLang mutated Language
 	 */
-	public Language mutateLang(Language l, double T) {
-		ArrayList<Integer> s = new ArrayList<Integer>(l.getLanguage());
-		Language newLang = new Language(s);
-		for (int i = 0; i < newLang.getLanguage().size(); i++) {
-			int currentTrait = newLang.getLanguage().get(i);
+	public Sequence mutateLang(Sequence l, double T) throws Exception {
+		Sequence newLang = new Sequence("", l.getData());
+		for (int i = 0; i < newLang.getData().length(); i++) {
+			int currentTrait = (int) newLang.getData().charAt(i);
 			// Mutations are exponentially distributed.
 			double t = Randomizer.nextExponential(rate);
 			while (t < T) {
-				currentTrait = newLang.getLanguage().get(i);
+				currentTrait = (int) newLang.getData().charAt(i);
 				// In binary model, a mutation switches trait.
-				newLang.getLanguage().set(i, 1 - currentTrait);
-				// Record mutation event in old language.
-				l.addMutation(t, newLang.getLanguage());
+				String newSeq = replaceCharAt(newLang.getData(), i, (char) (1 - currentTrait));
+				newLang.dataInput.setValue(newSeq, this);
 				t += Randomizer.nextExponential(rate);
 			}
 		}
@@ -86,7 +84,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	 * 
 	 * @return base Tree with languages added.
 	 */
-	public Tree mutateOverTree(Tree base) {
+	public Tree mutateOverTree(Tree base) throws Exception {
 		ArrayList<Node> currParents = new ArrayList<Node>();
 		ArrayList<Node> newParents = new ArrayList<Node>();
 		currParents.add(base.getRoot());
@@ -95,8 +93,8 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 				List<Node> children = parent.getChildren();
 				for (Node child : children) {
 					double T = child.getHeight() - parent.getHeight();
-					Language parentLang = (Language) parent.getMetaData("lang");
-					Language newLang = mutateLang(parentLang, T);
+					Sequence parentLang = (Sequence) parent.getMetaData("lang");
+					Sequence newLang = mutateLang(parentLang, T);
 					child.setMetaData("lang", newLang);
 					newParents.add(child);
 				}
@@ -118,7 +116,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	 * 
 	 * @return base Tree with languages added.
 	 */
-	public Tree mutateOverTreeBorrowing(Tree base, Double borrow, Double z) {
+	public Tree mutateOverTreeBorrowing(Tree base, Double borrow, Double z) throws Exception {
 		Double treeHeight = getTreeHeight(base);
 		// Get root node.
 		ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
@@ -127,8 +125,8 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		Double t = Randomizer.nextExponential(totalRate);
 		// Variable declarations.
 		Node ranNode = null, ranNode2 = null;
-		Language nodeLang = null, nodeLang2 = null, newNodeLang;
-		ArrayList<Integer> s;
+		Sequence nodeLang = null, nodeLang2 = null, newNodeLang;
+		String s;
 		int idx;
 		double[] probs;
 		while (t < treeHeight) {
@@ -141,14 +139,15 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 				// Pick a random node at time t.
 				idx = Randomizer.nextInt(aliveNodes.size());
 				ranNode = aliveNodes.get(idx);
-				nodeLang = (Language) ranNode.getMetaData("lang");
+				nodeLang = (Sequence) ranNode.getMetaData("lang");
 				// Pick a random position in language.
-				int pos = Randomizer.nextInt(nodeLang.getLanguage().size());
-				s = new ArrayList<Integer>(nodeLang.getLanguage());
-				newNodeLang = new Language(s);
-				int currentTrait = newNodeLang.getLanguage().get(pos);
+				int pos = Randomizer.nextInt(nodeLang.getData().length());
+				s = nodeLang.getData();
+				newNodeLang = new Sequence("",s);
+				int currentTrait = (int) newNodeLang.getData().charAt(pos);
 				// Flip the bit at the random position.
-				newNodeLang.getLanguage().set(pos, 1 - currentTrait);
+				String newSeq = replaceCharAt(newNodeLang.getData(), pos, (char) (1 - currentTrait));
+				newNodeLang.dataInput.setValue(newSeq, this);
 				setSubTreeLanguages(ranNode, newNodeLang);
 				break;
 			// Borrow.
@@ -161,10 +160,10 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 				while (true) {
 					idx = Randomizer.nextInt(aliveNodes.size());
 					ranNode = aliveNodes.get(idx);
-					nodeLang = (Language) ranNode.getMetaData("lang");
+					nodeLang = (Sequence) ranNode.getMetaData("lang");
 					idx = Randomizer.nextInt(aliveNodes.size());
 					ranNode2 = aliveNodes.get(idx);
-					nodeLang2 = (Language) ranNode2.getMetaData("lang");
+					nodeLang2 = (Sequence) ranNode2.getMetaData("lang");
 					if (ranNode != ranNode2) {
 						break;
 					}
@@ -175,11 +174,12 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 				} else {
 					// Randomly iterate through language and find a 1.
 					for (Integer i : getRandLangIndex(nodeLang)) {
-						if (nodeLang.getLanguage().get(i) == 1) {
+						if (Character.getNumericValue(nodeLang.getData().charAt(i)) == 1) {
 							// Give the 1 to the receiving language.
-							s = new ArrayList<Integer>(nodeLang2.getLanguage());
-							newNodeLang = new Language(s);
-							newNodeLang.getLanguage().set(i, 1);
+							s = nodeLang2.getData();
+							newNodeLang = new Sequence("",s);
+							newSeq = replaceCharAt(newNodeLang.getData(), i, '1');
+							newNodeLang.dataInput.setValue(newSeq, this);
 							setSubTreeLanguages(ranNode2, newNodeLang);
 							break;
 						}
@@ -208,8 +208,8 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		Double borrowSum = 0.0;
 		Double mutateSum = 0.0;
 		for (Node n : aliveNodes) {
-			borrowSum += ((Language) n.getMetaData("lang")).getBirths();
-			mutateSum += ((Language) n.getMetaData("lang")).getLanguage().size();
+			borrowSum += getBirths((Sequence) n.getMetaData("lang"));
+			mutateSum += ((Sequence) n.getMetaData("lang")).getData().length();
 		}
 		double[] probs = new double[2];
 		probs[0] = rate * mutateSum / totalRate;
@@ -230,8 +230,8 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		Double borrowSum = 0.0;
 		Double mutateSum = 0.0;
 		for (Node n : aliveNodes) {
-			borrowSum += ((Language) n.getMetaData("lang")).getBirths();
-			mutateSum += ((Language) n.getMetaData("lang")).getLanguage().size();
+			borrowSum += getBirths((Sequence) n.getMetaData("lang"));
+			mutateSum += ((Sequence) n.getMetaData("lang")).getData().length();
 		}
 		return rate * mutateSum + borrow * rate * borrowSum;
 	}

@@ -7,7 +7,7 @@ import java.util.Comparator;
 
 import beast.core.CalculationNode;
 import beast.core.Description;
-import beast.evolution.alignment.Language;
+import beast.evolution.alignment.Sequence;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 
@@ -42,14 +42,14 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @param T double, mutation time.
 	 * @return Language, mutated language.
 	 */
-	public abstract Language mutateLang(Language l, double T);
+	public abstract Sequence mutateLang(Sequence l, double T) throws Exception;
 	
 	/*
 	 * Basic full tree mutation, each branch uses mutateLang(l,c,T).
 	 * @param base Tree, initial tree with a root language. (Metadata("lang")).
 	 * @return Tree, final tree with a full set of mutated languages. 
 	 */
-	public abstract Tree mutateOverTree(Tree base);
+	public abstract Tree mutateOverTree(Tree base) throws Exception;
 	
 	/*
 	 * Full tree mutation with borrowing.
@@ -58,7 +58,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @param z local borrowing rate, 0.0 rate implies global borrowing. 
 	 * @return base Tree with languages added. 
 	 */
-	public abstract Tree mutateOverTreeBorrowing(Tree base, Double borrow, Double z);
+	public abstract Tree mutateOverTreeBorrowing(Tree base, Double borrow, Double z) throws Exception;
 	
 	/*
 	 * Probabilities for different events.
@@ -86,9 +86,9 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @param l Language.
 	 * @return shuffled indexes of each letter in l.
 	 */
-	protected ArrayList<Integer> getRandLangIndex(Language l) {
+	protected ArrayList<Integer> getRandLangIndex(Sequence l) {
 		ArrayList<Integer> randInts = new ArrayList<Integer>();
-		for (int i = 0; i < l.getLanguage().size(); i++) {
+		for (int i = 0; i < l.getData().length(); i++) {
 			randInts.add(i);
 		}
 		
@@ -153,7 +153,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @param subRoot Node, root node.
 	 * @param newLang Language, new language to set.
 	 */
-	protected void setSubTreeLanguages(Node subRoot, Language newLang) {
+	protected void setSubTreeLanguages(Node subRoot, Sequence newLang) {
 		subRoot.setMetaData("lang", newLang);
 		for (Node n : subRoot.getAllChildNodes()) {
 			n.setMetaData("lang", newLang);
@@ -195,5 +195,20 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 			}
 		}
 		return aN;
+	}
+	
+	public static int getBirths(Sequence l) {
+		String seq = l.getData();
+		int count = 0;
+		for (char c : seq.toCharArray()) {
+			if (Character.getNumericValue(c) == 1) {
+				count += 1;
+			}
+		}
+		return count;
+	}
+	
+	protected static String replaceCharAt(String s, int pos, char c) {
+		   return s.substring(0,pos) + c + s.substring(pos+1);
 	}
 }
