@@ -7,9 +7,7 @@ import java.util.Comparator;
 
 import beast.core.CalculationNode;
 import beast.core.Description;
-import beast.evolution.alignment.CognateSet;
 import beast.evolution.alignment.Language;
-import beast.evolution.datatype.DataType;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 
@@ -41,29 +39,26 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	/*
 	 * Single lineage language mutation.
 	 * @param l Language, initial language.
-	 * @param c CognateSet.
 	 * @param T double, mutation time.
 	 * @return Language, mutated language.
 	 */
-	public abstract Language mutateLang(Language l, CognateSet c, double T);
+	public abstract Language mutateLang(Language l, double T);
 	
 	/*
 	 * Basic full tree mutation, each branch uses mutateLang(l,c,T).
 	 * @param base Tree, initial tree with a root language. (Metadata("lang")).
-	 * @param c CognateSet, gets updated as the tree is constructed.
 	 * @return Tree, final tree with a full set of mutated languages. 
 	 */
-	public abstract Tree mutateOverTree(Tree base, CognateSet c);
+	public abstract Tree mutateOverTree(Tree base);
 	
 	/*
 	 * Full tree mutation with borrowing.
 	 * @param base Tree, initial tree with a root language. (Metadata("lang")).
-	 * @param c CognateSet, gets updated as the tree is constructed.
 	 * @param borrow borrowing rate.
 	 * @param z local borrowing rate, 0.0 rate implies global borrowing. 
 	 * @return base Tree with languages added. 
 	 */
-	public abstract Tree mutateOverTreeBorrowing(Tree base, CognateSet c, Double borrow, Double z);
+	public abstract Tree mutateOverTreeBorrowing(Tree base, Double borrow, Double z);
 	
 	/*
 	 * Probabilities for different events.

@@ -10,7 +10,7 @@ import java.util.List;
 import beast.core.BEASTInterface;
 import beast.core.Input;
 import beast.core.Input.Validate;
-import beast.evolution.alignment.CognateSet;
+import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.Language;
 import beast.evolution.substitutionmodel.LanguageSubsitutionModel;
 import beast.evolution.tree.Tree;
@@ -52,7 +52,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	@Override
 	public void run() throws Exception {
 		for (int i = 0; i < iterationsInput.get(); i++) {
-			CognateSet cognateSet = simulate();
+			Alignment cognateSet = simulate();
 			
 			// Write output to stdout or file
 	        PrintStream pstream;
@@ -67,12 +67,12 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		}
 	}
 	
-	public CognateSet simulate() throws Exception {
-		CognateSet cognateSet = new CognateSet(root);
+	public Alignment simulate() throws Exception {
+		Alignment cognateSet = new Alignment();
 		cognateSet.setID("LanguageSequenceSimulator");
 
 		
-		m_tree.getRoot().setMetaData("lang", cognateSet.getLanguage(0));
+		m_tree.getRoot().setMetaData("lang", root);
         cognateSet.setID("LanguageSequenceSimulator");
 		
 		return cognateSet;
@@ -124,7 +124,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	            LanguageSequenceGen treeSimulator = new LanguageSequenceGen();
 	            treeSimulator.init(root, tree, pSubModel,pBorrowingRate, pBorrowingRateZ, nReplications);
 	            XMLProducer producer = new XMLProducer();
-	            CognateSet alignment = treeSimulator.simulate();
+	            Alignment alignment = treeSimulator.simulate();
 	            sXML = producer.toRawXML(alignment);
 	            out.println("<beast version='2.0'>");
 	            out.println(sXML);

@@ -3,12 +3,9 @@ package test.beast.app.seqgen;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Random;
 
 import beast.app.seqgen.LanguageSequenceGen;
-import beast.evolution.alignment.CognateSet;
 import beast.evolution.alignment.Language;
 import beast.evolution.substitutionmodel.ExplicitBinaryGTR;
 import beast.evolution.substitutionmodel.ExplicitBinaryStochasticDollo;
@@ -43,46 +40,38 @@ public class BeastBorrowingPluginTest {
 
 	private static void GTRTest(ArrayList<Integer> seq) {
 		Language l = new Language(seq);
-		CognateSet c = new CognateSet(l);
 
 		System.out.println("GTR Test");
 		System.out.println(l.getLanguage());
 
 		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
-		Language gtrLang = gtr_mod.mutateLang(l, c, 10);
+		Language gtrLang = gtr_mod.mutateLang(l, 10);
 		System.out.println(gtrLang.getLanguage());
 	}
 
 	private static void SDTest(ArrayList<Integer> seq) {
 
 		Language l2 = new Language(seq);
-		CognateSet c = new CognateSet(l2);
-
+	
 		System.out.println("SD Test");
 		System.out.println(l2.getLanguage());
-		System.out.println(c.getStolloLength());
 		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5);
-		Language sdLang = sd_mod.mutateLang(l2, c, 10);
+		Language sdLang = sd_mod.mutateLang(l2, 10);
 		System.out.println(sdLang.getLanguage());
-		System.out.println(c.getStolloLength());
 	}
 
 	private static void TreeGenTest(ArrayList<Integer> seq) {
 		Language l = new Language(seq);
-		CognateSet c = new CognateSet(l);
 		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5);
 
 		System.out.println("Tree generation test");
-		System.out.println(c);
 		Node rootNode = new Node();
-		rootNode.setMetaData("lang", c.getLanguage(0));
+		rootNode.setMetaData("lang", l);
 		rootNode.setHeight(0);
 		Tree tree = new Tree(rootNode);
 		tree = randomTree(tree, 4, 0.6);
-		tree.getRoot().setMetaData("lang", c.getLanguage(0));
-		sd_mod.mutateOverTree(tree, c);
-		System.out.println();
-		System.out.println(c);
+		tree.getRoot().setMetaData("lang", l);
+		sd_mod.mutateOverTree(tree);
 	}
 
 	private static void TreeSDBorrowingTest(ArrayList<Integer> seq) {
@@ -92,17 +81,16 @@ public class BeastBorrowingPluginTest {
 			seq.add(1);
 		}
 		Language l = new Language(seq);
-		CognateSet c = new CognateSet(l);
 
 		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.0022314355, 0.00022314355);
 
 		System.out.println("Tree SD Borrowing Test");
 		Node rootNode = new Node();
-		rootNode.setMetaData("lang", c.getLanguage(0));
+		rootNode.setMetaData("lang", l);
 		rootNode.setHeight(0);
 		Tree tree = new Tree(rootNode);
 		tree = randomTree(tree, 4, 0.01);
-		sd_mod.mutateOverTreeBorrowing(tree, c, 0.1, 0.0);
+		sd_mod.mutateOverTreeBorrowing(tree, 0.1, 0.0);
 		for (Node n : tree.getExternalNodes()) {
 			Language l2 = (Language) n.getMetaData("lang");
 			System.out.println(l2.getLanguage());
@@ -111,16 +99,15 @@ public class BeastBorrowingPluginTest {
 	
 	private static void TreeGTRBorrowingTest(ArrayList<Integer> seq) {
 		Language l = new Language(seq);
-		CognateSet c = new CognateSet(l);
 		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
 
 		System.out.println("Tree GTR Borrowing Test");
 		Node rootNode = new Node();
-		rootNode.setMetaData("lang", c.getLanguage(0));
+		rootNode.setMetaData("lang", l);
 		rootNode.setHeight(0);
 		Tree tree = new Tree(rootNode);
 		tree = randomTree(tree, 8, 0.6);
-		gtr_mod.mutateOverTreeBorrowing(tree, c, 1.2, 0.0);
+		gtr_mod.mutateOverTreeBorrowing(tree, 1.2, 0.0);
 	}
 	
 	private static void GTRValidation() {
@@ -132,9 +119,8 @@ public class BeastBorrowingPluginTest {
 				seq.add(Randomizer.nextInt(2));
 			}
 			Language l = new Language(seq);
-			CognateSet c = new CognateSet(l);
 			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
-			Language gtrLang = gtr_mod.mutateLang(l, c, 100);
+			Language gtrLang = gtr_mod.mutateLang(l, 100);
 			births.add(gtrLang.getBirths());
 		}
 		//listToCSV(births, "C:/Users/Stuart/Google Drive/University/Year 5 - Honours/Thesis/R_Code/gtr.csv");
@@ -148,8 +134,7 @@ public class BeastBorrowingPluginTest {
 			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5);
 			ArrayList<Integer> seq = new ArrayList<Integer>();
 			Language l = new Language(seq);
-			CognateSet c = new CognateSet(l);
-			Language sdLang = sd_mod.mutateLang(l, c, 100);
+			Language sdLang = sd_mod.mutateLang(l, 100);
 			births.add(sdLang.getBirths());
 		}
 		listToCSV(births, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/sd.csv");
@@ -167,13 +152,12 @@ public class BeastBorrowingPluginTest {
 				seq.add(Randomizer.nextInt(2));
 			}
 			Language l = new Language(seq);
-			CognateSet c = new CognateSet(l);
 			Node rootNode = new Node();
-			rootNode.setMetaData("lang", c.getLanguage(0));
+			rootNode.setMetaData("lang", l);
 			rootNode.setHeight(0);
 			Tree tree = new Tree(rootNode);
 			tree = randomTree(tree, 8, 0.6);
-			tree = gtr_mod.mutateOverTree(tree, c);
+			tree = gtr_mod.mutateOverTree(tree);
 			for (Node n : tree.getExternalNodes()) {
 				Language l2 = (Language) n.getMetaData("lang");
 				births.add(l2.getBirths());
@@ -192,13 +176,12 @@ public class BeastBorrowingPluginTest {
 			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.000, 0.5);
 			ArrayList<Integer> seq = new ArrayList<Integer>();
 			Language l = new Language(seq);
-			CognateSet c = new CognateSet(l);
 			Node rootNode = new Node();
-			rootNode.setMetaData("lang", c.getLanguage(0));
+			rootNode.setMetaData("lang", l);
 			rootNode.setHeight(0);
 			Tree tree = new Tree(rootNode);
 			tree = randomTree(tree, 8, 0.005);
-			tree = sd_mod.mutateOverTree(tree, c);
+			tree = sd_mod.mutateOverTree(tree);
 			for (Node n : tree.getExternalNodes()) {
 				Language l2 = (Language) n.getMetaData("lang");
 				births.add(l2.getBirths());
@@ -223,13 +206,12 @@ public class BeastBorrowingPluginTest {
 				seq.add(Randomizer.nextInt(2));
 			}
 			Language l = new Language(seq);
-			CognateSet c = new CognateSet(l);
 			Node rootNode = new Node();
-			rootNode.setMetaData("lang", c.getLanguage(0));
+			rootNode.setMetaData("lang", l);
 			rootNode.setHeight(0);
 			tree = new Tree(rootNode);
 			tree = randomTree(tree, 2, 0.1);
-			tree = gtr_mod.mutateOverTreeBorrowing(tree, c, 0.5, 0.0);
+			tree = gtr_mod.mutateOverTreeBorrowing(tree, 0.5, 0.0);
 			List<Node> ext = tree.getExternalNodes();
 			ArrayList<Integer> l1 = ((Language) ext.get(0).getMetaData("lang")).getLanguage();
 			ArrayList<Integer> l2 = ((Language) ext.get(1).getMetaData("lang")).getLanguage();
@@ -277,13 +259,12 @@ public class BeastBorrowingPluginTest {
 				seq.add(Randomizer.nextInt(2));
 			}
 			Language l = new Language(seq);
-			CognateSet c = new CognateSet(l);
 			Node rootNode = new Node();
-			rootNode.setMetaData("lang", c.getLanguage(0));
+			rootNode.setMetaData("lang", l);
 			rootNode.setHeight(0);
 			tree = new Tree(rootNode);
 			tree = randomTree(tree, 3, 0.1);
-			tree = gtr_mod.mutateOverTreeBorrowing(tree, c, 0.5, 0.0);
+			tree = gtr_mod.mutateOverTreeBorrowing(tree, 0.5, 0.0);
 			List<Node> ext = tree.getExternalNodes();
 			ArrayList<Integer> l1 = ((Language) ext.get(0).getMetaData("lang")).getLanguage();
 			ArrayList<Integer> l2 = ((Language) ext.get(1).getMetaData("lang")).getLanguage();
@@ -346,13 +327,12 @@ public class BeastBorrowingPluginTest {
 				seq.add(1);
 			}
 			Language l = new Language(seq);
-			CognateSet c = new CognateSet(l);
 			Node rootNode = new Node();
-			rootNode.setMetaData("lang", c.getLanguage(0));
+			rootNode.setMetaData("lang", l);
 			rootNode.setHeight(0);
 			tree = new Tree(rootNode);
 			tree = randomTree(tree, 8, 0.01);
-			tree = sd_mod.mutateOverTreeBorrowing(tree, c, 0.1, 0.0);
+			tree = sd_mod.mutateOverTreeBorrowing(tree, 0.1, 0.0);
 			for (Node n : tree.getExternalNodes()) {
 				Language l2 = (Language) n.getMetaData("lang");
 				births.add(l2.getBirths());

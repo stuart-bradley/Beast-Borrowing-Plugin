@@ -5,9 +5,7 @@ import java.util.List;
 
 import beast.core.Description;
 import beast.core.Input;
-import beast.evolution.alignment.CognateSet;
 import beast.evolution.alignment.Language;
-import beast.evolution.datatype.DataType;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
 import beast.util.Randomizer;
@@ -62,7 +60,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	 * 
 	 * @return newLang mutated Language
 	 */
-	public Language mutateLang(Language l, CognateSet c, double T) {
+	public Language mutateLang(Language l, double T) {
 		ArrayList<Integer> s = new ArrayList<Integer>(l.getLanguage());
 		Language newLang = new Language(s);
 		for (int i = 0; i < newLang.getLanguage().size(); i++) {
@@ -86,11 +84,9 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	 * 
 	 * @param base Tree with starting language in root.
 	 * 
-	 * @param c CognateSet, gets updated as languages are created.
-	 * 
 	 * @return base Tree with languages added.
 	 */
-	public Tree mutateOverTree(Tree base, CognateSet c) {
+	public Tree mutateOverTree(Tree base) {
 		ArrayList<Node> currParents = new ArrayList<Node>();
 		ArrayList<Node> newParents = new ArrayList<Node>();
 		currParents.add(base.getRoot());
@@ -100,9 +96,8 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 				for (Node child : children) {
 					double T = child.getHeight() - parent.getHeight();
 					Language parentLang = (Language) parent.getMetaData("lang");
-					Language newLang = mutateLang(parentLang, c, T);
+					Language newLang = mutateLang(parentLang, T);
 					child.setMetaData("lang", newLang);
-					c.addLanguage(newLang);
 					newParents.add(child);
 				}
 			}
@@ -117,16 +112,13 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	 * 
 	 * @param base Tree with starting language in root.
 	 * 
-	 * @param c CognateSet gets updated at the end, once all languages are
-	 * created.
-	 * 
 	 * @param borrow borrowing rate.
 	 * 
 	 * @param z local borrowing rate, 0.0 rate implies global borrowing.
 	 * 
 	 * @return base Tree with languages added.
 	 */
-	public Tree mutateOverTreeBorrowing(Tree base, CognateSet c, Double borrow, Double z) {
+	public Tree mutateOverTreeBorrowing(Tree base, Double borrow, Double z) {
 		Double treeHeight = getTreeHeight(base);
 		// Get root node.
 		ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
