@@ -67,10 +67,10 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 			// Mutations are exponentially distributed.
 			double t = Randomizer.nextExponential(rate);
 			while (t < T) {
-				currentTrait = (int) newLang.getData().charAt(i);
+				currentTrait =  Character.getNumericValue(newLang.getData().charAt(i));
 				// In binary model, a mutation switches trait.
-				String newSeq = replaceCharAt(newLang.getData(), i, (char) (1 - currentTrait));
-				newLang.dataInput.setValue(newSeq, this);
+				String newSeq = replaceCharAt(newLang.getData(), i, Integer.toString((1 - currentTrait)));
+				newLang.dataInput.setValue(newSeq, newLang);
 				t += Randomizer.nextExponential(rate);
 			}
 		}
@@ -146,8 +146,8 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 				newNodeLang = new Sequence("",s);
 				int currentTrait = (int) newNodeLang.getData().charAt(pos);
 				// Flip the bit at the random position.
-				String newSeq = replaceCharAt(newNodeLang.getData(), pos, (char) (1 - currentTrait));
-				newNodeLang.dataInput.setValue(newSeq, this);
+				String newSeq = replaceCharAt(newNodeLang.getData(), pos, Integer.toString((1 - currentTrait)));
+				newNodeLang.dataInput.setValue(newSeq, newNodeLang);
 				setSubTreeLanguages(ranNode, newNodeLang);
 				break;
 			// Borrow.
@@ -178,8 +178,8 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 							// Give the 1 to the receiving language.
 							s = nodeLang2.getData();
 							newNodeLang = new Sequence("",s);
-							newSeq = replaceCharAt(newNodeLang.getData(), i, '1');
-							newNodeLang.dataInput.setValue(newSeq, this);
+							newSeq = replaceCharAt(newNodeLang.getData(), i, Integer.toString(1));
+							newNodeLang.dataInput.setValue(newSeq, newNodeLang);
 							setSubTreeLanguages(ranNode2, newNodeLang);
 							break;
 						}

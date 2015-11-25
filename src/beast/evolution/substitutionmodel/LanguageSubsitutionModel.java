@@ -208,7 +208,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 		return count;
 	}
 	
-	protected static String replaceCharAt(String s, int pos, char c) {
-		   return s.substring(0,pos) + c + s.substring(pos+1);
+	public static String replaceCharAt(String s, int pos, String c) {
+		return s.substring(0,pos) + c + s.substring(pos+1);
 	}
 }

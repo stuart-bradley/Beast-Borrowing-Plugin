@@ -25,10 +25,18 @@ public class BeastBorrowingPluginTest {
 		for (int i = 0; i < 5; i++) {
 			seq += '1';
 		}
+		/*
+		Sequence test = new Sequence("", "01010");
+		System.out.println(test.getData());
+		String newSeq = LanguageSubsitutionModel.replaceCharAt(test.getData(), 0, "1");
+		System.out.println(newSeq);
+		test.dataInput.setValue(newSeq, test);
+		System.out.println(test.getData());
+		*/
 
-		//GTRTest(seq);
+		GTRTest(seq);
 		//SDTest(seq);
-		TreeGenTest(seq);
+		//TreeGenTest(seq);
 		//TreeSDBorrowingTest(seq);
 		//TreeGTRBorrowingTest(seq);
 		
@@ -47,6 +55,7 @@ public class BeastBorrowingPluginTest {
 
 		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
 		Sequence gtrLang = gtr_mod.mutateLang(l, 10);
+		System.out.println();
 		System.out.println(gtrLang.getData());
 	}
 
@@ -109,6 +118,10 @@ public class BeastBorrowingPluginTest {
 		Tree tree = new Tree(rootNode);
 		tree = randomTree(tree, 8, 0.6);
 		gtr_mod.mutateOverTreeBorrowing(tree, 1.2, 0.0);
+		for (Node n : tree.getExternalNodes()) {
+			Sequence l2 = (Sequence) n.getMetaData("lang");
+			System.out.println(l2.getData());
+		}
 	}
 	
 	private static void GTRValidation() throws Exception {
