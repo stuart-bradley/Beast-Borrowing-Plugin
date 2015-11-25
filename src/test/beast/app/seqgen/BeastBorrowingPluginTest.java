@@ -32,9 +32,9 @@ public class BeastBorrowingPluginTest {
 		System.out.println(newSeq);
 		test.dataInput.setValue(newSeq, test);
 		System.out.println(test.getData());
-		*/
+		*/		
 
-		GTRTest(seq);
+		//GTRTest(seq);
 		//SDTest(seq);
 		//TreeGenTest(seq);
 		//TreeSDBorrowingTest(seq);
@@ -55,7 +55,6 @@ public class BeastBorrowingPluginTest {
 
 		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
 		Sequence gtrLang = gtr_mod.mutateLang(l, 10);
-		System.out.println();
 		System.out.println(gtrLang.getData());
 	}
 
@@ -82,6 +81,10 @@ public class BeastBorrowingPluginTest {
 		tree = randomTree(tree, 4, 0.6);
 		tree.getRoot().setMetaData("lang", l);
 		sd_mod.mutateOverTree(tree);
+		for (Node n : tree.getExternalNodes()) {
+			Sequence l2 = (Sequence) n.getMetaData("lang");
+			System.out.println(l2.getData());
+		}
 	}
 
 	private static void TreeSDBorrowingTest(String seq) throws Exception {

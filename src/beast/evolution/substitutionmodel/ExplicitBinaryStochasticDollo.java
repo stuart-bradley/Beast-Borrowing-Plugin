@@ -90,7 +90,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 				// Else birth.
 			} else {
 				String newSeq = newLang.getData() + '1';
-				newLang.dataInput.setValue(newSeq, this);
+				newLang.dataInput.setValue(newSeq, newLang);
 			}
 			t += Randomizer.nextExponential(getB() + getD() * getBirths(newLang));
 		}
@@ -169,7 +169,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 				// Find random alive trait, and kill it.
 				for (Integer i : getRandLangIndex(nodeLang)) {
 					if (Character.getNumericValue(nodeLang.getData().charAt(i)) != 0) {
-						s = replaceCharAt(newNodeLang.getData(), i, Integer.toString(0));
+						s = replaceCharAt(nodeLang.getData(), i, Integer.toString(0));
 						newNodeLang = new Sequence("",s);
 						newNodeLang.dataInput.setValue(s, newNodeLang);
 						setSubTreeLanguages(ranNode, newNodeLang);

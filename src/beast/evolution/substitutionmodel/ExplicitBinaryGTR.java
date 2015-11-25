@@ -142,12 +142,11 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 				nodeLang = (Sequence) ranNode.getMetaData("lang");
 				// Pick a random position in language.
 				int pos = Randomizer.nextInt(nodeLang.getData().length());
-				s = nodeLang.getData();
-				newNodeLang = new Sequence("",s);
-				int currentTrait = (int) newNodeLang.getData().charAt(pos);
+				int currentTrait =  Character.getNumericValue(nodeLang.getData().charAt(pos));
 				// Flip the bit at the random position.
-				String newSeq = replaceCharAt(newNodeLang.getData(), pos, Integer.toString((1 - currentTrait)));
-				newNodeLang.dataInput.setValue(newSeq, newNodeLang);
+				s = replaceCharAt(nodeLang.getData(), pos, Integer.toString((1 - currentTrait)));
+				newNodeLang = new Sequence("",s);
+				newNodeLang.dataInput.setValue(s, newNodeLang);
 				setSubTreeLanguages(ranNode, newNodeLang);
 				break;
 			// Borrow.
@@ -176,10 +175,9 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 					for (Integer i : getRandLangIndex(nodeLang)) {
 						if (Character.getNumericValue(nodeLang.getData().charAt(i)) == 1) {
 							// Give the 1 to the receiving language.
-							s = nodeLang2.getData();
+							s = replaceCharAt(nodeLang2.getData(), i, Integer.toString(1));
 							newNodeLang = new Sequence("",s);
-							newSeq = replaceCharAt(newNodeLang.getData(), i, Integer.toString(1));
-							newNodeLang.dataInput.setValue(newSeq, newNodeLang);
+							newNodeLang.dataInput.setValue(s, newNodeLang);
 							setSubTreeLanguages(ranNode2, newNodeLang);
 							break;
 						}
