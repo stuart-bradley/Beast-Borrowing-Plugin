@@ -112,8 +112,8 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 			for (Node parent : currParents) {
 				List<Node> children = parent.getChildren();
 				for (Node child : children) {
-					double T = child.getHeight() - parent.getHeight();
-					Sequence parentLang = (Sequence) parent.getMetaData("lang");
+					double T = Math.abs(child.getHeight() - parent.getHeight());
+					Sequence parentLang = getSequence(parent);
 					Sequence newLang = mutateLang(parentLang, T);
 					child.setMetaData("lang", newLang);
 					newParents.add(child);
@@ -155,7 +155,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 			case 0:
 				idx = Randomizer.nextInt(aliveNodes.size());
 				ranNode = aliveNodes.get(idx);
-				nodeLang = (Sequence) ranNode.getMetaData("lang");
+				nodeLang = getSequence(ranNode);
 				s = nodeLang.getData() + '1';
 				newNodeLang = new Sequence("",s);
 				setSubTreeLanguages(ranNode, newNodeLang);
@@ -165,7 +165,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 			case 1:
 				idx = Randomizer.nextInt(aliveNodes.size());
 				ranNode = aliveNodes.get(idx);
-				nodeLang = (Sequence) ranNode.getMetaData("lang");
+				nodeLang = getSequence(ranNode);
 				// Find random alive trait, and kill it.
 				for (Integer i : getRandLangIndex(nodeLang)) {
 					if (Character.getNumericValue(nodeLang.getData().charAt(i)) != 0) {
@@ -186,10 +186,10 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 				while (true) {
 					idx = Randomizer.nextInt(aliveNodes.size());
 					ranNode = aliveNodes.get(idx);
-					nodeLang = (Sequence) ranNode.getMetaData("lang");
+					nodeLang = getSequence(ranNode);
 					idx = Randomizer.nextInt(aliveNodes.size());
 					ranNode2 = aliveNodes.get(idx);
-					nodeLang2 = (Sequence) ranNode2.getMetaData("lang");
+					nodeLang2 =  getSequence(ranNode2);
 					if (ranNode != ranNode2) {
 						break;
 					}
@@ -229,14 +229,14 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 * 
 	 * @return double[], array of probabilities.
 	 */
-	protected double[] BorrowingProbs(ArrayList<Node> aliveNodes, Double borrow) {
+	protected double[] BorrowingProbs(ArrayList<Node> aliveNodes, Double borrow) throws Exception {
 		double[] probs = new double[3];
 		Double death = 0.0, bo = 0.0;
 		for (Node n : aliveNodes) {
 			// mu*k1 + ... + mu*kn
-			death += getD() * getBirths((Sequence) n.getMetaData("lang"));
+			death += getD() * getBirths(getSequence(n));
 			// b*(k1 + ... + kn)
-			bo += getBirths((Sequence) n.getMetaData("lang"));
+			bo += getBirths(getSequence(n));
 		}
 		Double tR = totalRate(aliveNodes, borrow);
 		probs[0] = (aliveNodes.size() * getB()) / tR; // Birth
@@ -254,12 +254,12 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 * 
 	 * @return Double, total rate.
 	 */
-	protected Double totalRate(ArrayList<Node> aliveNodes, Double borrow) {
+	protected Double totalRate(ArrayList<Node> aliveNodes, Double borrow) throws Exception {
 		Double totalRate = aliveNodes.size() * getB();
 		Double birthSum = 0.0;
 		for (Node n : aliveNodes) {
-			totalRate += getD() * getBirths((Sequence) n.getMetaData("lang"));
-			birthSum += getBirths((Sequence) n.getMetaData("lang"));
+			totalRate += getD() * getBirths(getSequence(n));
+			birthSum += getBirths(getSequence(n));
 		}
 		totalRate += getD() * borrow * birthSum;
 		return totalRate;
@@ -283,13 +283,14 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		allNodes.remove(newLangNode);
 		
 		// Calculate number of [new] mutations in new language.
-		Sequence newLang = (Sequence) newLangNode.getMetaData("lang");
+		Sequence newLang = getSequence(newLangNode);
 		for (Node n : allNodes) {
-				Sequence nLang = (Sequence) n.getMetaData("lang");
+				Sequence nLang = getSequence(n);
 				String s = nLang.getData();
 				Sequence newNodeLang = new Sequence("",s);
 				while (newNodeLang.getData().length() < newLang.getData().length()) {
 					String sNew = newNodeLang.getData() + '0';
+					//System.out.println(newNodeLang);
 					newNodeLang.dataInput.setValue(sNew, this);
 				}
 				n.setMetaData("lang", newNodeLang);

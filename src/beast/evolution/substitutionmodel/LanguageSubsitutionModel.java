@@ -66,7 +66,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @param borrow borrowing rate.
 	 * @return double[], array of probabilities.
 	 */
-	protected abstract double[] BorrowingProbs(ArrayList<Node> aliveNodes, Double borrow);
+	protected abstract double[] BorrowingProbs(ArrayList<Node> aliveNodes, Double borrow) throws Exception;
 	
 	/*
 	 * Total rate of mutation.
@@ -74,7 +74,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @param borrow borrowing rate.
 	 * @return Double, total rate,
 	 */
-	protected abstract Double totalRate (ArrayList<Node> aliveNodes, Double borrow);
+	protected abstract Double totalRate (ArrayList<Node> aliveNodes, Double borrow) throws Exception;
 	
 	/*
 	 * NORMAL METHODS
@@ -195,6 +195,14 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 			}
 		}
 		return aN;
+	}
+	
+	protected Sequence getSequence(Node n) throws Exception {
+		try {
+			return (Sequence) n.getMetaData("lang");
+		} catch (ClassCastException e) {
+			return new Sequence(n.metaDataString, "");
+		}
 	}
 	
 	public static int getBirths(Sequence l) {

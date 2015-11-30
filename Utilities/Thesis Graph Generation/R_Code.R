@@ -23,6 +23,11 @@ gtr111 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator
 traitLabOut <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/traitLabOut.csv", quote="\"")
 sdtreeborrowing <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/sdtreeborrowing.csv", quote="\"")
 
+speed_gtr_a1 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/speed_gtr_a1.csv", quote="\"")
+speed_gtr_a2 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/speed_gtr_a2.csv", quote="\"")
+speed_sd_a1 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/speed_sd_a1.csv", quote="\"")
+speed_sd_a2 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/speed_sd_a2.csv", quote="\"")
+
 # GTR Lineage Validation
 plot(density(rbinom(100000,20,0.5), adjust=10), col="green",lwd=2, 
      main="Simulation of 100,000 language evolutions under the GTR model", xlab="Number of cogantes", xlim=range(0:20))
@@ -69,3 +74,15 @@ plot(density(traitLabOut$V1, adjust=10), col="green",lwd=2,
      main="Simulation of 1000 language evolutions TraitLab and Algorithm 8", xlab="Number of birthed traits", xlim=range(0:20))
 lines(density(sdtreeborrowing$V1, adjust=10), col="blue", lwd=2)
 legend('topright',c("TraitLab","Algorithm 8"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
+
+# GTR/SD Simple Tree versus Borrowing Tree set to 0.0 algorithms.
+par(mfrow=c(2, 1))
+plot(density(speed_gtr_a1$V1, adjust=10), col="green",lwd=2, 
+     main="Simulation of 10,000 whole tree evolutions under the GTR model", xlab="Speed (ms)", xlim=range(0:20))
+lines(density(speed_gtr_a2$V1, adjust=10), col="blue", lwd=2)
+legend('topright',c("Simple Tree","Borrowing set to 0.0"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
+plot(density(speed_sd_a1$V1, adjust=10), col="green",lwd=2, 
+     main="Simulation of 10,000 whole tree evolutions under the Stochastic-Dollo model", xlab="Speed (ms)", xlim=range(0:20))
+lines(density(speed_sd_a2$V1, adjust=10), col="blue", lwd=2)
+legend('topright',c("Simple Tree","Borrowing set to 0.0"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
+par(mfrow=c(1, 1))

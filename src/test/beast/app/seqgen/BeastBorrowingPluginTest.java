@@ -40,14 +40,14 @@ public class BeastBorrowingPluginTest {
 		//TreeSDBorrowingTest(seq);
 		//TreeGTRBorrowingTest(seq);
 		
-		SDTreeValidation();
+		//SDTreeValidation();
 		//GTRTreeValidation();
 		//GTRTreeBorrowingValidationTwoLanguages();
 		//GTRTreeBorrowingValidationThreeLanguages();
 		//SDTreeBorrowingValidation();
 		//SeqGenTest();
-
-
+		
+		//SpeedTestNonBorrowing();
 	}
 
 	private static void GTRTest(String seq) throws Exception {
@@ -358,6 +358,56 @@ public class BeastBorrowingPluginTest {
 			}
 		}
 		listToCSV(births, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/sdtreeborrowing.csv");
+	}
+	
+	private static void SpeedTestNonBorrowing() throws Exception {
+		ArrayList<Long> GTRA1 = new ArrayList<Long>();
+		ArrayList<Long> GTRA2 = new ArrayList<Long>();
+		ArrayList<Long> SDA1 = new ArrayList<Long>();
+		ArrayList<Long> SDA2 = new ArrayList<Long>();
+		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5);
+		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5);
+		Tree tree = null;
+		long startTime, endTime;
+		for (int i = 0; i < 10000; i++) {
+			System.out.println(i);
+			String seq = "";
+			Integer pos =  (int) Randomizer.nextPoisson(10.0);
+			for (int j = 0; j < pos; j++) {
+				seq += '1';
+			}
+			Sequence l = new Sequence("",seq);
+			Node rootNode = new Node();
+			rootNode.setMetaData("lang", l);
+			rootNode.setHeight(0);
+			tree = new Tree(rootNode);
+			tree = randomTree(tree, 8, 0.06);
+			
+			startTime = System.nanoTime();
+			tree = gtr_mod.mutateOverTree(tree);
+			endTime = System.nanoTime();
+			GTRA1.add((endTime-startTime)/1000000);
+			
+			startTime = System.nanoTime();
+			tree = gtr_mod.mutateOverTreeBorrowing(tree, 0.0,0.0);	
+			endTime = System.nanoTime();
+			GTRA2.add((endTime-startTime)/1000000);
+			
+			startTime = System.nanoTime();
+			tree = sd_mod.mutateOverTree(tree);
+			endTime = System.nanoTime();
+			SDA1.add((endTime-startTime)/1000000);
+			
+			startTime = System.nanoTime();
+			tree = sd_mod.mutateOverTreeBorrowing(tree, 0.0,0.0);	
+			endTime = System.nanoTime();
+			SDA2.add((endTime-startTime)/1000000);
+			
+			listToCSV(GTRA1, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/speed_gtr_a1.csv");
+			listToCSV(GTRA2, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/speed_gtr_a2.csv");
+			listToCSV(SDA1, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/speed_sd_a1.csv");
+			listToCSV(SDA2, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/speed_sd_a2.csv");
+		}
 	}
 	
 	private static void SeqGenTest() {
