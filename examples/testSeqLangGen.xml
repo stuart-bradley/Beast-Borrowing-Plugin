@@ -7,6 +7,6 @@
     <run spec="beast.app.seqgen.LanguageSequenceGen" tree='@tree'>
 		<root spec='Sequence' value="01010101010100100010101010000100" taxon="human"/>
 		
-		<subModel spec='ExplicitBinaryStochasticDollo' birth="0.5" death = "0.5"/>	
+		<subModel spec='ExplicitBinaryStochasticDollo' birth="0.5" death = "0.5" borrowrate ="0.0" borrowzrate="0.0"/>	
 	</run>
 </beast>

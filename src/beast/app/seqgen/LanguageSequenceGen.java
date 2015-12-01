@@ -71,13 +71,16 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 
 		m_tree.getRoot().setMetaData("lang", root);
 		cognateSet.sequenceInput.setValue(root, cognateSet);
-		Tree newTree = m_subModel.mutateOverTree(m_tree);
+		Tree newTree;
+		if (m_subModel.getBorrowRate() == 0.0) { 
+			newTree = m_subModel.mutateOverTree(m_tree);
+		} else {
+			newTree = m_subModel.mutateOverTreeBorrowing(m_tree);
+		}
 		for (Node n : newTree.getExternalNodes()) {
 			Sequence d = LanguageSubsitutionModel.getSequence(n);
 			cognateSet.sequenceInput.setValue(d, cognateSet);
-			System.out.println(d);
 		}
-		
 		return cognateSet;
 	}
 	

@@ -25,6 +25,7 @@ import beast.util.Randomizer;
  */
 @Description("Binary GTR Model for Languages with recorded mutation events")
 public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
+
 	/** Backward and forward substitution rates. */
 	public Input<Double> rateInput = new Input<Double>("rate", "substitution rate");
 
@@ -36,9 +37,9 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	}
 
 	public ExplicitBinaryGTR(double r, double b, double z) {
-		this.rate = r;
-		this.borrowRate = b;
-		this.borrowZ = z;
+		this.setRate(r);
+		this.setBorrowRate(b);
+		this.setBorrowZ(z);
 	}
 
 	/*
@@ -236,5 +237,13 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 			mutateSum += (getSequence(n)).getData().length();
 		}
 		return rate * mutateSum + borrowRate * rate * borrowSum;
+	}
+	
+	public double getRate() {
+		return rate;
+	}
+
+	public void setRate(double rate) {
+		this.rate = rate;
 	}
 }
