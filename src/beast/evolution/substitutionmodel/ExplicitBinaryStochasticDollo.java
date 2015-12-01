@@ -27,9 +27,9 @@ import beast.util.Randomizer;
 public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	/** Backward and forward substitution rates. */
 	public Input<Double> rate01Input = new Input<Double>("birth",
-			"substitution rate for 0 to 1 (birth), default = 0.5");
+			"substitution rate for 0 to 1 (birth)");
 	public Input<Double> rate10Input = new Input<Double>("death",
-			"substitution rate for 1 to 0 (death), default = 0.5");
+			"substitution rate for 1 to 0 (death)");
 
 	/** Birth and Death rates */
 	private double b;
@@ -38,9 +38,11 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	public ExplicitBinaryStochasticDollo() throws Exception {
 	}
 
-	public ExplicitBinaryStochasticDollo(double birth, double death) {
+	public ExplicitBinaryStochasticDollo(double birth, double death, double borrow, double z) {
 		this.setB(birth);
 		this.setD(death);
+		this.setBorrowRate(borrow);
+		this.setBorrowZ(z);
 	}
 
 	/*
@@ -54,6 +56,8 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	public void initAndValidate() {
 		this.b = rate01Input.get();
 		this.d = rate10Input.get();
+		this.borrowRate = borrowInput.get();
+		this.borrowZ = borrowZInput.get();
 	}
 
 	/*
@@ -137,10 +141,10 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 * 
 	 * @return base Tree with languages added.
 	 */
-	public Tree mutateOverTreeBorrowing(Tree base, Double borrow, Double z) throws Exception {
+	public Tree mutateOverTreeBorrowing(Tree base) throws Exception {
 		Double treeHeight = getTreeHeight(base);
 		ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
-		Double totalRate = totalRate(aliveNodes, borrow);
+		Double totalRate = totalRate(aliveNodes);
 		Double t = Randomizer.nextExponential(totalRate);
 		Node ranNode = null, ranNode2 = null;
 		Sequence nodeLang = null, nodeLang2 = null, newNodeLang = null;
@@ -148,7 +152,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		int idx;
 		double[] probs = new double[3];
 		while (t < treeHeight) {
-			probs = BorrowingProbs(aliveNodes, borrow);
+			probs = BorrowingProbs(aliveNodes);
 			Integer choice = Randomizer.randomChoicePDF(probs);
 			switch (choice) {
 			// Birth.
@@ -194,7 +198,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 						break;
 					}
 				}
-				if (localDist(ranNode, ranNode2, z) == false) {
+				if (localDist(ranNode, ranNode2) == false) {
 					break;
 				} else {
 					for (Integer i : getRandLangIndex(nodeLang)) {
@@ -214,7 +218,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 				break;
 			}
 			aliveNodes = getAliveNodes(base, t);
-			totalRate = totalRate(aliveNodes, borrow);
+			totalRate = totalRate(aliveNodes);
 			t += Randomizer.nextExponential(totalRate);
 		}
 		return base;
@@ -229,7 +233,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 * 
 	 * @return double[], array of probabilities.
 	 */
-	protected double[] BorrowingProbs(ArrayList<Node> aliveNodes, Double borrow) throws Exception {
+	protected double[] BorrowingProbs(ArrayList<Node> aliveNodes) throws Exception {
 		double[] probs = new double[3];
 		Double death = 0.0, bo = 0.0;
 		for (Node n : aliveNodes) {
@@ -238,10 +242,10 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 			// b*(k1 + ... + kn)
 			bo += getBirths(getSequence(n));
 		}
-		Double tR = totalRate(aliveNodes, borrow);
+		Double tR = totalRate(aliveNodes);
 		probs[0] = (aliveNodes.size() * getB()) / tR; // Birth
 		probs[1] = (death) / tR; // Death
-		probs[2] = (getD() * borrow * bo) / tR; // Borrow
+		probs[2] = (getD() * borrowRate * bo) / tR; // Borrow
 		return probs;
 	}
 
@@ -254,14 +258,14 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 * 
 	 * @return Double, total rate.
 	 */
-	protected Double totalRate(ArrayList<Node> aliveNodes, Double borrow) throws Exception {
+	protected Double totalRate(ArrayList<Node> aliveNodes) throws Exception {
 		Double totalRate = aliveNodes.size() * getB();
 		Double birthSum = 0.0;
 		for (Node n : aliveNodes) {
 			totalRate += getD() * getBirths(getSequence(n));
 			birthSum += getBirths(getSequence(n));
 		}
-		totalRate += getD() * borrow * birthSum;
+		totalRate += getD() * borrowRate * birthSum;
 		return totalRate;
 	}
 	

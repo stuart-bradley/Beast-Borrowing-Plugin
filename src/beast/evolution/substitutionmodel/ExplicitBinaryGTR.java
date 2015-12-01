@@ -26,7 +26,7 @@ import beast.util.Randomizer;
 @Description("Binary GTR Model for Languages with recorded mutation events")
 public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	/** Backward and forward substitution rates. */
-	public Input<Double> rateInput = new Input<Double>("rate", "substitution rate, default = 0.5");
+	public Input<Double> rateInput = new Input<Double>("rate", "substitution rate");
 
 	/** Binary rate matrix */
 	protected double rate;
@@ -35,8 +35,10 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	public ExplicitBinaryGTR() throws Exception {
 	}
 
-	public ExplicitBinaryGTR(double r) {
+	public ExplicitBinaryGTR(double r, double b, double z) {
 		this.rate = r;
+		this.borrowRate = b;
+		this.borrowZ = z;
 	}
 
 	/*
@@ -49,6 +51,8 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	@Override
 	public void initAndValidate() {
 		this.rate = rateInput.get();
+		this.borrowRate = borrowInput.get();
+		this.borrowZ = borrowZInput.get();
 	}
 
 	/*
@@ -116,12 +120,12 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	 * 
 	 * @return base Tree with languages added.
 	 */
-	public Tree mutateOverTreeBorrowing(Tree base, Double borrow, Double z) throws Exception {
+	public Tree mutateOverTreeBorrowing(Tree base) throws Exception {
 		Double treeHeight = getTreeHeight(base);
 		// Get root node.
 		ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
 		// Get first event.
-		Double totalRate = totalRate(aliveNodes, borrow);
+		Double totalRate = totalRate(aliveNodes);
 		Double t = Randomizer.nextExponential(totalRate);
 		// Variable declarations.
 		Node ranNode = null, ranNode2 = null;
@@ -131,7 +135,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		double[] probs;
 		while (t < treeHeight) {
 			// Return array of event probabilities and pick one.
-			probs = BorrowingProbs(aliveNodes, borrow);
+			probs = BorrowingProbs(aliveNodes);
 			Integer choice = Randomizer.randomChoicePDF(probs);
 			switch (choice) {
 			// Mutate.
@@ -168,7 +172,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 					}
 				}
 				// Check they're close enough together.
-				if (localDist(ranNode, ranNode2, z) == false) {
+				if (localDist(ranNode, ranNode2) == false) {
 					break;
 				} else {
 					// Randomly iterate through language and find a 1.
@@ -186,7 +190,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 				break;
 			}
 			aliveNodes = getAliveNodes(base, t);
-			totalRate = totalRate(aliveNodes, borrow);
+			totalRate = totalRate(aliveNodes);
 			t += Randomizer.nextExponential(totalRate);
 		}
 		return base;
@@ -201,8 +205,8 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	 * 
 	 * @return double[], array of probabilities.
 	 */
-	protected double[] BorrowingProbs(ArrayList<Node> aliveNodes, Double borrow) throws Exception {
-		Double totalRate = totalRate(aliveNodes, borrow);
+	protected double[] BorrowingProbs(ArrayList<Node> aliveNodes) throws Exception {
+		Double totalRate = totalRate(aliveNodes);
 		Double borrowSum = 0.0;
 		Double mutateSum = 0.0;
 		for (Node n : aliveNodes) {
@@ -211,7 +215,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		}
 		double[] probs = new double[2];
 		probs[0] = rate * mutateSum / totalRate;
-		probs[1] = borrow * rate * borrowSum / totalRate;
+		probs[1] = borrowRate * rate * borrowSum / totalRate;
 		return probs;
 	}
 
@@ -224,13 +228,13 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	 * 
 	 * @return Double, total rate,
 	 */
-	protected Double totalRate(ArrayList<Node> aliveNodes, Double borrow) throws Exception {
+	protected Double totalRate(ArrayList<Node> aliveNodes) throws Exception {
 		Double borrowSum = 0.0;
 		Double mutateSum = 0.0;
 		for (Node n : aliveNodes) {
 			borrowSum += getBirths(getSequence(n));
 			mutateSum += (getSequence(n)).getData().length();
 		}
-		return rate * mutateSum + borrow * rate * borrowSum;
+		return rate * mutateSum + borrowRate * rate * borrowSum;
 	}
 }

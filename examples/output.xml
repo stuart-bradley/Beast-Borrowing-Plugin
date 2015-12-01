@@ -1,5 +1,20 @@
 <beast version='2.0'>
-<data/>
+<data>
+    <sequence taxon='human' value='01010101010100100010101010000100'/>
+
+    <sequence taxon='' value='01010101010100100010101010000100'/>
+
+    <sequence taxon='' value='01010101010100100010101010000100'/>
+
+    <sequence taxon='' value='01010101010100100010101010000100'/>
+
+    <sequence taxon='' value='01010101010100100010101010000100'/>
+
+    <sequence taxon='' value='01010101010100100010101010000100'/>
+
+    <sequence taxon='' value='01010101010100100010101010000000'/>
+
+</data>
 
 
 </beast>

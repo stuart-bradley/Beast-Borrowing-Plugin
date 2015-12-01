@@ -7,6 +7,7 @@ import java.util.Comparator;
 
 import beast.core.CalculationNode;
 import beast.core.Description;
+import beast.core.Input;
 import beast.evolution.alignment.Sequence;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
@@ -24,6 +25,11 @@ import beast.evolution.tree.Tree;
  */
 @Description("Abstract class for language mutation models")
 public abstract class LanguageSubsitutionModel extends CalculationNode {
+	public Input<Double> borrowInput = new Input<Double>("borrowrate", "borrowing rate");
+	public Input<Double> borrowZInput = new Input<Double>("borrowzrate", "local borrowing distance");
+	
+	protected double borrowRate;
+	protected double borrowZ;
 	
 	/*
 	 * ABSTRACT METHODS
@@ -58,7 +64,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @param z local borrowing rate, 0.0 rate implies global borrowing. 
 	 * @return base Tree with languages added. 
 	 */
-	public abstract Tree mutateOverTreeBorrowing(Tree base, Double borrow, Double z) throws Exception;
+	public abstract Tree mutateOverTreeBorrowing(Tree base) throws Exception;
 	
 	/*
 	 * Probabilities for different events.
@@ -66,7 +72,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @param borrow borrowing rate.
 	 * @return double[], array of probabilities.
 	 */
-	protected abstract double[] BorrowingProbs(ArrayList<Node> aliveNodes, Double borrow) throws Exception;
+	protected abstract double[] BorrowingProbs(ArrayList<Node> aliveNodes) throws Exception;
 	
 	/*
 	 * Total rate of mutation.
@@ -74,7 +80,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @param borrow borrowing rate.
 	 * @return Double, total rate,
 	 */
-	protected abstract Double totalRate (ArrayList<Node> aliveNodes, Double borrow) throws Exception;
+	protected abstract Double totalRate (ArrayList<Node> aliveNodes) throws Exception;
 	
 	/*
 	 * NORMAL METHODS
@@ -104,14 +110,14 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @param z Double, distance.
 	 * @return Boolean as to whether they are within z. 
 	 */
-	protected boolean localDist(Node L1, Node L2, Double z) {
+	protected boolean localDist(Node L1, Node L2) {
 		// If z is 0, global borrowing is in effect.
-		if (z == 0.0) {
+		if (borrowZ == 0.0) {
 			return true;
 		}
 		Node parent1, parent2;
 		Double dist1 = 0.0, dist2 = 0.0;
-		while (dist1 <= z && dist2 <= z) {
+		while (dist1 <= borrowZ && dist2 <= borrowZ) {
 			parent1 = L1.getParent();
 			parent2 = L1.getParent();
 			
@@ -197,7 +203,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 		return aN;
 	}
 	
-	protected Sequence getSequence(Node n) throws Exception {
+	public static Sequence getSequence(Node n) throws Exception {
 		try {
 			return (Sequence) n.getMetaData("lang");
 		} catch (ClassCastException e) {
@@ -218,5 +224,25 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	
 	public static String replaceCharAt(String s, int pos, String c) {
 		return s.substring(0,pos) + c + s.substring(pos+1);
+	}
+	
+	/*
+	 * Auto-generated getters/setters.
+	 */
+
+	public double getBorrowRate() {
+		return borrowRate;
+	}
+
+	public void setBorrowRate(double b) {
+		this.borrowRate = b;
+	}
+
+	public double getBorrowZ() {
+		return borrowZ;
+	}
+
+	public void setBorrowZ(double z) {
+		this.borrowZ = z;
 	}
 }

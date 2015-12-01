@@ -22,8 +22,6 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	public Input<Sequence> m_rootInput = new Input<Sequence>("root", "inital language", Validate.REQUIRED);
 	public Input<LanguageSubsitutionModel> m_subModelInput = new Input<LanguageSubsitutionModel>("subModel", "subsitution model for tree", Validate.REQUIRED);
 	public Input<Tree> m_treeInput = new Input<Tree>("tree", "phylogenetic beast.tree with sequence data in the leafs", Validate.REQUIRED);
-	public Input<Double> m_borrowingRateInput = new Input<Double>("borrowingRate", "rate of borrowing", 0.0);
-	public Input<Double> m_borrowingRateZInput = new Input<Double>("borrowingRateZ", "local borrowing distance", 0.0);
 	public Input<String> m_outputFileNameInput = new Input<String>(
             "outputFileName",
             "If provided, simulated alignment is written to this file rather "
@@ -72,9 +70,11 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		Alignment cognateSet = new Alignment();
 
 		m_tree.getRoot().setMetaData("lang", root);
+		cognateSet.sequenceInput.setValue(root, cognateSet);
 		Tree newTree = m_subModel.mutateOverTree(m_tree);
 		for (Node n : newTree.getExternalNodes()) {
-			Sequence d = (Sequence) n.getMetaData("lang");
+			Sequence d = LanguageSubsitutionModel.getSequence(n);
+			cognateSet.sequenceInput.setValue(d, cognateSet);
 			System.out.println(d);
 		}
 		
@@ -122,8 +122,6 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	            m_tree = ((Input<Tree>) plugin.getInput("tree")).get();
 	            m_tree.initAndValidate();
 	            m_subModel = ((Input<LanguageSubsitutionModel>) plugin.getInput("subModel")).get();
-	            Double pBorrowingRate = ((Input<Double>) plugin.getInput("borrowingRate")).get();
-	            Double pBorrowingRateZ = ((Input<Double>) plugin.getInput("borrowingRateZ")).get();
 
 	            // feed to sequence simulator and generate leaves
 	            LanguageSequenceGen treeSimulator = new LanguageSequenceGen();
