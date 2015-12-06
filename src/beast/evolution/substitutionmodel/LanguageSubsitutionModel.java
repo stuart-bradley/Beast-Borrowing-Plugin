@@ -82,6 +82,10 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 */
 	protected abstract Double totalRate (ArrayList<Node> aliveNodes) throws Exception;
 	
+	public abstract void setBirthRate(Double r);
+	
+	public abstract Double getBirthRate();
+	
 	/*
 	 * NORMAL METHODS
 	 */

@@ -47,48 +47,116 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		//m_outputFileName = (String) m_outputFileNameInput.get();
 		//iterations = iterationsInput.get();
 	}
-
-	@Override
-	public void run() throws Exception {
-		for (int i = 0; i < iterationsInput.get(); i++) {
-			Alignment cognateSet = simulate();
-			
-			// Write output to stdout or file
-	        PrintStream pstream;
-	        if (m_outputFileName == null)
-	            pstream = System.out;
-	        else
-	            pstream = new PrintStream(m_outputFileName);
-	        pstream.println(new XMLProducer().toRawXML(cognateSet));
-	        for (MergeDataWith merge : mergeListInput.get()) {
-	        	merge.process(cognateSet, i);
-	        } 
-		}
-	}
 	
-	public Alignment simulate() throws Exception {
+	public Alignment simulate(Integer emptyTrait) throws Exception {
 		Alignment cognateSet = new Alignment();
+		String meaningClasses = "0 ";
 
 		m_tree.getRoot().setMetaData("lang", root);
 		cognateSet.sequenceInput.setValue(root, cognateSet);
 		Tree newTree;
-		if (m_subModel.getBorrowRate() == 0.0) { 
-			newTree = m_subModel.mutateOverTree(m_tree);
-		} else {
-			newTree = m_subModel.mutateOverTreeBorrowing(m_tree);
+		for (int i = 0; i < emptyTrait; i++) {
+			// If EmptyTrait is active, set correct birthRate.
+			if (emptyTrait > 1) {
+				//m_subModel.setBirthRate(m_subModel.getBirthRate()/emptyTrait);
+			}
+			if (m_subModel.getBorrowRate() == 0.0) { 
+				newTree = m_subModel.mutateOverTree(m_tree);
+			} else {
+				newTree = m_subModel.mutateOverTreeBorrowing(m_tree);
+			}
+			// Base Case.
+			if (i == 0) {
+				ArrayList<Sequence> tmp = new ArrayList<Sequence>();
+				for (Node n : newTree.getExternalNodes()) {
+					tmp.add(LanguageSubsitutionModel.getSequence(n));
+				}
+				if (emptyTrait > 1) {
+					tmp = removeEmptyTraits(tmp);
+				}
+				for (Sequence d : tmp) {
+					cognateSet.sequenceInput.setValue(d, cognateSet);
+				}
+			} else {
+				ArrayList<Sequence> tmp = new ArrayList<Sequence>();
+				for (Node n : newTree.getExternalNodes()) {
+					tmp.add(LanguageSubsitutionModel.getSequence(n));
+				}
+				List<Sequence> counts = cognateSet.sequenceInput.get();
+				ArrayList<Sequence> newSeqs = new ArrayList<Sequence>();
+				// Grab next meaning class.
+				meaningClasses += counts.get(1).getData().length() + " ";
+				for (int j = 0; j < tmp.size(); j++) {
+					// j+1 to account for ROOT.
+					String newSeq = counts.get(j+1).getData();
+					newSeq += tmp.get(j).getData();
+					//System.out.println(newSeq);
+					// Create sequence.
+					Sequence d = new Sequence("", newSeq);
+					newSeqs.add(d);
+				}
+				// Recreate and repopulate alignment.
+				cognateSet = new Alignment();
+				cognateSet.sequenceInput.setValue(root, cognateSet);
+				for (Sequence d : removeEmptyTraits(newSeqs)) {
+					cognateSet.sequenceInput.setValue(d, cognateSet);
+				}
+			}
 		}
-		for (Node n : newTree.getExternalNodes()) {
-			Sequence d = LanguageSubsitutionModel.getSequence(n);
-			cognateSet.sequenceInput.setValue(d, cognateSet);
-		}
+		Sequence comment = new Sequence("Meaning Class Positions", meaningClasses);
+		cognateSet.sequenceInput.setValue(comment, cognateSet);
 		return cognateSet;
+	}
+	
+	public ArrayList<Sequence> removeEmptyTraits(ArrayList<Sequence> oldSeqs) throws Exception {
+		ArrayList<Sequence> newSeqs = new ArrayList<Sequence>();
+		ArrayList<String> taxa = new ArrayList<String>();
+		ArrayList<String> data = new ArrayList<String>();
+		ArrayList<Integer> pos = new ArrayList<Integer>();
+		Boolean changed = false;
+		for (Sequence d : oldSeqs) {
+			taxa.add(d.getTaxon());
+			data.add(d.getData());
+		}
+		outerloop:
+		for (int i = 0 ; i < data.get(0).length(); i++) {
+			for (String d : data) {
+				if (d.charAt(i) == '1') {
+					continue outerloop;
+				}
+			}
+			
+			// Whole column is 0's.
+			pos.add(i);
+			changed = true;
+		}
+		int dM = 0;
+		for (Integer i : pos) {
+			for (int j = 0; j < data.size(); j++) {
+				String front, back;
+				front = data.get(j).substring(0,i-dM);
+				back = data.get(j).substring(i-dM+1, data.get(j).length());
+				data.set(j, front + back);
+			}
+		dM += 1;
+		}
+		
+		if (changed) {
+			for (int i = 0; i < data.size(); i++) {
+				newSeqs.add(new Sequence(taxa.get(i), data.get(i)));
+			}
+		} else {
+			return oldSeqs;
+		}
+		
+		return newSeqs;
 	}
 	
 	public static void printUsageAndExit() {
         System.out.println("Usage: java " + SequenceSimulator.class.getName() + " <beast file> <nr of instantiations> [<output file>]");
-        System.out.println("simulates from a treelikelihood specified in the beast file.");
+        System.out.println("Produces an alignment of languages simulated from a tree, and a root language.");
         System.out.println("<beast file> is name of the path beast file containing the treelikelihood.");
-        System.out.println("<nr of instantiations> is the number of instantiations to be replicated.");
+        System.out.println("<nr of instantiations> is the number of instantiations to produce an alignment with the No Empty Trait Assumption.");
         System.out.println("<output file> optional name of the file to write the sequence to. By default, the sequence is written to standard output.");
         System.exit(0);
     } // printUsageAndExit
@@ -101,7 +169,6 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	                printUsageAndExit();
 	            }
 	            String sFile = args[0];
-	            int nReplications = Integer.parseInt(args[1]);
 	            PrintStream out = System.out;
 	            if (args.length == 3) {
 	                File file = new File(args[2]);
@@ -129,7 +196,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	            // feed to sequence simulator and generate leaves
 	            LanguageSequenceGen treeSimulator = new LanguageSequenceGen();
 	            XMLProducer producer = new XMLProducer();
-	            Alignment alignment = treeSimulator.simulate();
+	            Alignment alignment = treeSimulator.simulate(Integer.parseInt(args[1]));
 	            sXML = producer.toRawXML(alignment);
 	            out.println("<beast version='2.0'>");
 	            out.println(sXML);
@@ -138,4 +205,10 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	            e.printStackTrace();
 	        }
 	    }
+
+	@Override
+	public void run() throws Exception {
+		// TODO Auto-generated method stub
+		
+	}
 }

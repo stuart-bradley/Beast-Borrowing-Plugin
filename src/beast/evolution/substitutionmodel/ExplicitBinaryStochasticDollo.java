@@ -300,6 +300,14 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 				n.setMetaData("lang", newNodeLang);
 		}
 	}
+	
+	public void setBirthRate(Double r) {
+		this.b = r;
+	}
+	
+	public Double getBirthRate() {
+		return b;
+	}
 
 	/*
 	 * Auto-generated getters/setters.

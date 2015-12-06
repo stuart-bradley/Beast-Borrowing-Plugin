@@ -239,6 +239,14 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		return rate * mutateSum + borrowRate * rate * borrowSum;
 	}
 	
+	public void setBirthRate(Double r) {
+		this.rate = r;
+	}
+	
+	public Double getBirthRate() {
+		return rate;
+	}
+	
 	public double getRate() {
 		return rate;
 	}

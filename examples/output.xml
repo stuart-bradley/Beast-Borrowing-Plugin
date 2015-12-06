@@ -1,18 +1,20 @@
 <beast version='2.0'>
 <data>
-    <sequence taxon='human' value='01010101010100100010101010000100'/>
+    <sequence taxon='root' value='01010101010100100010101010000100'/>
 
-    <sequence taxon='' value='01010101010000100010101010000100'/>
+    <sequence taxon='' value='111111111111111111111111'/>
 
-    <sequence taxon='' value='01010101010000100010101010000100'/>
+    <sequence taxon='' value='111111111111111111111111'/>
 
-    <sequence taxon='' value='01010101010000100010101010000100'/>
+    <sequence taxon='' value='111111111111111111111111'/>
 
-    <sequence taxon='' value='01010101010000100010101010000100'/>
+    <sequence taxon='' value='111111111111111111111111'/>
 
-    <sequence taxon='' value='00010100010100100010101010000100'/>
+    <sequence taxon='' value='111111111111111111011111'/>
 
-    <sequence taxon='' value='01010001010100100010101000000100'/>
+    <sequence taxon='' value='111111111111111101101111'/>
+
+    <sequence taxon='Meaning Class Positions' value='0 12 '/>
 
 </data>
 

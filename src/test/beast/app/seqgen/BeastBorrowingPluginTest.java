@@ -46,6 +46,7 @@ public class BeastBorrowingPluginTest {
 		//GTRTreeBorrowingValidationThreeLanguages();
 		//SDTreeBorrowingValidation();
 		SeqGenTest();
+		//removeEmptyTraits();
 		
 		//SpeedTestNonBorrowing();
 	}
@@ -411,8 +412,43 @@ public class BeastBorrowingPluginTest {
 	}
 	
 	private static void SeqGenTest() {
-		String[] args = {"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/testSeqLangGen.xml","100","C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/output.xml"};
+		String[] args = {"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/testSeqLangGen.xml","2","C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/output.xml"};
 		LanguageSequenceGen.main(args);
+	}
+	
+	public static void removeEmptyTraits() throws Exception {
+		ArrayList<String> data = new ArrayList<String>();
+		ArrayList<Integer> pos = new ArrayList<Integer>();
+		data.add("100");
+		data.add("100");
+		outerloop:
+		for (int i = 0 ; i < data.get(0).length(); i++) {
+			for (String d : data) {
+				if (d.charAt(i) == '1') {
+					continue outerloop;
+				}
+			}
+			
+			// Whole column is 0's.
+			pos.add(i);
+		}
+		int dM = 0;
+		for (Integer i : pos) {
+			System.out.println(i);
+			for (int j = 0; j < data.size(); j++) {
+				String front, back;
+				front = data.get(j).substring(0,i-dM);
+				back = data.get(j).substring(i-dM+1, data.get(j).length());
+				data.set(j, front+back);
+			}
+			dM += 1;
+		}
+		
+		System.out.println();
+		for (String s : data) {
+			System.out.println(s);
+		}
+
 	}
 
 	private static void printTree(Tree base) {
