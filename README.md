@@ -27,20 +27,24 @@ java LanguageSequenceGen <beast file> <nr of instantiations> [<output file>]
 
 Like most BEAST2 plugins, this plugin has its own testing suite defined in `BeastBorrowingPluginTest`. In this class, the `SeqGenTest()` runs the plugin using arguments defined within the function: 
 
-```
+```Java
 private static void SeqGenTest() {
 		String[] args = {"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/testSeqLangGen.xml","2","C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/output.xml"};
 		LanguageSequenceGen.main(args);
 }
 ```
 
+The format of the arguments are the same as those in the *Command Line* section. 
+
 There are a number of other tests in the class that produce `csv` files, which are in turn used to validate various portions of the plugin in R. 
 
-## The BEAST File
+## Explanation of the Input/Output Files.
+
+### The BEAST File
 
 The BEAST file outlines how to produce the synthetic data. An example is provided in `/examples/testSeqLangGen.xml`; it is reproduced below:
 
-```
+```XML
 <beast version='2.0'
        namespace='beast.evolution.alignment:beast.evolution.substitutionmodel'>
 
@@ -57,4 +61,43 @@ The BEAST file outlines how to produce the synthetic data. An example is provide
 
 * The `tree` takes a newick formatted tree with both branch distances and taxon node names. 
 * The `run` initiates the plugin using the `tree` defined above. It also has a number of interior parameters:
-  * `root` is the sequence to be placed at the root of the tree. It should consist of present (1) or absent traits (0). The plugin does not handle missing or unknown traits. The `taxon` does not need to be *root*.  
+  * `root` is the sequence to be placed at the root of the tree. It should consist of present (1) or absent traits (0). The plugin does not handle missing or unknown traits. The `taxon` does not need to be *root*.
+  * `subModel` defines the module used to simulate evolution down the tree. All models have a `borrowrate` parameter, which defines the rate of global borrowing; `borrowzrate` defines the distance of local borrowing; note: if `borrowzrate` is set to `0.0`, the plugin assumes an infinite distance. Currently there are two models:
+    * `ExplicitBinaryGTR` evolves the `root` via a Generalised Time-Reversible model. This model has a single `rate` parameter which defines the rate at which traits both can be birthed, and die. 
+    * `ExplicitBinaryStochasticDollo` evolves the `root` via a Stochastic-Dollo model of sequence evolution, which has both a `birth` rate of traits, and a separate `death` rate. 
+
+### The Output file
+
+The Output file is a simple BEAST2 `alignment` piped to `xml`. An example from `/examples/output.xml` can be found below:
+
+```XML
+<beast version='2.0'>
+<data>
+    <sequence taxon='root' value='01010101010100100010101010000100'/>
+
+    <sequence taxon='' value='111111111111111111111111'/>
+
+    <sequence taxon='' value='111111111111111111111111'/>
+
+    <sequence taxon='' value='111111111111111111111111'/>
+
+    <sequence taxon='' value='111111111111111111111111'/>
+
+    <sequence taxon='' value='111111111111111111011111'/>
+
+    <sequence taxon='' value='111111111111111101101111'/>
+
+    <sequence taxon='Meaning Class Positions' value='0 12 '/>
+
+</data>
+
+
+</beast>
+
+```
+
+The first `sequence` is the root defined by `root` in the BEAST file, and the last `sequence` defines the positions of the first cognate in each meaning class. 
+
+## Current and Future Features
+
+## About and Contact
