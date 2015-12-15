@@ -100,4 +100,23 @@ The first `sequence` is the root defined by `root` in the BEAST file, and the la
 
 ## Current and Future Features
 
+### Current Features
+
+* Single language mutation.
+* Whole tree mutation.
+  * GTR model.
+  * Stochastic-Dollo model.
+* Whole tree mutation with borrowing.
+  * Local borrowing.
+
+### Future Features
+
+* Meaning classes (WIP).
+* No Empty Trait condition (WIP) - Stops a trait dying if it is the last trait in its meaning class.
+* Missing data simulation (WIP).
+
 ## About and Contact
+
+This plugin is being written as part of my Computer Science Honours thesis, supervised by [David Welch](https://www.cs.auckland.ac.nz/~davidw/), at the University of Auckland, New Zealand. It is an extension of work undertaken by the Computational Biology Group to create [BEAST2](beast2.org). 
+
+For any questions or queries feel free to contact me at sbra886@aucklanduni.ac.nz. 
