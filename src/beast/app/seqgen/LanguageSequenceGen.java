@@ -48,18 +48,14 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		//iterations = iterationsInput.get();
 	}
 	
-	public Alignment simulate(Integer emptyTrait) throws Exception {
+	public Alignment simulate(Integer numMeaningClasses) throws Exception {
 		Alignment cognateSet = new Alignment();
 		String meaningClasses = "0 ";
 
 		m_tree.getRoot().setMetaData("lang", root);
 		cognateSet.sequenceInput.setValue(root, cognateSet);
 		Tree newTree;
-		for (int i = 0; i < emptyTrait; i++) {
-			// If EmptyTrait is active, set correct birthRate.
-			if (emptyTrait > 1) {
-				//m_subModel.setBirthRate(m_subModel.getBirthRate()/emptyTrait);
-			}
+		for (int i = 0; i < numMeaningClasses; i++) {
 			if (m_subModel.getBorrowRate() == 0.0) { 
 				newTree = m_subModel.mutateOverTree(m_tree);
 			} else {
@@ -70,9 +66,6 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 				ArrayList<Sequence> tmp = new ArrayList<Sequence>();
 				for (Node n : newTree.getExternalNodes()) {
 					tmp.add(LanguageSubsitutionModel.getSequence(n));
-				}
-				if (emptyTrait > 1) {
-					tmp = removeEmptyTraits(tmp);
 				}
 				for (Sequence d : tmp) {
 					cognateSet.sequenceInput.setValue(d, cognateSet);
@@ -98,7 +91,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 				// Recreate and repopulate alignment.
 				cognateSet = new Alignment();
 				cognateSet.sequenceInput.setValue(root, cognateSet);
-				for (Sequence d : removeEmptyTraits(newSeqs)) {
+				for (Sequence d : newSeqs) {
 					cognateSet.sequenceInput.setValue(d, cognateSet);
 				}
 			}
@@ -108,49 +101,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		return cognateSet;
 	}
 	
-	public ArrayList<Sequence> removeEmptyTraits(ArrayList<Sequence> oldSeqs) throws Exception {
-		ArrayList<Sequence> newSeqs = new ArrayList<Sequence>();
-		ArrayList<String> taxa = new ArrayList<String>();
-		ArrayList<String> data = new ArrayList<String>();
-		ArrayList<Integer> pos = new ArrayList<Integer>();
-		Boolean changed = false;
-		for (Sequence d : oldSeqs) {
-			taxa.add(d.getTaxon());
-			data.add(d.getData());
-		}
-		outerloop:
-		for (int i = 0 ; i < data.get(0).length(); i++) {
-			for (String d : data) {
-				if (d.charAt(i) == '1') {
-					continue outerloop;
-				}
-			}
-			
-			// Whole column is 0's.
-			pos.add(i);
-			changed = true;
-		}
-		int dM = 0;
-		for (Integer i : pos) {
-			for (int j = 0; j < data.size(); j++) {
-				String front, back;
-				front = data.get(j).substring(0,i-dM);
-				back = data.get(j).substring(i-dM+1, data.get(j).length());
-				data.set(j, front + back);
-			}
-		dM += 1;
-		}
-		
-		if (changed) {
-			for (int i = 0; i < data.size(); i++) {
-				newSeqs.add(new Sequence(taxa.get(i), data.get(i)));
-			}
-		} else {
-			return oldSeqs;
-		}
-		
-		return newSeqs;
-	}
+	
 	
 	public static void printUsageAndExit() {
         System.out.println("Usage: java " + SequenceSimulator.class.getName() + " <beast file> <nr of instantiations> [<output file>]");

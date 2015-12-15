@@ -412,7 +412,8 @@ public class BeastBorrowingPluginTest {
 	}
 	
 	private static void SeqGenTest() {
-		String[] args = {"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/testSeqLangGen.xml","2","C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/output.xml"};
+		//String[] args = {"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/testSeqLangGen.xml","2","C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/output.xml"};
+		String[] args = {"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/testSeqLangGen.xml","2","/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/output.xml"};
 		LanguageSequenceGen.main(args);
 	}
 	
