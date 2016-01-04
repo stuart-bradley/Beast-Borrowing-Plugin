@@ -48,14 +48,14 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @param T double, mutation time.
 	 * @return Language, mutated language.
 	 */
-	public abstract Sequence mutateLang(Sequence l, double T, boolean NoEmptyTrait) throws Exception;
+	public abstract Sequence mutateLang(Sequence l, double T) throws Exception;
 	
 	/*
 	 * Basic full tree mutation, each branch uses mutateLang(l,c,T).
 	 * @param base Tree, initial tree with a root language. (Metadata("lang")).
 	 * @return Tree, final tree with a full set of mutated languages. 
 	 */
-	public abstract Tree mutateOverTree(Tree base, boolean NoEmptyTrait) throws Exception;
+	public abstract Tree mutateOverTree(Tree base) throws Exception;
 	
 	/*
 	 * Full tree mutation with borrowing.
@@ -64,7 +64,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @param z local borrowing rate, 0.0 rate implies global borrowing. 
 	 * @return base Tree with languages added. 
 	 */
-	public abstract Tree mutateOverTreeBorrowing(Tree base, boolean NoEmptyTrait) throws Exception;
+	public abstract Tree mutateOverTreeBorrowing(Tree base) throws Exception;
 	
 	/*
 	 * Probabilities for different events.
