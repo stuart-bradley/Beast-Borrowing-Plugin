@@ -69,7 +69,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 * 
 	 * @return newLang Mutated language.
 	 */
-	public Sequence mutateLang(Sequence l, double T) throws Exception {
+	public Sequence mutateLang(Sequence l, double T, boolean NoEmptyTrait) throws Exception {
 		Sequence newLang = new Sequence("",l.getData());
 		double[] probs = new double[2];
 		// Mutation proper.
@@ -108,7 +108,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 * 
 	 * @return base Tree with languages added.
 	 */
-	public Tree mutateOverTree(Tree base) throws Exception {
+	public Tree mutateOverTree(Tree base, boolean NoEmptyTrait) throws Exception {
 		ArrayList<Node> currParents = new ArrayList<Node>();
 		ArrayList<Node> newParents = new ArrayList<Node>();
 		currParents.add(base.getRoot());
@@ -118,7 +118,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 				for (Node child : children) {
 					double T = Math.abs(child.getHeight() - parent.getHeight());
 					Sequence parentLang = getSequence(parent);
-					Sequence newLang = mutateLang(parentLang, T);
+					Sequence newLang = mutateLang(parentLang, T, NoEmptyTrait);
 					child.setMetaData("lang", newLang);
 					newParents.add(child);
 					addEmptyTrait(base, child);
@@ -141,7 +141,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 * 
 	 * @return base Tree with languages added.
 	 */
-	public Tree mutateOverTreeBorrowing(Tree base) throws Exception {
+	public Tree mutateOverTreeBorrowing(Tree base, boolean NoEmptyTrait) throws Exception {
 		Double treeHeight = getTreeHeight(base);
 		ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
 		Double totalRate = totalRate(aliveNodes);

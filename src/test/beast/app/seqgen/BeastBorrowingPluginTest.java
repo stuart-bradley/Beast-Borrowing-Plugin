@@ -58,7 +58,7 @@ public class BeastBorrowingPluginTest {
 		System.out.println(l.getData());
 
 		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.0,0.0);
-		Sequence gtrLang = gtr_mod.mutateLang(l, 10);
+		Sequence gtrLang = gtr_mod.mutateLang(l, 10, false);
 		System.out.println(gtrLang.getData());
 	}
 
@@ -69,7 +69,7 @@ public class BeastBorrowingPluginTest {
 		System.out.println("SD Test");
 		System.out.println(l2.getData());
 		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5,0.0,0.0);
-		Sequence sdLang = sd_mod.mutateLang(l2, 10);
+		Sequence sdLang = sd_mod.mutateLang(l2, 10, false);
 		System.out.println(sdLang.getData());
 	}
 
@@ -84,7 +84,7 @@ public class BeastBorrowingPluginTest {
 		Tree tree = new Tree(rootNode);
 		tree = randomTree(tree, 4, 0.6);
 		tree.getRoot().setMetaData("lang", l);
-		sd_mod.mutateOverTree(tree);
+		sd_mod.mutateOverTree(tree, false);
 		for (Node n : tree.getExternalNodes()) {
 			Sequence l2 = (Sequence) n.getMetaData("lang");
 			System.out.println(l2.getData());
@@ -107,7 +107,7 @@ public class BeastBorrowingPluginTest {
 		rootNode.setHeight(0);
 		Tree tree = new Tree(rootNode);
 		tree = randomTree(tree, 4, 0.01);
-		sd_mod.mutateOverTreeBorrowing(tree);
+		sd_mod.mutateOverTreeBorrowing(tree, false);
 		for (Node n : tree.getExternalNodes()) {
 			Sequence l2 = (Sequence) n.getMetaData("lang");
 			System.out.println(l2.getData());
@@ -124,7 +124,7 @@ public class BeastBorrowingPluginTest {
 		rootNode.setHeight(0);
 		Tree tree = new Tree(rootNode);
 		tree = randomTree(tree, 8, 0.6);
-		gtr_mod.mutateOverTreeBorrowing(tree);
+		gtr_mod.mutateOverTreeBorrowing(tree, false);
 		for (Node n : tree.getExternalNodes()) {
 			Sequence l2 = (Sequence) n.getMetaData("lang");
 			System.out.println(l2.getData());
@@ -141,7 +141,7 @@ public class BeastBorrowingPluginTest {
 			}
 			Sequence l = new Sequence("",seq);
 			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.0,0.0);
-			Sequence gtrLang = gtr_mod.mutateLang(l, 100);
+			Sequence gtrLang = gtr_mod.mutateLang(l, 100, false);
 			births.add(LanguageSubsitutionModel.getBirths(gtrLang));
 		}
 		//listToCSV(births, "C:/Users/Stuart/Google Drive/University/Year 5 - Honours/Thesis/R_Code/gtr.csv");
@@ -155,7 +155,7 @@ public class BeastBorrowingPluginTest {
 			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5,0.0,0.0);
 			String seq = "";
 			Sequence l = new Sequence("",seq);
-			Sequence sdLang = sd_mod.mutateLang(l, 100);
+			Sequence sdLang = sd_mod.mutateLang(l, 100, false);
 			births.add(LanguageSubsitutionModel.getBirths(sdLang));
 		}
 		listToCSV(births, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/sd.csv");
@@ -178,7 +178,7 @@ public class BeastBorrowingPluginTest {
 			rootNode.setHeight(0);
 			Tree tree = new Tree(rootNode);
 			tree = randomTree(tree, 8, 0.6);
-			tree = gtr_mod.mutateOverTree(tree);
+			tree = gtr_mod.mutateOverTree(tree, false);
 			for (Node n : tree.getExternalNodes()) {
 				Sequence l2 = (Sequence) n.getMetaData("lang");
 				births.add(LanguageSubsitutionModel.getBirths(l2));
@@ -202,7 +202,7 @@ public class BeastBorrowingPluginTest {
 			rootNode.setHeight(0);
 			Tree tree = new Tree(rootNode);
 			tree = randomTree(tree, 8, 0.01);
-			tree = sd_mod.mutateOverTree(tree);			
+			tree = sd_mod.mutateOverTree(tree, false);			
 			for (Node n : tree.getExternalNodes()) {
 				Sequence l2 = (Sequence) n.getMetaData("lang");
 				births.add(LanguageSubsitutionModel.getBirths(l2));			
@@ -231,7 +231,7 @@ public class BeastBorrowingPluginTest {
 			rootNode.setHeight(0);
 			tree = new Tree(rootNode);
 			tree = randomTree(tree, 2, 0.1);
-			tree = gtr_mod.mutateOverTreeBorrowing(tree);
+			tree = gtr_mod.mutateOverTreeBorrowing(tree, false);
 			List<Node> ext = tree.getExternalNodes();
 			String l1 = ((Sequence) ext.get(0).getMetaData("lang")).getData();
 			String l2 = ((Sequence) ext.get(1).getMetaData("lang")).getData();
@@ -284,7 +284,7 @@ public class BeastBorrowingPluginTest {
 			rootNode.setHeight(0);
 			tree = new Tree(rootNode);
 			tree = randomTree(tree, 3, 0.1);
-			tree = gtr_mod.mutateOverTreeBorrowing(tree);
+			tree = gtr_mod.mutateOverTreeBorrowing(tree, false);
 			List<Node> ext = tree.getExternalNodes();
 			String l1 = ((Sequence) ext.get(0).getMetaData("lang")).getData();
 			String l2 = ((Sequence) ext.get(1).getMetaData("lang")).getData();
@@ -352,7 +352,7 @@ public class BeastBorrowingPluginTest {
 			rootNode.setHeight(0);
 			tree = new Tree(rootNode);
 			tree = randomTree(tree, 8, 0.01);
-			tree = sd_mod.mutateOverTreeBorrowing(tree);
+			tree = sd_mod.mutateOverTreeBorrowing(tree, false);
 			for (Node n : tree.getExternalNodes()) {
 				Sequence l2 = (Sequence) n.getMetaData("lang");
 				births.add(LanguageSubsitutionModel.getBirths(l2));
@@ -385,22 +385,22 @@ public class BeastBorrowingPluginTest {
 			tree = randomTree(tree, 8, 0.06);
 			
 			startTime = System.nanoTime();
-			tree = gtr_mod.mutateOverTree(tree);
+			tree = gtr_mod.mutateOverTree(tree, false);
 			endTime = System.nanoTime();
 			GTRA1.add((endTime-startTime)/1000000);
 			
 			startTime = System.nanoTime();
-			tree = gtr_mod.mutateOverTreeBorrowing(tree);	
+			tree = gtr_mod.mutateOverTreeBorrowing(tree, false);	
 			endTime = System.nanoTime();
 			GTRA2.add((endTime-startTime)/1000000);
 			
 			startTime = System.nanoTime();
-			tree = sd_mod.mutateOverTree(tree);
+			tree = sd_mod.mutateOverTree(tree, false);
 			endTime = System.nanoTime();
 			SDA1.add((endTime-startTime)/1000000);
 			
 			startTime = System.nanoTime();
-			tree = sd_mod.mutateOverTreeBorrowing(tree);	
+			tree = sd_mod.mutateOverTreeBorrowing(tree, false);	
 			endTime = System.nanoTime();
 			SDA2.add((endTime-startTime)/1000000);
 			

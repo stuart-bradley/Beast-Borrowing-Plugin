@@ -57,9 +57,9 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		Tree newTree;
 		for (int i = 0; i < numMeaningClasses; i++) {
 			if (m_subModel.getBorrowRate() == 0.0) { 
-				newTree = m_subModel.mutateOverTree(m_tree);
+				newTree = m_subModel.mutateOverTree(m_tree, false);
 			} else {
-				newTree = m_subModel.mutateOverTreeBorrowing(m_tree);
+				newTree = m_subModel.mutateOverTreeBorrowing(m_tree, false);
 			}
 			// Base Case.
 			if (i == 0) {
