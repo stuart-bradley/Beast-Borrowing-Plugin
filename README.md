@@ -108,10 +108,10 @@ The first `sequence` is the root defined by `root` in the BEAST file, and the la
   * Stochastic-Dollo model.
 * Whole tree mutation with borrowing.
   * Local borrowing.
-* Meaning classes.
 
 ### Future Features
 
+* Meaning classes (WIP).
 * No Empty Trait condition (WIP) - Stops a trait dying if it is the last trait in its meaning class.
 * Missing data simulation (WIP).
 
