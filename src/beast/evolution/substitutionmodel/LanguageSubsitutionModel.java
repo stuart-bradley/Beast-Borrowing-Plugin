@@ -27,9 +27,11 @@ import beast.evolution.tree.Tree;
 public abstract class LanguageSubsitutionModel extends CalculationNode {
 	public Input<Double> borrowInput = new Input<Double>("borrowrate", "borrowing rate");
 	public Input<Double> borrowZInput = new Input<Double>("borrowzrate", "local borrowing distance");
+	public Input<Boolean> noEmptyTraitInput = new Input<Boolean>("noEmptyTrait", "no empty trait");
 	
 	protected double borrowRate;
 	protected double borrowZ;
+	protected boolean noEmptyTrait;
 	
 	/*
 	 * ABSTRACT METHODS
@@ -248,5 +250,13 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 
 	public void setBorrowZ(double z) {
 		this.borrowZ = z;
+	}
+	
+	public boolean getNoEmptyTrait() {
+		return noEmptyTrait;
+	}
+	
+	public void setNoEmptyTrait(boolean noEmptyTrait) {
+		this.noEmptyTrait = noEmptyTrait;
 	}
 }

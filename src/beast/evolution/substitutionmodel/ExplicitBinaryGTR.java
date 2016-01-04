@@ -36,10 +36,11 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	public ExplicitBinaryGTR() throws Exception {
 	}
 
-	public ExplicitBinaryGTR(double r, double b, double z) {
+	public ExplicitBinaryGTR(double r, double b, double z, boolean e) {
 		this.setRate(r);
 		this.setBorrowRate(b);
 		this.setBorrowZ(z);
+		this.setNoEmptyTrait(e);
 	}
 
 	/*
@@ -54,6 +55,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		this.rate = rateInput.get();
 		this.borrowRate = borrowInput.get();
 		this.borrowZ = borrowZInput.get();
+		this.noEmptyTrait = noEmptyTraitInput.get();
 	}
 
 	/*

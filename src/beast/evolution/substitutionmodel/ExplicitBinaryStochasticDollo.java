@@ -38,11 +38,12 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	public ExplicitBinaryStochasticDollo() throws Exception {
 	}
 
-	public ExplicitBinaryStochasticDollo(double birth, double death, double borrow, double z) {
+	public ExplicitBinaryStochasticDollo(double birth, double death, double borrow, double z, boolean e) {
 		this.setB(birth);
 		this.setD(death);
 		this.setBorrowRate(borrow);
 		this.setBorrowZ(z);
+		this.setNoEmptyTrait(e);
 	}
 
 	/*
@@ -58,6 +59,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		this.d = rate10Input.get();
 		this.borrowRate = borrowInput.get();
 		this.borrowZ = borrowZInput.get();
+		this.noEmptyTrait = noEmptyTraitInput.get();
 	}
 
 	/*
