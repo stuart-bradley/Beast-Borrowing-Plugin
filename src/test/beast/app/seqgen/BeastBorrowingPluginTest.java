@@ -57,7 +57,7 @@ public class BeastBorrowingPluginTest {
 		System.out.println("GTR Test");
 		System.out.println(l.getData());
 
-		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.0,0.0);
+		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.0,0.0, false);
 		Sequence gtrLang = gtr_mod.mutateLang(l, 10);
 		System.out.println(gtrLang.getData());
 	}
@@ -68,14 +68,14 @@ public class BeastBorrowingPluginTest {
 	
 		System.out.println("SD Test");
 		System.out.println(l2.getData());
-		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5,0.0,0.0);
+		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5,0.0,0.0, false);
 		Sequence sdLang = sd_mod.mutateLang(l2, 10);
 		System.out.println(sdLang.getData());
 	}
 
 	private static void TreeGenTest(String seq) throws Exception {
 		Sequence l = new Sequence("",seq);
-		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5,0.0,0.0);
+		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5,0.0,0.0, false);
 
 		System.out.println("Tree generation test");
 		Node rootNode = new Node();
@@ -99,7 +99,7 @@ public class BeastBorrowingPluginTest {
 		}
 		Sequence l = new Sequence("",seq);
 
-		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.0022314355, 0.00022314355, 0.1, 0.0);
+		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.0022314355, 0.00022314355, 0.1, 0.0, false);
 
 		System.out.println("Tree SD Borrowing Test");
 		Node rootNode = new Node();
@@ -116,7 +116,7 @@ public class BeastBorrowingPluginTest {
 	
 	private static void TreeGTRBorrowingTest(String seq) throws Exception {
 		Sequence l = new Sequence("",seq);
-		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 1.2,0.0);
+		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 1.2,0.0, false);
 
 		System.out.println("Tree GTR Borrowing Test");
 		Node rootNode = new Node();
@@ -140,7 +140,7 @@ public class BeastBorrowingPluginTest {
 				seq += Integer.toString(Randomizer.nextInt(2));
 			}
 			Sequence l = new Sequence("",seq);
-			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.0,0.0);
+			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.0,0.0, false);
 			Sequence gtrLang = gtr_mod.mutateLang(l, 100);
 			births.add(LanguageSubsitutionModel.getBirths(gtrLang));
 		}
@@ -152,7 +152,7 @@ public class BeastBorrowingPluginTest {
 		ArrayList<Integer> births = new ArrayList<Integer>();
 		for (int i = 0; i < 100000; i++) {
 			System.out.println(i);
-			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5,0.0,0.0);
+			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5,0.0,0.0, false);
 			String seq = "";
 			Sequence l = new Sequence("",seq);
 			Sequence sdLang = sd_mod.mutateLang(l, 100);
@@ -167,7 +167,7 @@ public class BeastBorrowingPluginTest {
 		ArrayList<Integer> births = new ArrayList<Integer>();
 		for (int i = 0; i < 100000; i++) {
 			System.out.println(i);
-			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.0,0.0);
+			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.0,0.0, false);
 			String seq = "";
 			for (int j = 0; j < 20; j++) {
 				seq += Integer.toString(Randomizer.nextInt(2));
@@ -194,7 +194,7 @@ public class BeastBorrowingPluginTest {
 		
 		for (int i = 0; i < 100000; i++) {
 			System.out.println(i);
-			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5,0.0,0.0);
+			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5,0.0,0.0, false);
 			String seq = "";
 			Sequence l = new Sequence("",seq);
 			Node rootNode = new Node();
@@ -220,7 +220,7 @@ public class BeastBorrowingPluginTest {
 		ArrayList<Integer> oneOne = new ArrayList<Integer>();
 		for (int i = 0; i < 100000; i++) {
 			System.out.println(i);
-			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.5,0.0);
+			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.5,0.0, false);
 			String seq = "";
 			for (int j = 0; j < 100; j++) {
 				seq += Integer.toString(Randomizer.nextInt(2));
@@ -273,7 +273,7 @@ public class BeastBorrowingPluginTest {
 		ArrayList<Integer> oneOneOne = new ArrayList<Integer>();
 		for (int i = 0; i < 100000; i++) {
 			System.out.println(i);
-			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.5,0.0);
+			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.5,0.0, false);
 			String seq = "";
 			for (int j = 0; j < 10000; j++) {
 				seq += Integer.toString(Randomizer.nextInt(2));
@@ -340,7 +340,7 @@ public class BeastBorrowingPluginTest {
 		ArrayList<Integer> births = new ArrayList<Integer>();
 		for (int i = 0; i < 1000; i++) {
 			System.out.println(i);
-			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.0022314355, 0.00022314355,0.1,0.0);
+			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.0022314355, 0.00022314355,0.1,0.0, false);
 			String seq = "";
 			Integer pos =  (int) Randomizer.nextPoisson(10.0);
 			for (int j = 0; j < pos; j++) {
@@ -366,8 +366,8 @@ public class BeastBorrowingPluginTest {
 		ArrayList<Long> GTRA2 = new ArrayList<Long>();
 		ArrayList<Long> SDA1 = new ArrayList<Long>();
 		ArrayList<Long> SDA2 = new ArrayList<Long>();
-		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5,0.0,0.0);
-		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.0,0.0);
+		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5,0.0,0.0, false);
+		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.0,0.0, false);
 		Tree tree = null;
 		long startTime, endTime;
 		for (int i = 0; i < 10000; i++) {
