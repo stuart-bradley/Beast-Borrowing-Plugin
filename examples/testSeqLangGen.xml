@@ -5,8 +5,8 @@
 
 
     <run spec="beast.app.seqgen.LanguageSequenceGen" tree='@tree'>
-		<root spec='Sequence' value="01010101010100100010101010000100" taxon="root"/>
+		<root spec='Sequence' value="010101010101001000101010100001000011000" taxon="root"/>
 		
-		<subModel spec='ExplicitBinaryStochasticDollo' birth="0.5" death = "0.5" borrowrate ="0.0" borrowzrate="0.0", noEmptyTrait="false" />	
+		<subModel spec='ExplicitBinaryStochasticDollo' birth="0.5" death = "0.5" borrowrate ="0.0" borrowzrate="0.0" noEmptyTrait="false" />	
 	</run>
 </beast>

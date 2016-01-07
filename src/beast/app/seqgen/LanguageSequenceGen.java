@@ -34,6 +34,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
     protected static Tree m_tree;
     protected Double m_borrowingRate;
     protected Double m_borrowingRateZ;
+    protected boolean m_noEmptyTrait;
     protected String m_outputFileName;
     protected Integer iterations;
     

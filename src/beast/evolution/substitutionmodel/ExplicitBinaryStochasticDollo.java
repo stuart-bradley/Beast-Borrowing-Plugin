@@ -82,14 +82,13 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 			probs[1] = getB() / (getB() + getD() * getBirths(newLang));
 			// If death.
 			if (Randomizer.randomChoice(probs) == 0) {
-				int randomNum;
-				int max = newLang.getData().length();
 				// Find random alive trait, and kill it.
-				while (true) {
-					randomNum = Randomizer.nextInt(max);
+				for (int randomNum : getRandLangIndex(newLang)) {
 					if (Character.getNumericValue(newLang.getData().charAt(randomNum)) != 0) {
-						String newSeq = replaceCharAt(newLang.getData(), randomNum, Integer.toString(0));
-						newLang.dataInput.setValue(newSeq, newLang);
+						if (noEmptyTraitCheck(newLang)) {
+							String newSeq = replaceCharAt(newLang.getData(), randomNum, Integer.toString(0));
+							newLang.dataInput.setValue(newSeq, newLang);
+						}
 						break;
 					}
 				}
@@ -175,10 +174,12 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 				// Find random alive trait, and kill it.
 				for (Integer i : getRandLangIndex(nodeLang)) {
 					if (Character.getNumericValue(nodeLang.getData().charAt(i)) != 0) {
-						s = replaceCharAt(nodeLang.getData(), i, Integer.toString(0));
-						newNodeLang = new Sequence("",s);
-						newNodeLang.dataInput.setValue(s, newNodeLang);
-						setSubTreeLanguages(ranNode, newNodeLang);
+						if (noEmptyTraitCheck(nodeLang)) {
+							s = replaceCharAt(nodeLang.getData(), i, Integer.toString(0));
+							newNodeLang = new Sequence("",s);
+							newNodeLang.dataInput.setValue(s, newNodeLang);
+							setSubTreeLanguages(ranNode, newNodeLang);
+						}
 						break;
 					}
 				}

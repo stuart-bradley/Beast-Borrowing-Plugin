@@ -5,6 +5,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 
+import com.sun.xml.internal.ws.util.StringUtils;
+
 import beast.core.CalculationNode;
 import beast.core.Description;
 import beast.core.Input;
@@ -209,6 +211,30 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 		return aN;
 	}
 	
+	/*
+	 * No Empty Trait Check.
+	 * @param l Sequence.
+	 * @return boolean whether or not trait can be removed.
+	 */
+	public boolean noEmptyTraitCheck(Sequence l) {
+		// Traits are removal if noEmptyTrait flag is not set.
+		if (noEmptyTrait == false) {
+			return true;
+		} else {
+			// Check if removing a trait kills meaning class.
+			if (getBirths(l) > 1) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+	
+	/*
+	 * Gets Sequence from Node.
+	 * @param n Node.
+	 * @return Sequence.
+	 */
 	public static Sequence getSequence(Node n) throws Exception {
 		try {
 			return (Sequence) n.getMetaData("lang");
@@ -217,6 +243,11 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 		}
 	}
 	
+	/*
+	 * Gets number of alive traits (1's).
+	 * @param l Sequence.
+	 * @return count of 1's.
+	 */
 	public static int getBirths(Sequence l) {
 		String seq = l.getData();
 		int count = 0;
@@ -228,6 +259,13 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 		return count;
 	}
 	
+	/*
+	 * Replaces string (c) in string (s).
+	 * @param s String.
+	 * @param pos Int position.
+	 * @param c replacement String.
+	 * @return modified String.
+	 */
 	public static String replaceCharAt(String s, int pos, String c) {
 		return s.substring(0,pos) + c + s.substring(pos+1);
 	}
