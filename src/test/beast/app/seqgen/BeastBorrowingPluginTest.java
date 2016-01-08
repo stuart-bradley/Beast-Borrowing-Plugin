@@ -3,6 +3,7 @@ package test.beast.app.seqgen;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import beast.app.seqgen.LanguageSequenceGen;
@@ -45,9 +46,8 @@ public class BeastBorrowingPluginTest {
 		//GTRTreeBorrowingValidationTwoLanguages();
 		//GTRTreeBorrowingValidationThreeLanguages();
 		//SDTreeBorrowingValidation();
-		SeqGenTest();
-		//removeEmptyTraits();
-		
+		//SeqGenTest();
+		NoEmptyTraitTest();
 		//SpeedTestNonBorrowing();
 	}
 
@@ -417,39 +417,24 @@ public class BeastBorrowingPluginTest {
 		LanguageSequenceGen.main(args);
 	}
 	
-	public static void removeEmptyTraits() throws Exception {
-		ArrayList<String> data = new ArrayList<String>();
-		ArrayList<Integer> pos = new ArrayList<Integer>();
-		data.add("100");
-		data.add("100");
-		outerloop:
-		for (int i = 0 ; i < data.get(0).length(); i++) {
-			for (String d : data) {
-				if (d.charAt(i) == '1') {
-					continue outerloop;
-				}
+	private static void NoEmptyTraitTest() throws Exception {
+		for (int i = 0; i < 1; i++) {
+			System.out.println(i);
+			Sequence l = new Sequence("","00000000000001");
+			Node rootNode = new Node();
+			rootNode.setMetaData("lang", l);
+			rootNode.setHeight(0);
+			Tree tree = new Tree(rootNode);
+			tree = randomTree(tree, 3, 0.06);
+			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.0, 0.5,0.0,0.0, true);
+			tree = sd_mod.mutateOverTree(tree);
+			
+			for (Node n : tree.getExternalNodes()) {
+				Sequence l2 = (Sequence) n.getMetaData("lang");
+				System.out.println(l2.getData());
 			}
 			
-			// Whole column is 0's.
-			pos.add(i);
 		}
-		int dM = 0;
-		for (Integer i : pos) {
-			System.out.println(i);
-			for (int j = 0; j < data.size(); j++) {
-				String front, back;
-				front = data.get(j).substring(0,i-dM);
-				back = data.get(j).substring(i-dM+1, data.get(j).length());
-				data.set(j, front+back);
-			}
-			dM += 1;
-		}
-		
-		System.out.println();
-		for (String s : data) {
-			System.out.println(s);
-		}
-
 	}
 
 	private static void printTree(Tree base) {
@@ -520,4 +505,5 @@ public class BeastBorrowingPluginTest {
 		}
 		return rootTree;
 	}
+	
 }
