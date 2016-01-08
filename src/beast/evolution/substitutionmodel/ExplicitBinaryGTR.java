@@ -29,7 +29,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	/** Backward and forward substitution rates. */
 	public Input<Double> rateInput = new Input<Double>("rate", "substitution rate");
 
-	/** Binary rate matrix */
+	/** rate */
 	protected double rate;
 	
 

@@ -22,31 +22,13 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	public Input<Sequence> m_rootInput = new Input<Sequence>("root", "inital language", Validate.REQUIRED);
 	public Input<LanguageSubsitutionModel> m_subModelInput = new Input<LanguageSubsitutionModel>("subModel", "subsitution model for tree", Validate.REQUIRED);
 	public Input<Tree> m_treeInput = new Input<Tree>("tree", "phylogenetic beast.tree with sequence data in the leafs", Validate.REQUIRED);
-	public Input<String> m_outputFileNameInput = new Input<String>(
-            "outputFileName",
-            "If provided, simulated alignment is written to this file rather "
-            + "than to standard out.");
-	public Input<List<MergeDataWith>> mergeListInput = new Input<List<MergeDataWith>>("merge", "specifies template used to merge the generated alignment with", new ArrayList<MergeDataWith>());
-    public Input<Integer> iterationsInput = new Input<Integer>("iterations","number of times the data is generated", 1);
 	
     protected static Sequence root;
     protected static LanguageSubsitutionModel m_subModel;
     protected static Tree m_tree;
-    protected Double m_borrowingRate;
-    protected Double m_borrowingRateZ;
-    protected boolean m_noEmptyTrait;
-    protected String m_outputFileName;
-    protected Integer iterations;
     
     @Override
 	public void initAndValidate() throws Exception {
-		//root = m_rootInput.get();
-		//m_tree = m_treeInput.get();
-		//m_subModel =  m_subModelInput.get();
-		//m_borrowingRate = m_borrowingRateInput.get();
-		//m_borrowingRateZ = m_borrowingRateZInput.get();
-		//m_outputFileName = (String) m_outputFileNameInput.get();
-		//iterations = iterationsInput.get();
 	}
 	
 	public Alignment simulate(Integer numMeaningClasses) throws Exception {
@@ -144,6 +126,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	            m_tree = ((Input<Tree>) plugin.getInput("tree")).get();
 	            m_tree.initAndValidate();
 	            m_subModel = ((Input<LanguageSubsitutionModel>) plugin.getInput("subModel")).get();
+	            
 
 	            // feed to sequence simulator and generate leaves
 	            LanguageSequenceGen treeSimulator = new LanguageSequenceGen();
