@@ -49,10 +49,11 @@ public class BeastBorrowingPluginTest {
 		//GTRTreeBorrowingValidationTwoLanguages();
 		//GTRTreeBorrowingValidationThreeLanguages();
 		//SDTreeBorrowingValidation();
-		//SeqGenTest();
 		//NoEmptyTraitTest();
-		MissingDataTest();
+		//MissingDataTest();
 		//SpeedTestNonBorrowing();
+		
+		SeqGenTest();
 	}
 
 	private static void GTRTest(String seq) throws Exception {

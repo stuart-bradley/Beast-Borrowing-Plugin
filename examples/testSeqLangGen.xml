@@ -1,5 +1,5 @@
 <beast version='2.0'
-       namespace='beast.evolution.alignment:beast.evolution.substitutionmodel'>
+       namespace='beast.evolution.alignment:beast.evolution.substitutionmodel:beast.evolution.missingdatamodel'>
 
     <tree id='tree' spec='beast.util.TreeParser' IsLabelledNewick='true' newick='((((human:0.02096625515232275,(chimp:0.014857143159686462,bonobo:0.014857143159686462):0.0061091119926362895):0.012862878672687175,gorilla:0.033829133825009926):0.029471223948245952,orangutan:0.06330035777325588):0.0031773962188650223,siamang:0.0664777539921209)' />
 
@@ -8,5 +8,6 @@
 		<root spec='Sequence' value="010101010101001000101010100001000011000" taxon="root"/>
 		
 		<subModel spec='ExplicitBinaryStochasticDollo' birth="0.5" death = "0.5" borrowrate ="0.0" borrowzrate="0.0" noEmptyTrait="false" />	
+		<missingModel spec='MissingLanguageModel' rate="0.5"  />	
 	</run>
 </beast>

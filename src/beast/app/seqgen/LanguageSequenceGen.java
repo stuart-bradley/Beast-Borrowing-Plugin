@@ -12,6 +12,8 @@ import beast.core.Input;
 import beast.core.Input.Validate;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.Sequence;
+import beast.evolution.missingdatamodel.MissingDataModel;
+import beast.evolution.missingdatamodel.MissingLanguageModel;
 import beast.evolution.substitutionmodel.LanguageSubsitutionModel;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
@@ -22,10 +24,12 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	public Input<Sequence> m_rootInput = new Input<Sequence>("root", "inital language", Validate.REQUIRED);
 	public Input<LanguageSubsitutionModel> m_subModelInput = new Input<LanguageSubsitutionModel>("subModel", "subsitution model for tree", Validate.REQUIRED);
 	public Input<Tree> m_treeInput = new Input<Tree>("tree", "phylogenetic beast.tree with sequence data in the leafs", Validate.REQUIRED);
+	public Input<MissingDataModel> m_missingModelInput = new Input<MissingDataModel>("missingModel", "missing data model for alignment", Validate.REQUIRED);
 	
     protected static Sequence root;
     protected static LanguageSubsitutionModel m_subModel;
     protected static Tree m_tree;
+    protected static MissingDataModel m_missingModel;
     
     @Override
 	public void initAndValidate() throws Exception {
@@ -33,6 +37,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	
 	public Alignment simulate(Integer numMeaningClasses) throws Exception {
 		Alignment cognateSet = new Alignment();
+		ArrayList<Sequence> newSeqs = new ArrayList<Sequence>();
 		String meaningClasses = "0 ";
 
 		m_tree.getRoot().setMetaData("lang", root);
@@ -59,7 +64,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 					tmp.add(LanguageSubsitutionModel.getSequence(n));
 				}
 				List<Sequence> counts = cognateSet.sequenceInput.get();
-				ArrayList<Sequence> newSeqs = new ArrayList<Sequence>();
+				newSeqs = new ArrayList<Sequence>();
 				// Grab next meaning class.
 				meaningClasses += counts.get(1).getData().length() + " ";
 				for (int j = 0; j < tmp.size(); j++) {
@@ -80,7 +85,13 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 			}
 		}
 		Sequence comment = new Sequence("Meaning Class Positions", meaningClasses);
-		cognateSet.sequenceInput.setValue(comment, cognateSet);
+		newSeqs.add(comment);
+		newSeqs = m_missingModel.generateMissingData(newSeqs);
+		cognateSet = new Alignment();
+		cognateSet.sequenceInput.setValue(root, cognateSet);
+		for (Sequence d : newSeqs) {
+			cognateSet.sequenceInput.setValue(d, cognateSet);
+		}
 		return cognateSet;
 	}
 	
@@ -126,6 +137,9 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	            m_tree = ((Input<Tree>) plugin.getInput("tree")).get();
 	            m_tree.initAndValidate();
 	            m_subModel = ((Input<LanguageSubsitutionModel>) plugin.getInput("subModel")).get();
+	            m_subModel.initAndValidate();
+	            m_missingModel = ((Input<MissingDataModel>) plugin.getInput("missingModel")).get();
+	            m_subModel.initAndValidate();
 	            
 
 	            // feed to sequence simulator and generate leaves
