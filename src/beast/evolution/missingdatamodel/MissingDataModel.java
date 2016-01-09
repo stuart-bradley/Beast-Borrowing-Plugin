@@ -1,8 +1,11 @@
 package beast.evolution.missingdatamodel;
 
+import java.util.ArrayList;
+
 import beast.core.CalculationNode;
 import beast.core.Description;
 import beast.evolution.alignment.Alignment;
+import beast.evolution.alignment.Sequence;
 
 /*
  * MissingDataModel Abstract Class
@@ -28,6 +31,6 @@ public abstract class MissingDataModel extends CalculationNode {
 	 */
 	public abstract void initAndValidate();
 	
-	public abstract Alignment generateMissingData(Alignment a) throws Exception;
+	public abstract ArrayList<Sequence> generateMissingData(ArrayList<Sequence> a) throws Exception;
 
 }

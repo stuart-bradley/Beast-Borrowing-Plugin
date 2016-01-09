@@ -7,7 +7,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import beast.app.seqgen.LanguageSequenceGen;
+import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.Sequence;
+import beast.evolution.missingdatamodel.MissingLanguageModel;
 import beast.evolution.substitutionmodel.ExplicitBinaryGTR;
 import beast.evolution.substitutionmodel.ExplicitBinaryStochasticDollo;
 import beast.evolution.substitutionmodel.LanguageSubsitutionModel;
@@ -47,7 +49,8 @@ public class BeastBorrowingPluginTest {
 		//GTRTreeBorrowingValidationThreeLanguages();
 		//SDTreeBorrowingValidation();
 		//SeqGenTest();
-		NoEmptyTraitTest();
+		//NoEmptyTraitTest();
+		MissingDataTest();
 		//SpeedTestNonBorrowing();
 	}
 
@@ -435,6 +438,24 @@ public class BeastBorrowingPluginTest {
 			}
 			
 		}
+	}
+	
+	private static void MissingDataTest()  throws Exception {
+		ArrayList<Sequence> test = new ArrayList<Sequence>();
+		for (int i = 0; i < 8; i++) {
+			String seq = "";
+			Integer pos =  (int) Randomizer.nextPoisson(10.0);
+			for (int j = 0; j < pos; j++) {
+				seq += '1';
+			}
+			Sequence l = new Sequence(Integer.toString(i),seq);
+			test.add(l);
+			
+		}
+		MissingLanguageModel model = new MissingLanguageModel(0.3);
+		System.out.println(test.toString());
+		test = model.generateMissingData(test);
+		System.out.println(test.toString());
 	}
 
 	private static void printTree(Tree base) {
