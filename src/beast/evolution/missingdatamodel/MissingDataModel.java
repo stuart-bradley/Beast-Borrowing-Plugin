@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import beast.core.CalculationNode;
 import beast.core.Description;
-import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.Sequence;
 
 /*
