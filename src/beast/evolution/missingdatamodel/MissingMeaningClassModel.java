@@ -54,7 +54,7 @@ public class MissingMeaningClassModel extends MissingDataModel {
 	private ArrayList<Sequence> meaningClassToUnknown(ArrayList<Sequence> a, int startIndex, ArrayList<Integer> mcList) throws Exception {
 		int mcIndex = mcList.indexOf(startIndex);
 		// MC is last in list.
-		int endIndex = a.size()-1;
+		int endIndex = a.get(0).getData().length();
 		if (mcIndex != mcList.size()-1) {
 			endIndex = mcList.get(mcIndex+1);
 		}

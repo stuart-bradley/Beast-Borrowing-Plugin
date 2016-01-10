@@ -50,10 +50,11 @@ public class BeastBorrowingPluginTest {
 		//GTRTreeBorrowingValidationThreeLanguages();
 		//SDTreeBorrowingValidation();
 		//NoEmptyTraitTest();
-		//MissingDataTest();
+		//MissingLanguageValidation();
+		MissingMeaningClassesValidation();
 		//SpeedTestNonBorrowing();
 		
-		SeqGenTest();
+		//SeqGenTest();
 	}
 
 	private static void GTRTest(String seq) throws Exception {
@@ -442,18 +443,69 @@ public class BeastBorrowingPluginTest {
 		}
 	}
 	
-	private static void MissingDataTest()  throws Exception {
-		ArrayList<Sequence> test = new ArrayList<Sequence>();
-		for (int i = 0; i < 8; i++) {
-			Sequence l = new Sequence(Integer.toString(i),"01001011");
-			test.add(l);
+	private static void MissingMeaningClassesValidation() throws Exception {
+		ArrayList<Integer> missingMCs = new ArrayList<Integer>();
+		MissingMeaningClassModel model_mc = new MissingMeaningClassModel(0.5);
+		for (int i = 0; i < 100000; i++) {
+			System.out.println(i);
+			ArrayList<Sequence> test = new ArrayList<Sequence>();
+			String seq = "";
+			for (int j = 0; j < 100; j++) {
+				seq+="1";
+			}
 			
+			for (int j = 0; j < 10; j++) {
+				Sequence l = new Sequence(Integer.toString(j),seq);
+				test.add(l);
+				
+			}
+			test.add(new Sequence("mc", "0 10 20 30 40 50 60 70 80 90"));
+			
+			ArrayList<Sequence> tmp = new ArrayList<Sequence>();
+			tmp = model_mc.generateMissingData(test);
+			
+			int missingMC = 0;
+			char[] seqArray = tmp.get(0).getData().toCharArray();
+			for (int j = 0; j < 100; j+=10) {
+				if (seqArray[j] == '?') {
+					missingMC += 1;
+				}
+			}
+			missingMCs.add(missingMC);
 		}
-		test.add(new Sequence("mc", "3 6"));
-		MissingMeaningClassModel model = new MissingMeaningClassModel(0.5);
-		System.out.println(test.toString());
-		test = model.generateMissingData(test);
-		System.out.println(test.toString());
+		listToCSV(missingMCs, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/missing_mc2.csv");
+	}
+	
+	private static void MissingLanguageValidation()  throws Exception {
+		ArrayList<Integer> missingLangs = new ArrayList<Integer>();
+
+		MissingLanguageModel model_lang = new MissingLanguageModel(0.5);
+		for (int i = 0; i < 100000; i++) {
+			ArrayList<Sequence> testLang = new ArrayList<Sequence>();
+			String seq = "";
+			for (int j = 0; j < 100; j++) {
+				seq+="1";
+			}
+			
+			for (int j = 0; j < 10; j++) {
+				Sequence l = new Sequence(Integer.toString(j),seq);
+				testLang.add(l);
+				
+			}
+			testLang.add(new Sequence("mc", "0 10 20 30 40 50 60 70 80 90"));
+			System.out.println(i);
+			ArrayList<Sequence> tmpLang = new ArrayList<Sequence>();
+			tmpLang = model_lang.generateMissingData(testLang);
+			int missingLang = 0;
+			for (Sequence t : tmpLang) {
+				if (t.getData().contains("?")) {
+					missingLang += 1;
+				}
+			}
+			missingLangs.add(missingLang);
+		}
+		
+		listToCSV(missingLangs, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/missing_lang.csv");
 	}
 
 	private static void printTree(Tree base) {

@@ -28,6 +28,9 @@ speed_gtr_a2 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSim
 speed_sd_a1 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/speed_sd_a1.csv", quote="\"")
 speed_sd_a2 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/speed_sd_a2.csv", quote="\"")
 
+missing_lang <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/missing_lang.csv", quote="\"")
+missing_mc <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/missing_mc.csv", quote="\"")
+
 # GTR Lineage Validation
 plot(density(rbinom(100000,20,0.5), adjust=10), col="green",lwd=2, 
      main="Simulation of 100,000 language evolutions under the GTR model", xlab="Number of cogantes", xlim=range(0:20))
@@ -85,4 +88,16 @@ plot(density(speed_sd_a1$V1, adjust=10), col="green",lwd=2,
      main="Simulation of 10,000 whole tree evolutions under the Stochastic-Dollo model", xlab="Speed (ms)", xlim=range(0:20))
 lines(density(speed_sd_a2$V1, adjust=10), col="blue", lwd=2)
 legend('topright',c("Simple Tree","Borrowing set to 0.0"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
+par(mfrow=c(1, 1))
+
+# Missing Language Validation.
+par(mfrow=c(2, 1))
+plot(density(rbinom(100000,10,0.5), adjust=10), col="green",lwd=2, 
+     main="Simulation of 100,000 missing language models", xlab="Number of missing languages", xlim=range(0:20))
+lines(density(missing_lang$V1, adjust=10), col="blue", lwd=2)
+legend('topright',c("Binomial Distribution","Missing Languages Algorithm"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
+plot(density(rbinom(100000,10,0.5), adjust=10), col="green",lwd=2, 
+     main="Simulation of 100,000 missing meaning class models", xlab="Number of missing meaning classes", xlim=range(0:20))
+lines(density(missing_mc$V1, adjust=10), col="blue", lwd=2)
+legend('topright',c("Binomial Distribution","Missing Meaning Classes Algorithm"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
 par(mfrow=c(1, 1))
