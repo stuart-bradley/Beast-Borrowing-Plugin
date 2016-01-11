@@ -54,7 +54,8 @@ The BEAST file outlines how to produce the synthetic data. An example is provide
     <run spec="beast.app.seqgen.LanguageSequenceGen" tree='@tree'>
 		<root spec='Sequence' value="01010101010100100010101010000100" taxon="root"/>
 		
-		<subModel spec='ExplicitBinaryStochasticDollo' birth="0.5" death = "0.5" borrowrate ="0.0" borrowzrate="0.0" />	
+		<subModel spec='ExplicitBinaryStochasticDollo' birth="0.5" death = "0.5" borrowrate ="0.0" borrowzrate="0.0" noEmptyTrait="false" />	
+    <missingModel spec='MissingLanguageModel' rate="0.5"  />
 	</run>
 </beast> 
 ```
@@ -62,9 +63,12 @@ The BEAST file outlines how to produce the synthetic data. An example is provide
 * The `tree` takes a newick formatted tree with both branch distances and taxon node names. 
 * The `run` initiates the plugin using the `tree` defined above. It also has a number of interior parameters:
   * `root` is the sequence to be placed at the root of the tree. It should consist of present (1) or absent traits (0). The plugin does not handle missing or unknown traits. The `taxon` does not need to be *root*.
-  * `subModel` defines the module used to simulate evolution down the tree. All models have a `borrowrate` parameter, which defines the rate of global borrowing; `borrowzrate` defines the distance of local borrowing; note: if `borrowzrate` is set to `0.0`, the plugin assumes an infinite distance. Currently there are two models:
+  * `subModel` defines the model used to simulate evolution down the tree. All models have a `borrowrate` parameter, which defines the rate of global borrowing; `borrowzrate` defines the distance of local borrowing; note: if `borrowzrate` is set to `0.0`, the plugin assumes an infinite distance. Currently there are two models:
     * `ExplicitBinaryGTR` evolves the `root` via a Generalised Time-Reversible model. This model has a single `rate` parameter which defines the rate at which traits both can be birthed, and die. 
     * `ExplicitBinaryStochasticDollo` evolves the `root` via a Stochastic-Dollo model of sequence evolution, which has both a `birth` rate of traits, and a separate `death` rate. 
+  * `missingModel` defines the model used to simulate missing data in the final alignment. Currently, this is non-optional and to not use it `rate` should be set to `0`.
+    * `MissingLanguageModel` - Languages are picked in a random binomal fashion at some `rate` to be converted to unknown date.
+    * `MissingMeaningClassModel` - Individual meaning classes are picked in a random binomal fashion at some `rate` which are converted to unknown data across all languages. 
 
 ### The Output file
 
@@ -109,6 +113,8 @@ The first `sequence` is the root defined by `root` in the BEAST file, and the la
 * Whole tree mutation with borrowing.
   * Local borrowing.
 * Meaning classes.
+  * No empty trait flag.
+* Missing data sythesis.
 
 ### Future Features
 
