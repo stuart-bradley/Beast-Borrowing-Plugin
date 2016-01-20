@@ -58,18 +58,20 @@ par(mfrow=c(1, 1))
 
 # GTR Whole Tree Borrowing Validation (2 Languages)
 p = c(0.2222,0.2222,0.2222,0.3333)
-plot(density(rmultinom(400000,20,p), adjust=10), col="green",lwd=2, 
-     main="Simulation of 100,000 language evolutions under the GTR borrowing model", xlab="Number of cogantes", xlim=range(0:20))
-p = c(mean(gtr00$V1)/20,mean(gtr01$V1)/20,mean(gtr10$V1)/20,mean(gtr11$V1)/20)
-lines(density(rmultinom(400000,20,p), adjust=10), col="blue", lwd=2)
+cognates = 20
+plot(density(rmultinom(400000,cognates,p), adjust=10), col="green",lwd=2, 
+     main="Simulation of 100,000 language evolutions under the GTR borrowing model", xlab="Number of cogantes", xlim=range(0:cognates))
+p = c(mean(gtr00$V1)/cognates,mean(gtr01$V1)/cognates,mean(gtr10$V1)/cognates,mean(gtr11$V1)/cognates)
+lines(density(rmultinom(400000,cognates,p), adjust=10), col="blue", lwd=2)
 legend('topright',c("Multinomial Distribution","GTR Borrowing Algorithm (2 Languages)"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
 
 # GTR Whole Tree Borrowing Validation (3 Languages)
 p = c(0.0930,0.0930,0.0930,0.0930,0.1395,0.1395,0.1395,0.2093)
-plot(density(rmultinom(400000,20,p), adjust=10), col="green",lwd=2, 
-     main="Simulation of 100,000 language evolutions under the GTR borrowing model", xlab="Number of cogantes", xlim=range(0:20))
-p = c(mean(gtr000$V1)/20,mean(gtr100$V1)/20,mean(gtr010$V1)/20,mean(gtr001$V1)/20,mean(gtr110$V1)/20,mean(gtr101$V1)/20,mean(gtr011$V1)/20,mean(gtr111$V1)/20)
-lines(density(rmultinom(400000,20,p), adjust=10), col="blue", lwd=2)
+cognates = 20
+plot(density(rmultinom(400000,cognates,p), adjust=10), col="green",lwd=2, 
+     main="Simulation of 100,000 language evolutions under the GTR borrowing model", xlab="Number of cogantes", xlim=range(0:cognates))
+p = c(mean(gtr000$V1)/cognates,mean(gtr100$V1)/cognates,mean(gtr010$V1)/cognates,mean(gtr001$V1)/cognates,mean(gtr110$V1)/cognates,mean(gtr101$V1)/cognates,mean(gtr011$V1)/cognates,mean(gtr111$V1)/cognates)
+lines(density(rmultinom(400000,cognates,p), adjust=10), col="blue", lwd=2)
 legend('topright',c("Multinomial Distribution","GTR Borrowing Algorithm (3 Languages)"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
 
 # SD Whole Tree Borrowing Validation 

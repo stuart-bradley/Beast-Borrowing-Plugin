@@ -46,8 +46,8 @@ public class BeastBorrowingPluginTest {
 		
 		//SDTreeValidation();
 		//GTRTreeValidation();
-		//GTRTreeBorrowingValidationTwoLanguages();
-		//GTRTreeBorrowingValidationThreeLanguages();
+		GTRTreeBorrowingValidationTwoLanguages();
+		GTRTreeBorrowingValidationThreeLanguages();
 		//SDTreeBorrowingValidation();
 		//NoEmptyTraitTest();
 		//MissingLanguageValidation();
@@ -228,7 +228,7 @@ public class BeastBorrowingPluginTest {
 			System.out.println(i);
 			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.5,0.0, false);
 			String seq = "";
-			for (int j = 0; j < 100; j++) {
+			for (int j = 0; j < 20; j++) {
 				seq += Integer.toString(Randomizer.nextInt(2));
 			}
 			Sequence l = new Sequence("",seq);
@@ -281,7 +281,7 @@ public class BeastBorrowingPluginTest {
 			System.out.println(i);
 			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.5,0.0, false);
 			String seq = "";
-			for (int j = 0; j < 10000; j++) {
+			for (int j = 0; j < 20; j++) {
 				seq += Integer.toString(Randomizer.nextInt(2));
 			}
 			Sequence l = new Sequence("",seq);
@@ -289,7 +289,7 @@ public class BeastBorrowingPluginTest {
 			rootNode.setMetaData("lang", l);
 			rootNode.setHeight(0);
 			tree = new Tree(rootNode);
-			tree = randomTree(tree, 3, 0.1);
+			tree = randomTree3Branch(tree, 3, 0.1);
 			tree = gtr_mod.mutateOverTreeBorrowing(tree);
 			List<Node> ext = tree.getExternalNodes();
 			String l1 = ((Sequence) ext.get(0).getMetaData("lang")).getData();
@@ -576,5 +576,50 @@ public class BeastBorrowingPluginTest {
 		}
 		return rootTree;
 	}
+	
+	private static Tree randomTree3Branch(Tree rootTree, Integer numLeaves, Double branchRate) {
+		ArrayList<Node> currLeaves = new ArrayList<Node>(); 
+		ArrayList<Node> newLeaves = new ArrayList<Node>();
+		currLeaves.add(rootTree.getRoot());
+		Sequence rootLang = (Sequence) rootTree.getRoot().getMetaData("lang");
+		Node childLeft, childMiddle, childRight;
+		
+		while (currLeaves.size() < numLeaves) {
+			for (Node parent : currLeaves) {
+				childLeft = new Node();
+				childMiddle = new Node();
+				childRight = new Node();
+				
+				// Left child.
+				double t = Randomizer.nextExponential(branchRate);
+				childLeft.setParent(parent);
+				parent.addChild(childLeft);
+				childLeft.setHeight(parent.getHeight()+t);
+				childLeft.setMetaData("lang", rootLang);
+				newLeaves.add(childLeft);
+				rootTree.addNode(childLeft);
+				// Middle child. 
+				//t = Randomizer.nextExponential(branchRate);
+				childMiddle.setParent(parent);
+				parent.addChild(childMiddle);
+				childMiddle.setHeight(parent.getHeight()+t);
+				childMiddle.setMetaData("lang", rootLang);
+				newLeaves.add(childMiddle);
+				rootTree.addNode(childMiddle);
+				// Right child.
+				//t = Randomizer.nextExponential(branchRate);
+				childRight.setParent(parent);
+				parent.addChild(childRight);
+				childRight.setHeight(parent.getHeight()+t);
+				childRight.setMetaData("lang", rootLang);
+				newLeaves.add(childRight);
+				rootTree.addNode(childRight);
+			}
+			currLeaves = new ArrayList<Node>(newLeaves);
+			newLeaves = new ArrayList<Node>();
+		}
+		return rootTree;
+	}
+	
 	
 }
