@@ -51,7 +51,7 @@ public class BeastBorrowingPluginTest {
 		//SDTreeBorrowingValidation();
 		//NoEmptyTraitTest();
 		//MissingLanguageValidation();
-		MissingMeaningClassesValidation();
+		//MissingMeaningClassesValidation();
 		//SpeedTestNonBorrowing();
 		
 		//SeqGenTest();

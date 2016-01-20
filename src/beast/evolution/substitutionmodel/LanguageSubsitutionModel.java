@@ -180,7 +180,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @param t Double, alive time.
 	 * @return list of alive nodes.
 	 */
-	protected ArrayList<Node> getAliveNodes(Tree base, Double t) {
+	public ArrayList<Node> getAliveNodes(Tree base, Double t) {
 		ArrayList<Node> aliveNodes = new ArrayList<Node>();
 		
 		Node root = base.getRoot();
@@ -212,11 +212,33 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	}
 	
 	/*
+	 * Determines whether two lists of alive nodes are equal.
+	 * @param oldAliveNodes.
+	 * @param newAliveNodes.
+	 * @return boolean as to whether they are the same.
+	 */
+	protected boolean compareAliveNodes(ArrayList<Node> oldAliveNodes, ArrayList<Node> newAliveNodes) {
+		ArrayList<Node> oldAN = new ArrayList<Node>(oldAliveNodes);
+		ArrayList<Node> newAN = new ArrayList<Node>(newAliveNodes);
+		
+		// Newer list will always be equal or larger (Tree structure).
+		newAN.removeAll(oldAliveNodes);
+		oldAN.removeAll(newAliveNodes);
+
+		// If all are removed, then lists are equal.
+		if (newAN.isEmpty() && oldAN.isEmpty()) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+	
+	/*
 	 * No Empty Trait Check.
 	 * @param l Sequence.
 	 * @return boolean whether or not trait can be removed.
 	 */
-	public boolean noEmptyTraitCheck(Sequence l) {
+	protected boolean noEmptyTraitCheck(Sequence l) {
 		// Traits are removal if noEmptyTrait flag is not set.
 		if (noEmptyTrait == false) {
 			return true;

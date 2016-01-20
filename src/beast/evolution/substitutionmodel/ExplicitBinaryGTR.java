@@ -147,6 +147,14 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		int idx;
 		double[] probs;
 		while (t < treeHeight) {
+			// If t has changed rate, ignore event.
+			if (! compareAliveNodes(aliveNodes, getAliveNodes(base, t))) {
+				aliveNodes = getAliveNodes(base, t);
+				totalRate = totalRate(aliveNodes);
+				t += Randomizer.nextExponential(totalRate);
+				continue;
+			}
+			
 			// Return array of event probabilities and pick one.
 			probs = BorrowingProbs(aliveNodes);
 			Integer choice = Randomizer.randomChoicePDF(probs);

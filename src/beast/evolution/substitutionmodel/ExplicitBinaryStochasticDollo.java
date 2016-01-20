@@ -153,6 +153,13 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		int idx;
 		double[] probs = new double[3];
 		while (t < treeHeight) {
+			// If t has changed rate, ignore event.
+			if (! compareAliveNodes(aliveNodes, getAliveNodes(base, t))) {
+				aliveNodes = getAliveNodes(base, t);
+				totalRate = totalRate(aliveNodes);
+				t += Randomizer.nextExponential(totalRate);
+				continue;
+			}
 			probs = BorrowingProbs(aliveNodes);
 			Integer choice = Randomizer.randomChoicePDF(probs);
 			switch (choice) {
