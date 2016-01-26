@@ -46,7 +46,7 @@ public class BeastBorrowingPluginTest {
 		
 		//SDTreeValidation();
 		//GTRTreeValidation();
-		GTRTreeBorrowingValidationTwoLanguages();
+		//GTRTreeBorrowingValidationTwoLanguages();
 		GTRTreeBorrowingValidationThreeLanguages();
 		//SDTreeBorrowingValidation();
 		//NoEmptyTraitTest();
@@ -236,7 +236,7 @@ public class BeastBorrowingPluginTest {
 			rootNode.setMetaData("lang", l);
 			rootNode.setHeight(0);
 			tree = new Tree(rootNode);
-			tree = randomTree(tree, 2, 0.1);
+			tree = randomTree(tree, 2, 0.01);
 			tree = gtr_mod.mutateOverTreeBorrowing(tree);
 			List<Node> ext = tree.getExternalNodes();
 			String l1 = ((Sequence) ext.get(0).getMetaData("lang")).getData();
@@ -592,6 +592,7 @@ public class BeastBorrowingPluginTest {
 				
 				// Left child.
 				double t = Randomizer.nextExponential(branchRate);
+				System.out.println(t);
 				childLeft.setParent(parent);
 				parent.addChild(childLeft);
 				childLeft.setHeight(parent.getHeight()+t);
