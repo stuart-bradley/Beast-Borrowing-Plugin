@@ -136,9 +136,9 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	public Tree mutateOverTreeBorrowing(Tree base) throws Exception {
 		Double treeHeight = getTreeHeight(base);
 		// Get root node.
-		ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
+		ArrayList<Node> aliveNodes; 
 		// Get first event.
-		Double totalRate = totalRate(aliveNodes);
+		Double totalRate = totalRate(getAliveNodes(base, 0.0));
 		Double t = Randomizer.nextExponential(totalRate);
 		// Variable declarations.
 		Node ranNode = null, ranNode2 = null;
@@ -147,11 +147,14 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		int idx;
 		double[] probs;
 		while (t < treeHeight) {
+			aliveNodes = getAliveNodes(base, t);
 			// If t has changed rate, ignore event.
 			if (! compareAliveNodes(aliveNodes, getAliveNodes(base, t))) {
 				aliveNodes = getAliveNodes(base, t);
 				totalRate = totalRate(aliveNodes);
-				t += Randomizer.nextExponential(totalRate);
+				System.out.println(t);
+				t = aliveNodes.get(0).getHeight();
+				System.out.println(t);
 				continue;
 			}
 			
@@ -170,7 +173,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 				int currentTrait =  Character.getNumericValue(nodeLang.getData().charAt(pos));
 				// Flip the bit at the random position.
 				// On death check NoEmptyTrait.
-				if (1 - currentTrait == 0) {
+				if (1 - currentTrait != 0) {
 					if (noEmptyTraitCheck(nodeLang)) {
 						s = replaceCharAt(nodeLang.getData(), pos, Integer.toString((1 - currentTrait)));
 					} else {
@@ -219,8 +222,6 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 				}
 				break;
 			}
-			aliveNodes = getAliveNodes(base, t);
-			totalRate = totalRate(aliveNodes);
 			t += Randomizer.nextExponential(totalRate);
 		}
 		return base;
