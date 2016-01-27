@@ -277,7 +277,7 @@ public class BeastBorrowingPluginTest {
 		ArrayList<Integer> oneZeroOne = new ArrayList<Integer>();
 		ArrayList<Integer> zeroOneOne = new ArrayList<Integer>();
 		ArrayList<Integer> oneOneOne = new ArrayList<Integer>();
-		for (int i = 0; i < 1000; i++) {
+		for (int i = 0; i < 10000; i++) {
 			System.out.println(i);
 			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.5,0.0, false);
 			String seq = "";
