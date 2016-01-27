@@ -26,7 +26,7 @@ public class BeastBorrowingPluginTest {
 	private static void run() throws Exception {
 		// Base Seq generation.
 		String seq = "";
-		for (int i = 0; i < 5; i++) {
+		for (int i = 0; i < 20; i++) {
 			seq += '1';
 		}
 		/*
@@ -277,7 +277,7 @@ public class BeastBorrowingPluginTest {
 		ArrayList<Integer> oneZeroOne = new ArrayList<Integer>();
 		ArrayList<Integer> zeroOneOne = new ArrayList<Integer>();
 		ArrayList<Integer> oneOneOne = new ArrayList<Integer>();
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 1000; i++) {
 			System.out.println(i);
 			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.5,0.0, false);
 			String seq = "";
@@ -289,7 +289,7 @@ public class BeastBorrowingPluginTest {
 			rootNode.setMetaData("lang", l);
 			rootNode.setHeight(0);
 			tree = new Tree(rootNode);
-			tree = randomTree(tree, 3, 0.1);
+			tree = randomTree3Branch(tree, 3, 0.1);
 			tree = gtr_mod.mutateOverTreeBorrowing(tree);
 			List<Node> ext = tree.getExternalNodes();
 			String l1 = ((Sequence) ext.get(0).getMetaData("lang")).getData();
@@ -331,14 +331,14 @@ public class BeastBorrowingPluginTest {
 			zeroOneOne.add(zeroOneOneInt);
 			oneOneOne.add(oneOneOneInt);
 		}
-		//listToCSV(zeroZeroZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr000.csv");
-		//listToCSV(oneZeroZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr100.csv");
-		//listToCSV(zeroOneZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr010.csv");
-		//listToCSV(zeroZeroOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr001.csv");
-		//listToCSV(oneOneZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr110.csv");
-		//listToCSV(oneZeroOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr101.csv");
-		//listToCSV(zeroOneOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr011.csv");
-		//listToCSV(oneOneOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr111.csv");
+		listToCSV(zeroZeroZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr000.csv");
+		listToCSV(oneZeroZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr100.csv");
+		listToCSV(zeroOneZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr010.csv");
+		listToCSV(zeroZeroOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr001.csv");
+		listToCSV(oneOneZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr110.csv");
+		listToCSV(oneZeroOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr101.csv");
+		listToCSV(zeroOneOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr011.csv");
+		listToCSV(oneOneOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr111.csv");
 	}
 	
 	private static void SDTreeBorrowingValidation() throws Exception {
@@ -592,7 +592,6 @@ public class BeastBorrowingPluginTest {
 				
 				// Left child.
 				double t = Randomizer.nextExponential(branchRate);
-				System.out.println(t);
 				childLeft.setParent(parent);
 				parent.addChild(childLeft);
 				childLeft.setHeight(parent.getHeight()+t);

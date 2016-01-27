@@ -253,6 +253,21 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	}
 	
 	/*
+	 * Gets smallest rate change node.
+	 * @param aliveNodes.
+	 * @return double of smallest height.
+	 */
+	protected double getSmallestHeight(ArrayList<Node> aliveNodes) {
+		double smallest = Double.MAX_VALUE;
+		for (Node n : aliveNodes) {
+			if (n.getHeight() < smallest) {
+				smallest = n.getHeight();
+			}
+		}
+		return smallest;
+	}
+	
+	/*
 	 * Gets Sequence from Node.
 	 * @param n Node.
 	 * @return Sequence.
