@@ -144,7 +144,9 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 */
 	public Tree mutateOverTreeBorrowing(Tree base) throws Exception {
 		Double treeHeight = getTreeHeight(base);
-		ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
+		// Get root node.
+		ArrayList<Node> aliveNodes  = getAliveNodes(base, 0.0);
+		ArrayList<Node> aliveNodesNew;
 		Double totalRate = totalRate(aliveNodes);
 		Double t = Randomizer.nextExponential(totalRate);
 		Node ranNode = null, ranNode2 = null;
@@ -154,81 +156,80 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		double[] probs = new double[3];
 		while (t < treeHeight) {
 			// If t has changed rate, ignore event.
-			if (! compareAliveNodes(aliveNodes, getAliveNodes(base, t))) {
-				aliveNodes = getAliveNodes(base, t);
-				totalRate = totalRate(aliveNodes);
-				t += Randomizer.nextExponential(totalRate);
-				continue;
-			}
-			probs = BorrowingProbs(aliveNodes);
-			Integer choice = Randomizer.randomChoicePDF(probs);
-			switch (choice) {
-			// Birth.
-			case 0:
-				idx = Randomizer.nextInt(aliveNodes.size());
-				ranNode = aliveNodes.get(idx);
-				nodeLang = getSequence(ranNode);
-				s = nodeLang.getData() + '1';
-				newNodeLang = new Sequence("",s);
-				setSubTreeLanguages(ranNode, newNodeLang);
-				addEmptyTrait(base, ranNode);
-				break;
-			// Death.
-			case 1:
-				idx = Randomizer.nextInt(aliveNodes.size());
-				ranNode = aliveNodes.get(idx);
-				nodeLang = getSequence(ranNode);
-				// Find random alive trait, and kill it.
-				for (Integer i : getRandLangIndex(nodeLang)) {
-					if (Character.getNumericValue(nodeLang.getData().charAt(i)) != 0) {
-						if (noEmptyTraitCheck(nodeLang)) {
-							s = replaceCharAt(nodeLang.getData(), i, Integer.toString(0));
-							newNodeLang = new Sequence("",s);
-							newNodeLang.dataInput.setValue(s, newNodeLang);
-							setSubTreeLanguages(ranNode, newNodeLang);
-						}
-						break;
-					}
-				}
-				ranNode.setMetaData("lang", nodeLang);
-				break;
-			// Borrowing.
-			case 2:
-				if (aliveNodes.size() < 2) {
-					break;
-				}
-				while (true) {
+			aliveNodesNew = getAliveNodes(base, t);
+			if (compareAliveNodes(aliveNodes, aliveNodesNew)) {	
+				probs = BorrowingProbs(aliveNodes);
+				Integer choice = Randomizer.randomChoicePDF(probs);
+				switch (choice) {
+				// Birth.
+				case 0:
 					idx = Randomizer.nextInt(aliveNodes.size());
 					ranNode = aliveNodes.get(idx);
 					nodeLang = getSequence(ranNode);
-					idx = Randomizer.nextInt(aliveNodes.size());
-					ranNode2 = aliveNodes.get(idx);
-					nodeLang2 =  getSequence(ranNode2);
-					if (ranNode != ranNode2) {
-						break;
-					}
-				}
-				if (localDist(ranNode, ranNode2) == false) {
+					s = nodeLang.getData() + '1';
+					newNodeLang = new Sequence("",s);
+					setSubTreeLanguages(ranNode, newNodeLang);
+					addEmptyTrait(base, ranNode);
 					break;
-				} else {
+				// Death.
+				case 1:
+					idx = Randomizer.nextInt(aliveNodes.size());
+					ranNode = aliveNodes.get(idx);
+					nodeLang = getSequence(ranNode);
+					// Find random alive trait, and kill it.
 					for (Integer i : getRandLangIndex(nodeLang)) {
-						try {
-							if (Character.getNumericValue(nodeLang.getData().charAt(i)) == 1) {
-								s = replaceCharAt(nodeLang2.getData(), i, Integer.toString(1));
+						if (Character.getNumericValue(nodeLang.getData().charAt(i)) != 0) {
+							if (noEmptyTraitCheck(nodeLang)) {
+								s = replaceCharAt(nodeLang.getData(), i, Integer.toString(0));
 								newNodeLang = new Sequence("",s);
 								newNodeLang.dataInput.setValue(s, newNodeLang);
-								setSubTreeLanguages(ranNode2, newNodeLang);
-								break;
+								setSubTreeLanguages(ranNode, newNodeLang);
 							}
-						} catch (IndexOutOfBoundsException e) {
-							continue;
+							break;
 						}
 					}
+					ranNode.setMetaData("lang", nodeLang);
+					break;
+				// Borrowing.
+				case 2:
+					if (aliveNodes.size() < 2) {
+						break;
+					}
+					while (true) {
+						idx = Randomizer.nextInt(aliveNodes.size());
+						ranNode = aliveNodes.get(idx);
+						nodeLang = getSequence(ranNode);
+						idx = Randomizer.nextInt(aliveNodes.size());
+						ranNode2 = aliveNodes.get(idx);
+						nodeLang2 =  getSequence(ranNode2);
+						if (ranNode != ranNode2) {
+							break;
+						}
+					}
+					if (localDist(ranNode, ranNode2) == false) {
+						break;
+					} else {
+						for (Integer i : getRandLangIndex(nodeLang)) {
+							try {
+								if (Character.getNumericValue(nodeLang.getData().charAt(i)) == 1) {
+									s = replaceCharAt(nodeLang2.getData(), i, Integer.toString(1));
+									newNodeLang = new Sequence("",s);
+									newNodeLang.dataInput.setValue(s, newNodeLang);
+									setSubTreeLanguages(ranNode2, newNodeLang);
+									break;
+								}
+							} catch (IndexOutOfBoundsException e) {
+								continue;
+							}
+						}
+					}
+					break;
 				}
-				break;
+			} else {
+				t = getSmallestHeight(aliveNodes);
+				aliveNodes = aliveNodesNew;
+				totalRate = totalRate(aliveNodes);
 			}
-			aliveNodes = getAliveNodes(base, t);
-			totalRate = totalRate(aliveNodes);
 			t += Randomizer.nextExponential(totalRate);
 		}
 		return base;
