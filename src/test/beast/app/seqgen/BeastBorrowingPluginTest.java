@@ -26,7 +26,7 @@ public class BeastBorrowingPluginTest {
 	private static void run() throws Exception {
 		// Base Seq generation.
 		String seq = "";
-		for (int i = 0; i < 20; i++) {
+		for (int i = 0; i < 300; i++) {
 			seq += '1';
 		}
 		/*
@@ -46,7 +46,7 @@ public class BeastBorrowingPluginTest {
 		
 		//SDTreeValidation();
 		//GTRTreeValidation();
-		//GTRTreeBorrowingValidationTwoLanguages();
+		GTRTreeBorrowingValidationTwoLanguages();
 		GTRTreeBorrowingValidationThreeLanguages();
 		//SDTreeBorrowingValidation();
 		//NoEmptyTraitTest();
@@ -122,7 +122,7 @@ public class BeastBorrowingPluginTest {
 	
 	private static void TreeGTRBorrowingTest(String seq) throws Exception {
 		Sequence l = new Sequence("",seq);
-		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 1.2,0.0, false);
+		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 1.2, 0.0, false);
 
 		System.out.println("Tree GTR Borrowing Test");
 		Node rootNode = new Node();
@@ -130,6 +130,23 @@ public class BeastBorrowingPluginTest {
 		rootNode.setHeight(0);
 		Tree tree = new Tree(rootNode);
 		tree = randomTree(tree, 8, 0.6);
+		gtr_mod.mutateOverTreeBorrowing(tree);
+		for (Node n : tree.getExternalNodes()) {
+			Sequence l2 = (Sequence) n.getMetaData("lang");
+			System.out.println(l2.getData());
+		}
+	}
+	
+	private static void aliveNodesTest(String seq) throws Exception {
+		Sequence l = new Sequence("",seq);
+		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.5,0.0, false);
+
+		System.out.println("Tree GTR Borrowing Test");
+		Node rootNode = new Node();
+		rootNode.setMetaData("lang", l);
+		rootNode.setHeight(0);
+		Tree tree = new Tree(rootNode);
+		tree = randomTree3Branch(tree, 3, 0.01);
 		gtr_mod.mutateOverTreeBorrowing(tree);
 		for (Node n : tree.getExternalNodes()) {
 			Sequence l2 = (Sequence) n.getMetaData("lang");
@@ -224,11 +241,11 @@ public class BeastBorrowingPluginTest {
 		ArrayList<Integer> zeroOne = new ArrayList<Integer>();
 		ArrayList<Integer> oneZero = new ArrayList<Integer>();
 		ArrayList<Integer> oneOne = new ArrayList<Integer>();
-		for (int i = 0; i < 100000; i++) {
+		for (int i = 0; i < 10000; i++) {
 			System.out.println(i);
 			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.5,0.0, false);
 			String seq = "";
-			for (int j = 0; j < 20; j++) {
+			for (int j = 0; j < 50; j++) {
 				seq += Integer.toString(Randomizer.nextInt(2));
 			}
 			Sequence l = new Sequence("",seq);
@@ -236,7 +253,7 @@ public class BeastBorrowingPluginTest {
 			rootNode.setMetaData("lang", l);
 			rootNode.setHeight(0);
 			tree = new Tree(rootNode);
-			tree = randomTree(tree, 2, 0.01);
+			tree = randomTree(tree, 2, 0.001);
 			tree = gtr_mod.mutateOverTreeBorrowing(tree);
 			List<Node> ext = tree.getExternalNodes();
 			String l1 = ((Sequence) ext.get(0).getMetaData("lang")).getData();
@@ -245,7 +262,7 @@ public class BeastBorrowingPluginTest {
 			int zeroOneInt = 0;
 			int oneZeroInt = 0;
 			int oneOneInt = 0;
-			for (int j = 0; j < 20; j++) {
+			for (int j = 0; j < 50; j++) {
 				if (l1.charAt(j) == '0' && l2.charAt(j) == '0') {
 					zeroZeroInt += 1;
 				} else if (l1.charAt(j) == '0' && l2.charAt(j) == '1') {
@@ -281,7 +298,7 @@ public class BeastBorrowingPluginTest {
 			System.out.println(i);
 			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.5,0.0, false);
 			String seq = "";
-			for (int j = 0; j < 20; j++) {
+			for (int j = 0; j < 50; j++) {
 				seq += Integer.toString(Randomizer.nextInt(2));
 			}
 			Sequence l = new Sequence("",seq);
@@ -289,7 +306,7 @@ public class BeastBorrowingPluginTest {
 			rootNode.setMetaData("lang", l);
 			rootNode.setHeight(0);
 			tree = new Tree(rootNode);
-			tree = randomTree3Branch(tree, 3, 0.1);
+			tree = randomTree3Branch(tree, 3, 0.001);
 			tree = gtr_mod.mutateOverTreeBorrowing(tree);
 			List<Node> ext = tree.getExternalNodes();
 			String l1 = ((Sequence) ext.get(0).getMetaData("lang")).getData();
@@ -303,7 +320,7 @@ public class BeastBorrowingPluginTest {
 			Integer oneZeroOneInt = 0;
 			Integer zeroOneOneInt = 0;
 			Integer oneOneOneInt = 0;
-			for (int j = 0; j < 20; j++) {
+			for (int j = 0; j < 50; j++) {
 				if (l1.charAt(j) == '0' && l2.charAt(j) == '0' && l3.charAt(j) == '0') {
 					zeroZeroZeroInt += 1;
 				} else if (l1.charAt(j) == '1' && l2.charAt(j) == '0' && l3.charAt(j) == '0') {
@@ -357,7 +374,7 @@ public class BeastBorrowingPluginTest {
 			rootNode.setMetaData("lang", l);
 			rootNode.setHeight(0);
 			tree = new Tree(rootNode);
-			tree = randomTree(tree, 8, 0.01);
+			tree = randomTree(tree, 8, 0.1);
 			tree = sd_mod.mutateOverTreeBorrowing(tree);
 			for (Node n : tree.getExternalNodes()) {
 				Sequence l2 = (Sequence) n.getMetaData("lang");
@@ -591,7 +608,7 @@ public class BeastBorrowingPluginTest {
 				childRight = new Node();
 				
 				// Left child.
-				double t = Randomizer.nextExponential(branchRate);
+				double t = Randomizer.nextExponential(branchRate);;
 				childLeft.setParent(parent);
 				parent.addChild(childLeft);
 				childLeft.setHeight(parent.getHeight()+t);

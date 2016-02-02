@@ -83,7 +83,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 			// If death.
 			if (Randomizer.randomChoice(probs) == 0) {
 				// Find random alive trait, and kill it.
-				for (int randomNum : getRandLangIndex(newLang)) {
+				for (int randomNum : Randomizer.shuffled(newLang.getData().length())) {
 					if (Character.getNumericValue(newLang.getData().charAt(randomNum)) != 0) {
 						if (noEmptyTraitCheck(newLang)) {
 							String newSeq = replaceCharAt(newLang.getData(), randomNum, Integer.toString(0));
@@ -142,6 +142,17 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 * 
 	 * @return base Tree with languages added.
 	 */
+	/*
+	 * Mutates down a tree, includes global and local borrowing.
+	 * 
+	 * @param base Tree with starting language in root.
+	 * 
+	 * @param borrow borrowing rate.
+	 * 
+	 * @param z local borrowing rate, 0.0 rate implies global borrowing.
+	 * 
+	 * @return base Tree with languages added.
+	 */
 	public Tree mutateOverTreeBorrowing(Tree base) throws Exception {
 		Double treeHeight = getTreeHeight(base);
 		// Get root node.
@@ -152,7 +163,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		Node ranNode = null, ranNode2 = null;
 		Sequence nodeLang = null, nodeLang2 = null, newNodeLang = null;
 		String s;
-		int idx;
+		int idx, idx2;
 		double[] probs = new double[3];
 		while (t < treeHeight) {
 			// If t has changed rate, ignore event.
@@ -160,9 +171,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 			if (compareAliveNodes(aliveNodes, aliveNodesNew)) {	
 				probs = BorrowingProbs(aliveNodes);
 				Integer choice = Randomizer.randomChoicePDF(probs);
-				switch (choice) {
-				// Birth.
-				case 0:
+				if (choice == 0) {
 					idx = Randomizer.nextInt(aliveNodes.size());
 					ranNode = aliveNodes.get(idx);
 					nodeLang = getSequence(ranNode);
@@ -170,14 +179,13 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 					newNodeLang = new Sequence("",s);
 					setSubTreeLanguages(ranNode, newNodeLang);
 					addEmptyTrait(base, ranNode);
-					break;
 				// Death.
-				case 1:
+				} else if (choice == 1) {
 					idx = Randomizer.nextInt(aliveNodes.size());
 					ranNode = aliveNodes.get(idx);
 					nodeLang = getSequence(ranNode);
 					// Find random alive trait, and kill it.
-					for (Integer i : getRandLangIndex(nodeLang)) {
+					for (Integer i : Randomizer.shuffled(nodeLang.getData().length())) {
 						if (Character.getNumericValue(nodeLang.getData().charAt(i)) != 0) {
 							if (noEmptyTraitCheck(nodeLang)) {
 								s = replaceCharAt(nodeLang.getData(), i, Integer.toString(0));
@@ -189,41 +197,34 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 						}
 					}
 					ranNode.setMetaData("lang", nodeLang);
-					break;
 				// Borrowing.
-				case 2:
-					if (aliveNodes.size() < 2) {
-						break;
-					}
-					while (true) {
-						idx = Randomizer.nextInt(aliveNodes.size());
+				} else if (choice == 2) {
+					if (aliveNodes.size() > 1) {
+						// Pick two distinct languages at random.
+						do {
+							idx = Randomizer.nextInt(aliveNodes.size());
+							idx2 = Randomizer.nextInt(aliveNodes.size());
+						} while (idx == idx2);
 						ranNode = aliveNodes.get(idx);
 						nodeLang = getSequence(ranNode);
-						idx = Randomizer.nextInt(aliveNodes.size());
-						ranNode2 = aliveNodes.get(idx);
-						nodeLang2 =  getSequence(ranNode2);
-						if (ranNode != ranNode2) {
-							break;
-						}
-					}
-					if (localDist(ranNode, ranNode2) == false) {
-						break;
-					} else {
-						for (Integer i : getRandLangIndex(nodeLang)) {
-							try {
+						
+						ranNode2 = aliveNodes.get(idx2);
+						nodeLang2 = getSequence(ranNode2);
+
+						if (localDist(ranNode, ranNode2)) {
+							// Randomly iterate through language and find a 1.
+							for (Integer i : Randomizer.shuffled(nodeLang.getData().length())) {
 								if (Character.getNumericValue(nodeLang.getData().charAt(i)) == 1) {
+									// Give the 1 to the receiving language.
 									s = replaceCharAt(nodeLang2.getData(), i, Integer.toString(1));
 									newNodeLang = new Sequence("",s);
 									newNodeLang.dataInput.setValue(s, newNodeLang);
 									setSubTreeLanguages(ranNode2, newNodeLang);
 									break;
 								}
-							} catch (IndexOutOfBoundsException e) {
-								continue;
 							}
 						}
 					}
-					break;
 				}
 			} else {
 				t = getSmallestHeight(aliveNodes);

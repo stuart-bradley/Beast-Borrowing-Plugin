@@ -13,6 +13,7 @@ import beast.core.Input;
 import beast.evolution.alignment.Sequence;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
+import beast.util.Randomizer;
 
 
 /*
@@ -93,24 +94,6 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	/*
 	 * NORMAL METHODS
 	 */
-	
-	
-	/*
-	 * Language index in random order.
-	 * @param l Language.
-	 * @return shuffled indexes of each letter in l.
-	 */
-	protected ArrayList<Integer> getRandLangIndex(Sequence l) {
-		ArrayList<Integer> randInts = new ArrayList<Integer>();
-		for (int i = 0; i < l.getData().length(); i++) {
-			randInts.add(i);
-		}
-		
-		Collections.shuffle(randInts);
-		
-		return randInts;
-		
-	}
 	
 	/*
 	 * Local borrowing distance between two languages (nodes)

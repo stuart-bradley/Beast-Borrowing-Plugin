@@ -145,7 +145,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		Node ranNode = null, ranNode2 = null;
 		Sequence nodeLang = null, nodeLang2 = null, newNodeLang;
 		String s;
-		int idx;
+		int idx, idx2;
 		double[] probs;
 		while (t < treeHeight) {
 			aliveNodesNew = getAliveNodes(base, t);
@@ -175,21 +175,20 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 				} else if (choice == 1) {
 					if (aliveNodes.size() > 1) {
 						// Pick two distinct languages at random.
-						while (true) {
+						do {
 							idx = Randomizer.nextInt(aliveNodes.size());
-							ranNode = aliveNodes.get(idx);
-							nodeLang = getSequence(ranNode);
-							idx = Randomizer.nextInt(aliveNodes.size());
-							ranNode2 = aliveNodes.get(idx);
-							nodeLang2 = getSequence(ranNode2);
-							if (ranNode != ranNode2) {
-								break;
-							}
-						}
+							idx2 = Randomizer.nextInt(aliveNodes.size());
+						} while (idx == idx2);
+						ranNode = aliveNodes.get(idx);
+						nodeLang = getSequence(ranNode);
+						
+						ranNode2 = aliveNodes.get(idx2);
+						nodeLang2 = getSequence(ranNode2);
+
 						if (localDist(ranNode, ranNode2)) {
 							// Randomly iterate through language and find a 1.
-							for (Integer i : getRandLangIndex(nodeLang)) {
-								if (Character.getNumericValue(nodeLang.getData().charAt(i)) == 1) {
+							for (Integer i : Randomizer.shuffled(nodeLang.getData().length())) {
+								if ((Character.getNumericValue(nodeLang.getData().charAt(i)) == 1)) {
 									// Give the 1 to the receiving language.
 									s = replaceCharAt(nodeLang2.getData(), i, Integer.toString(1));
 									newNodeLang = new Sequence("",s);
