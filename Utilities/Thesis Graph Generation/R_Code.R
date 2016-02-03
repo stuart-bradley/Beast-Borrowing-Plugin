@@ -103,3 +103,12 @@ plot(density(rbinom(100000,10,0.5), adjust=10), col="green",lwd=2,
 lines(density(missing_mc$V1, adjust=10), col="blue", lwd=2)
 legend('topright',c("Binomial Distribution","Missing Meaning Classes Algorithm"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
 par(mfrow=c(1, 1))
+
+gtr000 <- read.table("/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr000.csv", quote="\"")
+gtr100 <- read.table("/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr100.csv", quote="\"")
+gtr010 <- read.table("/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr010.csv", quote="\"")
+gtr001 <- read.table("/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr001.csv", quote="\"")
+gtr110 <- read.table("/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr110.csv", quote="\"")
+gtr101 <- read.table("/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr101.csv", quote="\"")
+gtr011 <- read.table("/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr011.csv", quote="\"")
+gtr111 <- read.table("/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr111.csv", quote="\"")

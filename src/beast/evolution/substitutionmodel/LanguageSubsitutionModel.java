@@ -250,6 +250,24 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 		return smallest;
 	}
 	
+	protected Node[] getBorrowingNodes(ArrayList<Node> aliveNodes) {
+		double totalCognates = 0.0;
+		Node[] nodes = new Node[2];
+		for (Node n : aliveNodes) {
+			totalCognates += getBirths((Sequence) n.getMetaData("lang"));
+		}
+		double[] probs = new double[aliveNodes.size()];
+		for (int i = 0; i < aliveNodes.size(); i++) {
+			probs[i] = getBirths((Sequence) aliveNodes.get(i).getMetaData("lang")) / totalCognates;
+		}
+		do {
+			nodes[0] = aliveNodes.get(Randomizer.randomChoicePDF(probs));
+			nodes[1] = aliveNodes.get(Randomizer.randomChoicePDF(probs));
+		} while (nodes[0] == nodes[1]);
+				
+		return nodes;
+	}
+	
 	/*
 	 * Gets Sequence from Node.
 	 * @param n Node.

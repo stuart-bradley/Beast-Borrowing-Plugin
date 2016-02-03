@@ -145,7 +145,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		Node ranNode = null, ranNode2 = null;
 		Sequence nodeLang = null, nodeLang2 = null, newNodeLang;
 		String s;
-		int idx, idx2;
+		int idx;
 		double[] probs;
 		while (t < treeHeight) {
 			aliveNodesNew = getAliveNodes(base, t);
@@ -175,14 +175,11 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 				} else if (choice == 1) {
 					if (aliveNodes.size() > 1) {
 						// Pick two distinct languages at random.
-						do {
-							idx = Randomizer.nextInt(aliveNodes.size());
-							idx2 = Randomizer.nextInt(aliveNodes.size());
-						} while (idx == idx2);
-						ranNode = aliveNodes.get(idx);
+						Node[] borrowNodes = getBorrowingNodes(aliveNodes);
+						ranNode = borrowNodes[0];
 						nodeLang = getSequence(ranNode);
 						
-						ranNode2 = aliveNodes.get(idx2);
+						ranNode2 = borrowNodes[1];
 						nodeLang2 = getSequence(ranNode2);
 
 						if (localDist(ranNode, ranNode2)) {
