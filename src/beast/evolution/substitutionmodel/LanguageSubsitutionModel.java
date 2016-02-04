@@ -250,6 +250,12 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 		return smallest;
 	}
 	
+	
+	/*
+	 * Gets giver and receiver nodes.
+	 * @param aliveNodes.
+	 * @return node[0] as giver and node[1] as reciever.
+	 */
 	protected Node[] getBorrowingNodes(ArrayList<Node> aliveNodes) {
 		double totalCognates = 0.0;
 		Node[] nodes = new Node[2];
@@ -266,6 +272,21 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 		} while (nodes[0] == nodes[1]);
 				
 		return nodes;
+	}
+	
+	/*
+	 * Returns the index of a random birth/
+	 * @ s Sequence from which birth is determined.
+	 * @return random birth index. 
+	 */
+	protected int getRandomBirthIndex(Sequence s) {
+		ArrayList<Integer> birthIndicies = new ArrayList<Integer>();
+		for (int i = 0; i < s.getData().length(); i++) {
+			if ((Character.getNumericValue(s.getData().charAt(i)) == 1)) {
+				birthIndicies.add(i);
+			}
+		}
+		return birthIndicies.get(Randomizer.nextInt(birthIndicies.size()));
 	}
 	
 	/*

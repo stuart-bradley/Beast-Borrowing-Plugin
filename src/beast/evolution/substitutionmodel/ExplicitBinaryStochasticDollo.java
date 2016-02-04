@@ -163,7 +163,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		Node ranNode = null, ranNode2 = null;
 		Sequence nodeLang = null, nodeLang2 = null, newNodeLang = null;
 		String s;
-		int idx, idx2;
+		int idx;
 		double[] probs = new double[3];
 		while (t < treeHeight) {
 			// If t has changed rate, ignore event.
@@ -210,16 +210,12 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 
 						if (localDist(ranNode, ranNode2)) {
 							// Randomly iterate through language and find a 1.
-							for (Integer i : Randomizer.shuffled(nodeLang.getData().length())) {
-								if (Character.getNumericValue(nodeLang.getData().charAt(i)) == 1) {
-									// Give the 1 to the receiving language.
-									s = replaceCharAt(nodeLang2.getData(), i, Integer.toString(1));
-									newNodeLang = new Sequence("",s);
-									newNodeLang.dataInput.setValue(s, newNodeLang);
-									setSubTreeLanguages(ranNode2, newNodeLang);
-									break;
-								}
-							}
+							int i = getRandomBirthIndex(nodeLang);
+							// Give the 1 to the receiving language.
+							s = replaceCharAt(nodeLang2.getData(), i, Integer.toString(1));
+							newNodeLang = new Sequence("",s);
+							newNodeLang.dataInput.setValue(s, newNodeLang);
+							setSubTreeLanguages(ranNode2, newNodeLang);
 						}
 					}
 				}

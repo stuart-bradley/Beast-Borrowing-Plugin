@@ -184,17 +184,13 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 
 						if (localDist(ranNode, ranNode2)) {
 							// Randomly iterate through language and find a 1.
-							for (Integer i : Randomizer.shuffled(nodeLang.getData().length())) {
-								if ((Character.getNumericValue(nodeLang.getData().charAt(i)) == 1)) {
-									// Give the 1 to the receiving language.
-									s = replaceCharAt(nodeLang2.getData(), i, Integer.toString(1));
-									newNodeLang = new Sequence("",s);
-									newNodeLang.dataInput.setValue(s, newNodeLang);
-									setSubTreeLanguages(ranNode2, newNodeLang);
-									break;
-								}
-							}
-						}
+							int i = getRandomBirthIndex(nodeLang);
+							// Give the 1 to the receiving language.
+							s = replaceCharAt(nodeLang2.getData(), i, Integer.toString(1));
+							newNodeLang = new Sequence("",s);
+							newNodeLang.dataInput.setValue(s, newNodeLang);
+							setSubTreeLanguages(ranNode2, newNodeLang);
+						} 
 					}
 				}
 			} else {

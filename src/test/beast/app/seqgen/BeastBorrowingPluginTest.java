@@ -47,8 +47,8 @@ public class BeastBorrowingPluginTest {
 		//SDTreeValidation();
 		//GTRTreeValidation();
 		//GTRTreeBorrowingValidationTwoLanguages();
-		GTRTreeBorrowingValidationThreeLanguages();
-		//SDTreeBorrowingValidation();
+		//GTRTreeBorrowingValidationThreeLanguages();
+		SDTreeBorrowingValidation();
 		//NoEmptyTraitTest();
 		//MissingLanguageValidation();
 		//MissingMeaningClassesValidation();
@@ -306,7 +306,7 @@ public class BeastBorrowingPluginTest {
 			rootNode.setMetaData("lang", l);
 			rootNode.setHeight(0);
 			tree = new Tree(rootNode);
-			tree = randomTree3Branch(tree, 3, 0.1);
+			tree = randomTree3Branch(tree, 3, 0.01);
 			tree = gtr_mod.mutateOverTreeBorrowing(tree);
 			List<Node> ext = tree.getExternalNodes();
 			String l1 = ((Sequence) ext.get(0).getMetaData("lang")).getData();
@@ -348,7 +348,7 @@ public class BeastBorrowingPluginTest {
 			zeroOneOne.add(zeroOneOneInt);
 			oneOneOne.add(oneOneOneInt);
 		}
-		/*
+		
 		listToCSV(zeroZeroZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr000.csv");
 		listToCSV(oneZeroZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr100.csv");
 		listToCSV(zeroOneZero, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr010.csv");
@@ -357,16 +357,7 @@ public class BeastBorrowingPluginTest {
 		listToCSV(oneZeroOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr101.csv");
 		listToCSV(zeroOneOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr011.csv");
 		listToCSV(oneOneOne, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr111.csv");
-		*/
 		
-		listToCSV(zeroZeroZero, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr000.csv");
-		listToCSV(oneZeroZero, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr100.csv");
-		listToCSV(zeroOneZero, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr010.csv");
-		listToCSV(zeroZeroOne, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr001.csv");
-		listToCSV(oneOneZero, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr110.csv");
-		listToCSV(oneZeroOne, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr101.csv");
-		listToCSV(zeroOneOne, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr011.csv");
-		listToCSV(oneOneOne, "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/Utilities/Thesis Graph Generation/gtr111.csv");
 	}
 	
 	private static void SDTreeBorrowingValidation() throws Exception {
