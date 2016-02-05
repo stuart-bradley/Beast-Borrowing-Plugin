@@ -1,6 +1,7 @@
 package beast.evolution.substitutionmodel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import beast.core.Description;
@@ -202,6 +203,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		}
 		return base;
 	}
+	
 	/*
 	 * Probabilities for different events.
 	 * 
@@ -258,5 +260,93 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 
 	public void setRate(double rate) {
 		this.rate = rate;
+	}
+	
+	/*
+	 * Code used to validate the GTR borrowing method. 
+	 */
+	
+	public HashMap<String, Integer> mutateOverTreeBorrowingWithEvents(Tree base) throws Exception {
+		HashMap<String, Integer> events = new HashMap<String, Integer>();
+		Double treeHeight = getTreeHeight(base);
+		// Get root node.
+		ArrayList<Node> aliveNodes  = getAliveNodes(base, 0.0);
+		ArrayList<Node> aliveNodesNew;
+		// Get first event.
+		Double totalRate = totalRate(aliveNodes);
+		Double t = Randomizer.nextExponential(totalRate);
+		// Variable declarations.
+		Node ranNode = null, ranNode2 = null;
+		Sequence nodeLang = null, nodeLang2 = null, newNodeLang;
+		String s;
+		int idx;
+		int pos = 0;
+		double[] probs;
+		while (t < treeHeight) {
+			aliveNodesNew = getAliveNodes(base, t);
+			if (compareAliveNodes(aliveNodes, aliveNodesNew)) {			
+				// Return array of event probabilities and pick one.
+				probs = BorrowingProbs(aliveNodes);
+				Integer choice = Randomizer.randomChoicePDF(probs);
+				// Mutate.
+				if (choice == 0) {
+					// Pick a random node at time t.
+					idx = Randomizer.nextInt(aliveNodes.size());
+					ranNode = aliveNodes.get(idx);
+					nodeLang = getSequence(ranNode);
+					// Pick a random position in language.
+					pos = Randomizer.nextInt(nodeLang.getData().length());
+					int currentTrait =  Character.getNumericValue(nodeLang.getData().charAt(pos));
+					// If death and noEmptyTraitCheck fails.
+					if (currentTrait == 1 && (! noEmptyTraitCheck(nodeLang))) {
+						s = nodeLang.getData();
+					} else {
+						s = replaceCharAt(nodeLang.getData(), pos, Integer.toString((1 - currentTrait)));
+					}
+					newNodeLang = new Sequence("",s);
+					newNodeLang.dataInput.setValue(s, newNodeLang);
+					setSubTreeLanguages(ranNode, newNodeLang);
+				// Borrow.
+				} else if (choice == 1) {
+					if (aliveNodes.size() > 1) {
+						// Pick two distinct languages at random.
+						Node[] borrowNodes = getBorrowingNodes(aliveNodes);
+						ranNode = borrowNodes[0];
+						nodeLang = getSequence(ranNode);
+						
+						ranNode2 = borrowNodes[1];
+						nodeLang2 = getSequence(ranNode2);
+
+						if (localDist(ranNode, ranNode2)) {
+							// Randomly iterate through language and find a 1.
+							pos = getRandomBirthIndex(nodeLang);
+							// Give the 1 to the receiving language.
+							s = replaceCharAt(nodeLang2.getData(), pos, Integer.toString(1));
+							newNodeLang = new Sequence("",s);
+							newNodeLang.dataInput.setValue(s, newNodeLang);
+							setSubTreeLanguages(ranNode2, newNodeLang);
+						} 
+					}
+				}
+			} else {
+				t = getSmallestHeight(aliveNodes);
+				aliveNodes = aliveNodesNew;
+				totalRate = totalRate(aliveNodes);
+			}
+			t += Randomizer.nextExponential(totalRate);
+			int count = events.getOrDefault(getPositionState(aliveNodes, pos), 0);
+			events.put(getPositionState(aliveNodes, pos), count + 1);
+			count = events.getOrDefault("total", 0);
+			events.put("total", count + 1);
+		}
+		return events;
+	}
+	
+	public String getPositionState(ArrayList<Node> aliveNodes, int pos) {
+		String res = "";
+		for (Node n : aliveNodes) {
+			res += ((Sequence) n.getMetaData("lang")).getData().charAt(pos);
+		}
+		return res;
 	}
 }

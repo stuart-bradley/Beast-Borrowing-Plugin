@@ -4,6 +4,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 import beast.app.seqgen.LanguageSequenceGen;
@@ -43,12 +44,12 @@ public class BeastBorrowingPluginTest {
 		//TreeGenTest(seq);
 		//TreeSDBorrowingTest(seq);
 		//TreeGTRBorrowingTest(seq);
+		countsTest();
 		
 		//SDTreeValidation();
 		//GTRTreeValidation();
 		//GTRTreeBorrowingValidationTwoLanguages();
 		//GTRTreeBorrowingValidationThreeLanguages();
-		SDTreeBorrowingValidation();
 		//NoEmptyTraitTest();
 		//MissingLanguageValidation();
 		//MissingMeaningClassesValidation();
@@ -434,6 +435,34 @@ public class BeastBorrowingPluginTest {
 			listToCSV(SDA1, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/speed_sd_a1.csv");
 			listToCSV(SDA2, "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/speed_sd_a2.csv");
 		}
+	}
+	
+	private static void countsTest() throws Exception {
+		HashMap<String, Integer> results = new HashMap<String, Integer>();
+		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.5,0.0, false);
+		for (int i = 0; i < 100000; i++) {
+			System.out.println(i);
+			String seq = "";
+			for (int j = 0; j < 50; j++) {
+				seq += Integer.toString(Randomizer.nextInt(2));
+			}
+			Sequence l = new Sequence("",seq);
+			Node rootNode = new Node();
+			rootNode.setMetaData("lang", l);
+			rootNode.setHeight(0);
+			Tree tree = new Tree(rootNode);
+			tree = randomTree3Branch(tree, 3, 0.1);
+			HashMap<String, Integer> events = gtr_mod.mutateOverTreeBorrowingWithEvents(tree);
+			results.putAll(events);
+		}
+		Double total = results.get("total") + 0.0;
+		for (String name: results.keySet()){
+            String key = name.toString();
+            if (key != "total") {
+            	Integer value = results.get(name);  
+                System.out.println(key + " " + value/total); 
+            } 
+		} 
 	}
 	
 	private static void SeqGenTest() {

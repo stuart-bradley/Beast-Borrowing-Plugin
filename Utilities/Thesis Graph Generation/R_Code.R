@@ -66,11 +66,11 @@ lines(density(rmultinom(400000,cognates,p), adjust=10), col="blue", lwd=2)
 legend('topright',c("Multinomial Distribution","GTR Borrowing Algorithm (2 Languages)"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
 
 # GTR Whole Tree Borrowing Validation (3 Languages)
-p = c(0.0930,0.0930,0.0930,0.0930,0.1395,0.1395,0.1395,0.2093)
+p = c(0.0870,0.0870,0.0870,0.0870,0.1304,0.1304,0.1304,0.2609)
 cognates = 50
 plot(density(rmultinom(800000,cognates,p), adjust=10), col="green",lwd=2, 
      main="Simulation of 100,000 language evolutions under the GTR borrowing model", xlab="Number of cogantes", xlim=range(0:cognates))
-p = c(mean(gtr000$V1)/cognates,mean(gtr100$V1)/cognates,mean(gtr010$V1)/cognates,mean(gtr001$V1)/cognates,mean(gtr110$V1)/cognates,mean(gtr101$V1)/cognates,mean(gtr011$V1)/cognates,mean(gtr111$V1)/cognates)
+p = c(0.0859,0.0937,0.092,0.085,0.1334,0.1334,0.1338,0.2609)
 lines(density(rmultinom(800000,cognates,p), adjust=10), col="blue", lwd=2)
 legend('topright',c("Multinomial Distribution","GTR Borrowing Algorithm (3 Languages)"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
 
