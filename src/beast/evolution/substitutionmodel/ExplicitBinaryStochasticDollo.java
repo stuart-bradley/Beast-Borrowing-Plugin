@@ -169,6 +169,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 			// If t has changed rate, ignore event.
 			aliveNodesNew = getAliveNodes(base, t);
 			if (compareAliveNodes(aliveNodes, aliveNodesNew)) {	
+				System.out.println(totalRate);
 				probs = BorrowingProbs(aliveNodes);
 				Integer choice = Randomizer.randomChoicePDF(probs);
 				if (choice == 0) {
@@ -221,9 +222,9 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 				}
 			} else {
 				t = getSmallestHeight(aliveNodes);
-				aliveNodes = aliveNodesNew;
-				totalRate = totalRate(aliveNodes);
 			}
+			aliveNodes = aliveNodesNew;
+			totalRate = totalRate(aliveNodes);
 			t += Randomizer.nextExponential(totalRate);
 		}
 		return base;

@@ -27,7 +27,7 @@ public class BeastBorrowingPluginTest {
 	private static void run() throws Exception {
 		// Base Seq generation.
 		String seq = "";
-		for (int i = 0; i < 300; i++) {
+		for (int i = 0; i < 20; i++) {
 			seq += '1';
 		}
 		/*
@@ -50,6 +50,7 @@ public class BeastBorrowingPluginTest {
 		//GTRTreeValidation();
 		//GTRTreeBorrowingValidationTwoLanguages();
 		//GTRTreeBorrowingValidationThreeLanguages();
+		//SDTreeBorrowingValidation();
 		//NoEmptyTraitTest();
 		//MissingLanguageValidation();
 		//MissingMeaningClassesValidation();
@@ -130,7 +131,7 @@ public class BeastBorrowingPluginTest {
 		rootNode.setMetaData("lang", l);
 		rootNode.setHeight(0);
 		Tree tree = new Tree(rootNode);
-		tree = randomTree(tree, 8, 0.6);
+		tree = randomTree(tree, 2, 0.01);
 		gtr_mod.mutateOverTreeBorrowing(tree);
 		for (Node n : tree.getExternalNodes()) {
 			Sequence l2 = (Sequence) n.getMetaData("lang");
@@ -299,7 +300,7 @@ public class BeastBorrowingPluginTest {
 			System.out.println(i);
 			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.5,0.0, false);
 			String seq = "";
-			for (int j = 0; j < 50; j++) {
+			for (int j = 0; j < 20; j++) {
 				seq += Integer.toString(Randomizer.nextInt(2));
 			}
 			Sequence l = new Sequence("",seq);
@@ -321,7 +322,7 @@ public class BeastBorrowingPluginTest {
 			Integer oneZeroOneInt = 0;
 			Integer zeroOneOneInt = 0;
 			Integer oneOneOneInt = 0;
-			for (int j = 0; j < 50; j++) {
+			for (int j = 0; j < 20; j++) {
 				if (l1.charAt(j) == '0' && l2.charAt(j) == '0' && l3.charAt(j) == '0') {
 					zeroZeroZeroInt += 1;
 				} else if (l1.charAt(j) == '1' && l2.charAt(j) == '0' && l3.charAt(j) == '0') {
@@ -440,10 +441,10 @@ public class BeastBorrowingPluginTest {
 	private static void countsTest() throws Exception {
 		HashMap<String, Integer> results = new HashMap<String, Integer>();
 		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.5,0.0, false);
-		for (int i = 0; i < 100000; i++) {
+		for (int i = 0; i < 1; i++) {
 			System.out.println(i);
 			String seq = "";
-			for (int j = 0; j < 50; j++) {
+			for (int j = 0; j < 5; j++) {
 				seq += Integer.toString(Randomizer.nextInt(2));
 			}
 			Sequence l = new Sequence("",seq);
@@ -451,7 +452,7 @@ public class BeastBorrowingPluginTest {
 			rootNode.setMetaData("lang", l);
 			rootNode.setHeight(0);
 			Tree tree = new Tree(rootNode);
-			tree = randomTree3Branch(tree, 3, 0.1);
+			tree = randomTree3Branch(tree, 3, 0.01);
 			HashMap<String, Integer> events = gtr_mod.mutateOverTreeBorrowingWithEvents(tree);
 			results.putAll(events);
 		}
