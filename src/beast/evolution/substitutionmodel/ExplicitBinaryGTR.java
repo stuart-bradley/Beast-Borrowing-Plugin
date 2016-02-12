@@ -239,26 +239,10 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	protected Double totalRate(ArrayList<Node> aliveNodes) throws Exception {
 		Double borrowSum = 0.0;
 		Double mutateSum = 0.0;
-		System.out.println();
 		for (Node n : aliveNodes) {
-			System.out.println(getSequence(n).getData());
 			borrowSum += getBirths(getSequence(n));
 			mutateSum += (getSequence(n)).getData().length();
 		}
-		for (int i = 0; i < 5; i++) {
-			int key = Integer.parseInt(getPositionState(aliveNodes, i));
-			if (key == 111) {
-				borrowSum -= 3;
-			} else if (key == 110 || key == 101 || key == 011) {
-				borrowSum -= 1;
-			}
-		}
-		System.out.println(rate * mutateSum + borrowRate * rate * borrowSum);
-		double r = 0.0; 
-		for (int i = 0; i < 5; i++) {
-			r += twoLangRate(getPositionState(aliveNodes, i));
-		}
-		System.out.println("rate matrix rate:" + r);
 		return rate * mutateSum + borrowRate * rate * borrowSum;
 	}
 	
@@ -373,7 +357,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		} else if (Integer.parseInt(key) == 100 || Integer.parseInt(key) == 001 || Integer.parseInt(key) == 010) {
 			return rate + rate * (borrowRate/2.0+1) + rate * (borrowRate/2.0+1);
 		} else {
-			return rate + rate + rate * (2*borrowRate+1);
+			return rate + rate + rate * (borrowRate+1);
 		}
 	}
 }

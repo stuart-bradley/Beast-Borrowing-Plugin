@@ -44,7 +44,7 @@ public class BeastBorrowingPluginTest {
 		//TreeGenTest(seq);
 		//TreeSDBorrowingTest(seq);
 		//TreeGTRBorrowingTest(seq);
-		countsTest();
+		//countsTest();
 		
 		//SDTreeValidation();
 		//GTRTreeValidation();
