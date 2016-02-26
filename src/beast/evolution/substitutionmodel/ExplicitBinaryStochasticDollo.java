@@ -142,18 +142,8 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 * 
 	 * @return base Tree with languages added.
 	 */
-	/*
-	 * Mutates down a tree, includes global and local borrowing.
-	 * 
-	 * @param base Tree with starting language in root.
-	 * 
-	 * @param borrow borrowing rate.
-	 * 
-	 * @param z local borrowing rate, 0.0 rate implies global borrowing.
-	 * 
-	 * @return base Tree with languages added.
-	 */
 	public Tree mutateOverTreeBorrowing(Tree base) throws Exception {
+		setSubTreeLanguages(base.getRoot(), (Sequence) base.getRoot().getMetaData("lang"));
 		Double treeHeight = getTreeHeight(base);
 		// Get root node.
 		ArrayList<Node> aliveNodes  = getAliveNodes(base, 0.0);
@@ -169,7 +159,6 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 			// If t has changed rate, ignore event.
 			aliveNodesNew = getAliveNodes(base, t);
 			if (compareAliveNodes(aliveNodes, aliveNodesNew)) {	
-				System.out.println(totalRate);
 				probs = BorrowingProbs(aliveNodes);
 				Integer choice = Randomizer.randomChoicePDF(probs);
 				if (choice == 0) {

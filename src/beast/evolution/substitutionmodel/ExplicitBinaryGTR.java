@@ -135,6 +135,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	 * @return base Tree with languages added.
 	 */	
 	public Tree mutateOverTreeBorrowing(Tree base) throws Exception {
+		setSubTreeLanguages(base.getRoot(), (Sequence) base.getRoot().getMetaData("lang"));
 		Double treeHeight = getTreeHeight(base);
 		// Get root node.
 		ArrayList<Node> aliveNodes  = getAliveNodes(base, 0.0);

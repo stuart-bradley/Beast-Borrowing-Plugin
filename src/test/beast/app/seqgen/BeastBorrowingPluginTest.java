@@ -17,6 +17,7 @@ import beast.evolution.substitutionmodel.ExplicitBinaryStochasticDollo;
 import beast.evolution.substitutionmodel.LanguageSubsitutionModel;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
+import beast.evolution.tree.TreeUtils;
 import beast.util.Randomizer;
 
 public class BeastBorrowingPluginTest {
@@ -56,7 +57,7 @@ public class BeastBorrowingPluginTest {
 		//MissingMeaningClassesValidation();
 		//SpeedTestNonBorrowing();
 		
-		//SeqGenTest();
+		SeqGenTest();
 	}
 
 	private static void GTRTest(String seq) throws Exception {
@@ -466,9 +467,10 @@ public class BeastBorrowingPluginTest {
 		} 
 	}
 	
-	private static void SeqGenTest() {
+	private static void SeqGenTest() throws Exception {
 		String[] args = {"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/testSeqLangGen.xml","2","C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/output.xml"};
 		//String[] args = {"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/testSeqLangGen.xml","2","/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/output.xml"};
+		
 		LanguageSequenceGen.main(args);
 	}
 	

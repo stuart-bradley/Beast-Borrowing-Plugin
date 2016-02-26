@@ -52,16 +52,20 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 			// Base Case.
 			if (i == 0) {
 				ArrayList<Sequence> tmp = new ArrayList<Sequence>();
+				ArrayList<String> tmp_taxon = new ArrayList<String>();
 				for (Node n : newTree.getExternalNodes()) {
 					tmp.add(LanguageSubsitutionModel.getSequence(n));
+					tmp_taxon.add(n.getID());
 				}
 				for (Sequence d : tmp) {
 					cognateSet.sequenceInput.setValue(d, cognateSet);
 				}
 			} else {
 				ArrayList<Sequence> tmp = new ArrayList<Sequence>();
+				ArrayList<String> tmp_taxon = new ArrayList<String>();
 				for (Node n : newTree.getExternalNodes()) {
 					tmp.add(LanguageSubsitutionModel.getSequence(n));
+					tmp_taxon.add(n.getID());
 				}
 				List<Sequence> counts = cognateSet.sequenceInput.get();
 				newSeqs = new ArrayList<Sequence>();
@@ -73,7 +77,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 					newSeq += tmp.get(j).getData();
 					//System.out.println(newSeq);
 					// Create sequence.
-					Sequence d = new Sequence("", newSeq);
+					Sequence d = new Sequence(tmp_taxon.get(j), newSeq);
 					newSeqs.add(d);
 				}
 				// Recreate and repopulate alignment.
