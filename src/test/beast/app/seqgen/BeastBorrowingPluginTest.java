@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import beast.app.seqgen.LanguageSequenceGen;
+import beast.core.parameter.RealParameter;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.Sequence;
 import beast.evolution.missingdatamodel.MissingLanguageModel;
@@ -16,8 +17,10 @@ import beast.evolution.substitutionmodel.ExplicitBinaryGTR;
 import beast.evolution.substitutionmodel.ExplicitBinaryStochasticDollo;
 import beast.evolution.substitutionmodel.LanguageSubsitutionModel;
 import beast.evolution.tree.Node;
+import beast.evolution.tree.RandomTree;
 import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeUtils;
+import beast.evolution.tree.coalescent.ConstantPopulation;
 import beast.util.Randomizer;
 
 public class BeastBorrowingPluginTest {
@@ -57,7 +60,9 @@ public class BeastBorrowingPluginTest {
 		//MissingMeaningClassesValidation();
 		//SpeedTestNonBorrowing();
 		
-		SeqGenTest();
+		//SeqGenTest();
+		randomTreeTest();
+		
 	}
 
 	private static void GTRTest(String seq) throws Exception {
@@ -474,6 +479,37 @@ public class BeastBorrowingPluginTest {
 		LanguageSequenceGen.main(args);
 	}
 	
+	private static void randomTreeTest() throws Exception {
+        StringBuilder traitSB = new StringBuilder();
+        List<Sequence> seqList = new ArrayList<Sequence>();
+
+        for (int i=0; i<10; i++) {
+            String taxonID = "t " + i;
+            seqList.add(new Sequence(taxonID, "?"));
+            
+            if (i>0)
+                traitSB.append(",");
+            traitSB.append(taxonID).append("=").append(i);
+        }
+
+        Alignment alignment = new Alignment(seqList, "nucleotide");
+		ConstantPopulation popFunc = new ConstantPopulation();
+        popFunc.initByName("popSize", new RealParameter("1.0"));
+		RandomTree t = new RandomTree();
+		t.initByName("taxa", alignment, "populationModel", popFunc);
+		
+		Sequence l = new Sequence("","");
+
+		System.out.println("Tree GTR Borrowing Test");
+		Node rootNode = new Node();
+		rootNode.setMetaData("lang", l);
+		rootNode.setHeight(0);
+		Tree tree = new Tree(rootNode);
+		tree = randomTree(tree, 2, 0.01);
+		System.out.println(TreeUtils.getTreeLength(tree, tree.getRoot()));
+		
+	}
+	
 	private static void NoEmptyTraitTest() throws Exception {
 		for (int i = 0; i < 1; i++) {
 			System.out.println(i);
@@ -606,7 +642,7 @@ public class BeastBorrowingPluginTest {
 				childRight = new Node();
 				
 				// Left child.
-				double t = Randomizer.nextExponential(branchRate);
+				double t = 10;
 				childLeft.setParent(parent);
 				parent.addChild(childLeft);
 				childLeft.setHeight(parent.getHeight()+t);

@@ -128,24 +128,6 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	}
 	
 	/*
-	 * Gets height of tree.
-	 * @param base Tree.
-	 * @return height of base. 
-	 */
-	protected Double getTreeHeight(Tree base) {
-		Node[] nodes = base.getNodesAsArray();
-		// Comparator that sorts nodes on height.
-	    Arrays.sort(nodes, new Comparator<Node>() {
-	        @Override
-	        public int compare(Node o1, Node o2) {
-	            return new Double (o1.getHeight()).compareTo(o2.getHeight());
-	        }
-	    });	
-	    // Gets largest node.
-	    return nodes[nodes.length-1].getHeight();
-	}
-	
-	/*
 	 * Sets the language of a node and all its decendents.
 	 * @param subRoot Node, root node.
 	 * @param newLang Language, new language to set.

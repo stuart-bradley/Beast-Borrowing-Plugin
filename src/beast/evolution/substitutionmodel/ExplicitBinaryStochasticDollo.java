@@ -8,6 +8,7 @@ import beast.core.Input;
 import beast.evolution.alignment.Sequence;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
+import beast.evolution.tree.TreeUtils;
 import beast.util.Randomizer;
 
 /*
@@ -144,7 +145,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 */
 	public Tree mutateOverTreeBorrowing(Tree base) throws Exception {
 		setSubTreeLanguages(base.getRoot(), (Sequence) base.getRoot().getMetaData("lang"));
-		Double treeHeight = getTreeHeight(base);
+		Double treeHeight = Math.abs(TreeUtils.getTreeLength(base, base.getRoot()));
 		// Get root node.
 		ArrayList<Node> aliveNodes  = getAliveNodes(base, 0.0);
 		ArrayList<Node> aliveNodesNew;
