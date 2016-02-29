@@ -38,7 +38,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	public Alignment simulate(Integer numMeaningClasses) throws Exception {
 		Alignment cognateSet = new Alignment();
 		ArrayList<Sequence> newSeqs = new ArrayList<Sequence>();
-		String meaningClasses = "0 ";
+		String meaningClasses = "0";
 
 		m_tree.getRoot().setMetaData("lang", root);
 		cognateSet.sequenceInput.setValue(root, cognateSet);
@@ -51,26 +51,27 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 			}
 			// Base Case.
 			if (i == 0) {
-				ArrayList<Sequence> tmp = new ArrayList<Sequence>();
-				ArrayList<String> tmp_taxon = new ArrayList<String>();
+				newSeqs = new ArrayList<Sequence>();
 				for (Node n : newTree.getExternalNodes()) {
-					tmp.add(LanguageSubsitutionModel.getSequence(n));
-					tmp_taxon.add(n.getID());
+					Sequence d = new Sequence(n.getID(), LanguageSubsitutionModel.getSequence(n).getData());
+					newSeqs.add(d);
 				}
-				for (Sequence d : tmp) {
+				for (Sequence d : newSeqs) {
 					cognateSet.sequenceInput.setValue(d, cognateSet);
 				}
 			} else {
+				System.out.println();
 				ArrayList<Sequence> tmp = new ArrayList<Sequence>();
 				ArrayList<String> tmp_taxon = new ArrayList<String>();
 				for (Node n : newTree.getExternalNodes()) {
 					tmp.add(LanguageSubsitutionModel.getSequence(n));
 					tmp_taxon.add(n.getID());
 				}
+				
 				List<Sequence> counts = cognateSet.sequenceInput.get();
 				newSeqs = new ArrayList<Sequence>();
 				// Grab next meaning class.
-				meaningClasses += counts.get(1).getData().length() + " ";
+				meaningClasses += " " + counts.get(1).getData().length();
 				for (int j = 0; j < tmp.size(); j++) {
 					// j+1 to account for ROOT.
 					String newSeq = counts.get(j+1).getData();
@@ -80,6 +81,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 					Sequence d = new Sequence(tmp_taxon.get(j), newSeq);
 					newSeqs.add(d);
 				}
+				
 				// Recreate and repopulate alignment.
 				cognateSet = new Alignment();
 				cognateSet.sequenceInput.setValue(root, cognateSet);
