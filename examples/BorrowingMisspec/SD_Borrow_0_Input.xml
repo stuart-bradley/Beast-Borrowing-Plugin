@@ -6,7 +6,7 @@
     <run spec="beast.app.seqgen.LanguageSequenceGen" tree='@tree'>
 		<root spec='Sequence' value="1" taxon="root"/>
 		
-		<subModel spec='ExplicitBinaryGTR' rate="0.0002231436" borrowrate ="0.00" borrowzrate="0.0" noEmptyTrait="false" />	
+		<subModel spec='ExplicitBinaryStochasticDollo' birth="0.0002231436" death = "0.0002231436" borrowrate ="0.00" borrowzrate="0.0" noEmptyTrait="false" />	
 		<missingModel spec='MissingLanguageModel' rate="0.0"  />	
 	</run>
 </beast>
