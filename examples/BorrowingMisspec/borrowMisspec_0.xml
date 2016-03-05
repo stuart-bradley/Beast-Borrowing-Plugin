@@ -1,12 +1,12 @@
 <beast version='2.0'
        namespace='beast.evolution.alignment:beast.evolution.substitutionmodel:beast.evolution.missingdatamodel'>
 
-    <tree id='tree' spec='beast.util.TreeParser' IsLabelledNewick='true' newick='((((human:-100,(chimp:-100,bonobo:-100):-100):-100,gorilla:-100):-100,orangutan:-100):-100,siamang:-100)' />
+    <tree id='tree' spec='beast.util.TreeParser' IsLabelledNewick='true' newick='((((human:100,(chimp:100,bonobo:100):100):100,gorilla:100):100,orangutan:100):100,siamang:100)' />
 
     <run spec="beast.app.seqgen.LanguageSequenceGen" tree='@tree'>
-		<root spec='Sequence' value="11000101111111110111011011011111011001010100100110111101010011100011111001001111001001010110111100011111111110111101001110010101101100110010101110001100100001100111010010001111000011110101001011101101" taxon="root"/>
+		<root spec='Sequence' value="1" taxon="root"/>
 		
-		<subModel spec='ExplicitBinaryStochasticDollo' birth="0.04462871" death = "0.0002231436" borrowrate ="0.0" borrowzrate="0.0" noEmptyTrait="false" />	
+		<subModel spec='ExplicitBinaryStochasticDollo' birth="0.0002231436" death = "0.0002231436" borrowrate ="0.0" borrowzrate="0.0" noEmptyTrait="false" />	
 		<missingModel spec='MissingLanguageModel' rate="0.0"  />	
 	</run>
 </beast>

@@ -39,11 +39,11 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		Alignment cognateSet = new Alignment();
 		ArrayList<Sequence> newSeqs = new ArrayList<Sequence>();
 		String meaningClasses = "0";
-
-		m_tree.getRoot().setMetaData("lang", root);
-		cognateSet.sequenceInput.setValue(root, cognateSet);
-		Tree newTree;
+		
 		for (int i = 0; i < numMeaningClasses; i++) {
+			Tree newTree;
+			m_tree.getRoot().setMetaData("lang", root);
+			cognateSet.sequenceInput.setValue(root, cognateSet);
 			if (m_subModel.getBorrowRate() == 0.0) { 
 				newTree = m_subModel.mutateOverTree(m_tree);
 			} else {
@@ -60,7 +60,6 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 					cognateSet.sequenceInput.setValue(d, cognateSet);
 				}
 			} else {
-				System.out.println();
 				ArrayList<Sequence> tmp = new ArrayList<Sequence>();
 				ArrayList<String> tmp_taxon = new ArrayList<String>();
 				for (Node n : newTree.getExternalNodes()) {
