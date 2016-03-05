@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import beast.core.BEASTInterface;
@@ -35,7 +36,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	public void initAndValidate() throws Exception {
 	}
 	
-	public Alignment simulate(Integer numMeaningClasses) throws Exception {
+	public HashMap<Alignment,String> simulate(Integer numMeaningClasses) throws Exception {
 		Alignment cognateSet = new Alignment();
 		ArrayList<Sequence> newSeqs = new ArrayList<Sequence>();
 		String meaningClasses = "0";
@@ -43,6 +44,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		for (int i = 0; i < numMeaningClasses; i++) {
 			Tree newTree;
 			m_tree.getRoot().setMetaData("lang", root);
+			cognateSet.sequenceInput.setValue(root, cognateSet);
 			if (m_subModel.getBorrowRate() == 0.0) { 
 				newTree = m_subModel.mutateOverTree(m_tree);
 			} else {
@@ -88,14 +90,15 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 				}
 			}
 		}
-		Sequence comment = new Sequence("Meaning Class Positions", meaningClasses);
-		newSeqs.add(comment);
 		newSeqs = m_missingModel.generateMissingData(newSeqs);
 		cognateSet = new Alignment();
+		cognateSet.dataTypeInput.setValue("binary", cognateSet);
 		for (Sequence d : newSeqs) {
 			cognateSet.sequenceInput.setValue(d, cognateSet);
 		}
-		return cognateSet;
+		HashMap<Alignment, String> result = new HashMap<Alignment, String>();
+		result.put(cognateSet, meaningClasses);
+		return result;
 	}
 	
 	
@@ -148,10 +151,13 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	            // feed to sequence simulator and generate leaves
 	            LanguageSequenceGen treeSimulator = new LanguageSequenceGen();
 	            XMLProducer producer = new XMLProducer();
-	            Alignment alignment = treeSimulator.simulate(Integer.parseInt(args[1]));
+	            HashMap<Alignment, String> alignmentHash = treeSimulator.simulate(Integer.parseInt(args[1]));
+	            Alignment alignment = (Alignment) alignmentHash.keySet().toArray()[0];
+	            String meaningClasses = alignmentHash.get(alignment);
 	            sXML = producer.toRawXML(alignment);
 	            out.println("<beast version='2.0'>");
-	            out.println(sXML);
+	            out.print(sXML);
+	            out.println("<!-- Meaning Classes: " + meaningClasses + " -->");
 	            out.println("</beast>");
 	        } catch (Exception e) {
 	            e.printStackTrace();
