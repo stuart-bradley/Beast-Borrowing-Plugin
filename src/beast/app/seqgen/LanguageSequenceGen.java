@@ -90,6 +90,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 				}
 			}
 		}
+		newSeqs = removeEmptyColumns(newSeqs);
 		newSeqs = m_missingModel.generateMissingData(newSeqs);
 		cognateSet = new Alignment();
 		cognateSet.dataTypeInput.setValue("binary", cognateSet);
@@ -99,6 +100,37 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		HashMap<Alignment, String> result = new HashMap<Alignment, String>();
 		result.put(cognateSet, meaningClasses);
 		return result;
+	}
+	
+	private static ArrayList<Sequence> removeEmptyColumns (ArrayList<Sequence> oldS) throws Exception {
+		ArrayList<Sequence> newS = new ArrayList<Sequence>();
+		ArrayList<Integer> emptyColumns = new ArrayList<Integer>();
+		int seqLength = oldS.get(0).getData().length();
+		
+		for (int i = 0; i < seqLength; i++) {
+			boolean empty = true;
+			for (Sequence s : oldS) {
+				if (s.getData().charAt(i) != '0') {
+					empty = false;
+					break;
+				}
+			}
+			if (empty) {
+				emptyColumns.add(i);
+			}
+		}
+		for (Sequence s : oldS) {
+			int removalCounter = 0;
+			StringBuilder sb = new StringBuilder(s.getData());
+			for (int i : emptyColumns) {
+				sb.deleteCharAt(i - removalCounter);
+				removalCounter += 1;
+			}
+			Sequence newSeq = new Sequence(s.getTaxon(), sb.toString());
+			newS.add(newSeq);
+		}
+		
+		return newS;
 	}
 	
 	

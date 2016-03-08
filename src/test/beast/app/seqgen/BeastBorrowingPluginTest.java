@@ -50,6 +50,7 @@ public class BeastBorrowingPluginTest {
 		//TreeGTRBorrowingTest(seq);
 		//countsTest();
 		
+		
 		//SDTreeValidation();
 		//GTRTreeValidation();
 		//GTRTreeBorrowingValidationTwoLanguages();
@@ -60,7 +61,7 @@ public class BeastBorrowingPluginTest {
 		//MissingMeaningClassesValidation();
 		//SpeedTestNonBorrowing();
 		
-		SeqGenTest();
+		//SeqGenTest();
 		//randomTreeTest();
 		
 	}
