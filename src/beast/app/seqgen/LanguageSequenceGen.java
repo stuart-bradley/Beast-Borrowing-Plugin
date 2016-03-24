@@ -44,7 +44,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		for (int i = 0; i < numMeaningClasses; i++) {
 			Tree newTree;
 			m_tree.getRoot().setMetaData("lang", root);
-			cognateSet.sequenceInput.setValue(root, cognateSet);
+			//cognateSet.sequenceInput.setValue(root, cognateSet);
 			if (m_subModel.getBorrowRate() == 0.0) { 
 				newTree = m_subModel.mutateOverTree(m_tree);
 			} else {
@@ -57,9 +57,6 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 					Sequence d = new Sequence(n.getID(), LanguageSubsitutionModel.getSequence(n).getData());
 					newSeqs.add(d);
 				}
-				for (Sequence d : newSeqs) {
-					cognateSet.sequenceInput.setValue(d, cognateSet);
-				}
 			} else {
 				ArrayList<Sequence> tmp = new ArrayList<Sequence>();
 				ArrayList<String> tmp_taxon = new ArrayList<String>();
@@ -68,25 +65,13 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 					tmp_taxon.add(n.getID());
 				}
 				
-				List<Sequence> counts = cognateSet.sequenceInput.get();
-				newSeqs = new ArrayList<Sequence>();
-				// Grab next meaning class.
-				meaningClasses += " " + counts.get(1).getData().length();
-				for (int j = 0; j < tmp.size(); j++) {
-					// j+1 to account for ROOT.
-					String newSeq = counts.get(j+1).getData();
+				meaningClasses += " " + newSeqs.get(1).getData().length();
+				for (int j = 0; j < newSeqs.size(); j++) {
+					String newSeq = newSeqs.get(j).getData();
 					newSeq += tmp.get(j).getData();
-					//System.out.println(newSeq);
 					// Create sequence.
 					Sequence d = new Sequence(tmp_taxon.get(j), newSeq);
-					newSeqs.add(d);
-				}
-				
-				// Recreate and repopulate alignment.
-				cognateSet = new Alignment();
-				cognateSet.sequenceInput.setValue(root, cognateSet);
-				for (Sequence d : newSeqs) {
-					cognateSet.sequenceInput.setValue(d, cognateSet);
+					newSeqs.set(j,d);
 				}
 			}
 		}

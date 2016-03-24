@@ -1,11 +1,17 @@
 package test.beast.app.seqgen;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
+
 
 import beast.app.seqgen.LanguageSequenceGen;
 import beast.core.parameter.RealParameter;
@@ -61,8 +67,9 @@ public class BeastBorrowingPluginTest {
 		//MissingMeaningClassesValidation();
 		//SpeedTestNonBorrowing();
 		
-		//SeqGenTest();
+		SeqGenTest();
 		//randomTreeTest();
+		
 		
 	}
 
@@ -474,7 +481,7 @@ public class BeastBorrowingPluginTest {
 	}
 	
 	private static void SeqGenTest() throws Exception {
-		String[] args = {"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/testSeqLangGen.xml","200","C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/output.xml"};
+		String[] args = {"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/SD_Borrow_0_Input.xml","200","C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/SD_Borrow_0_Output.xml"};
 		//String[] args = {"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/testSeqLangGen.xml","2","/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/output.xml"};
 		
 		LanguageSequenceGen.main(args);
