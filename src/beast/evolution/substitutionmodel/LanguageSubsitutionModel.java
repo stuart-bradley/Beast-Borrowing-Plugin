@@ -130,6 +130,21 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	}
 	
 	/*
+	 * Gets height of tree.
+	 * @param base Tree.
+	 * @return height of base. 
+	 */
+	protected Double getTreeHeight(Tree base) {
+		Double height = 0.0;
+		for (Node c : base.getExternalNodes()) {
+			if (Math.abs(c.getHeight()) > height) {
+				height = Math.abs(c.getHeight());
+			}
+		}
+	    return height;
+	}
+	
+	/*
 	 * Sets the language of a node and all its decendents.
 	 * @param subRoot Node, root node.
 	 * @param newLang Language, new language to set.

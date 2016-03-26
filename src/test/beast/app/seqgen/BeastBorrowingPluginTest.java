@@ -54,14 +54,14 @@ public class BeastBorrowingPluginTest {
 		//TreeGenTest(seq);
 		//TreeSDBorrowingTest(seq);
 		//TreeGTRBorrowingTest(seq);
-		//countsTest();
+		countsTest();
 		
 		
 		//SDTreeValidation();
 		//GTRTreeValidation();
-		GTRTreeBorrowingValidationTwoLanguages();
-		GTRTreeBorrowingValidationThreeLanguages();
-		SDTreeBorrowingValidation();
+		//GTRTreeBorrowingValidationTwoLanguages();
+		//GTRTreeBorrowingValidationThreeLanguages();
+		//SDTreeBorrowingValidation();
 		//NoEmptyTraitTest();
 		//MissingLanguageValidation();
 		//MissingMeaningClassesValidation();
@@ -454,9 +454,8 @@ public class BeastBorrowingPluginTest {
 	
 	private static void countsTest() throws Exception {
 		HashMap<String, Integer> results = new HashMap<String, Integer>();
-		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.5,0.0, false);
+		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.0,0.0, false);
 		for (int i = 0; i < 1; i++) {
-			System.out.println(i);
 			String seq = "";
 			for (int j = 0; j < 5; j++) {
 				seq += Integer.toString(Randomizer.nextInt(2));
@@ -650,7 +649,7 @@ public class BeastBorrowingPluginTest {
 				childRight = new Node();
 				
 				// Left child.
-				double t = 10;
+				double t = Randomizer.nextExponential(branchRate);
 				childLeft.setParent(parent);
 				parent.addChild(childLeft);
 				childLeft.setHeight(parent.getHeight()+t);
@@ -686,7 +685,7 @@ public class BeastBorrowingPluginTest {
 				childRight = new Node();
 				
 				// Left child.
-				double t = Randomizer.nextExponential(branchRate);;
+				double t = Randomizer.nextExponential(branchRate);
 				childLeft.setParent(parent);
 				parent.addChild(childLeft);
 				childLeft.setHeight(parent.getHeight()+t);

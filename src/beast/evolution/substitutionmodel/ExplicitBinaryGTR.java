@@ -137,7 +137,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	 */	
 	public Tree mutateOverTreeBorrowing(Tree base) throws Exception {
 		setSubTreeLanguages(base.getRoot(), (Sequence) base.getRoot().getMetaData("lang"));
-		Double treeHeight = Math.abs(TreeUtils.getTreeLength(base, base.getRoot()));
+		Double treeHeight = getTreeHeight(base);
 		// Get root node.
 		ArrayList<Node> aliveNodes  = getAliveNodes(base, 0.0);
 		ArrayList<Node> aliveNodesNew;
@@ -198,10 +198,15 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 				}
 			} else {
 				t = getSmallestHeight(aliveNodes);
+				System.out.println(t);
 				aliveNodes = aliveNodesNew;
 				totalRate = totalRate(aliveNodes);
+				System.out.println(aliveNodes.size());
 			}
 			t += Randomizer.nextExponential(totalRate);
+			System.out.println();
+			System.out.println(treeHeight);
+			System.out.println(t);
 		}
 		return base;
 	}
