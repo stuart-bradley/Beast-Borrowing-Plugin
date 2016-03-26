@@ -362,4 +362,11 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 			return rate + rate + rate * (borrowRate+1);
 		}
 	}
+
+	@Override
+	public String toString() {
+		String s = "";
+		s += "GTR";
+		return s;
+	}
 }

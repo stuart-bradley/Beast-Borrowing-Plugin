@@ -86,6 +86,8 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @return Double, total rate,
 	 */
 	protected abstract Double totalRate (ArrayList<Node> aliveNodes) throws Exception;
+
+	public abstract String toString();
 	
 	public abstract void setBirthRate(Double r);
 	
@@ -248,10 +250,25 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 		for (int i = 0; i < aliveNodes.size(); i++) {
 			probs[i] = getBirths((Sequence) aliveNodes.get(i).getMetaData("lang")) / totalCognates;
 		}
-		do {
+		// Check to see if two values have probabilities > 0.0.
+		ArrayList<Double> posProbs = new ArrayList<Double>();
+		for (double i : probs) {
+			if (i > 0.0) {
+				posProbs.add(i);
+			}
+		}
+		
+		
+		
+		if (posProbs.size() > 1) {
+			do {
+				nodes[0] = aliveNodes.get(Randomizer.randomChoicePDF(probs));
+				nodes[1] = aliveNodes.get(Randomizer.randomChoicePDF(probs));
+			} while (nodes[0] == nodes[1]);
+		} else {
 			nodes[0] = aliveNodes.get(Randomizer.randomChoicePDF(probs));
 			nodes[1] = aliveNodes.get(Randomizer.randomChoicePDF(probs));
-		} while (nodes[0] == nodes[1]);
+		}
 				
 		return nodes;
 	}

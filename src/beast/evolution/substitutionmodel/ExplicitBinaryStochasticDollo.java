@@ -324,4 +324,11 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	public void setD(double d) {
 		this.d = d;
 	}
+
+	@Override
+	public String toString() {
+		String s = "";
+		s += "SD";
+		return s;
+	}
 }
