@@ -20,13 +20,13 @@ import beast.util.Randomizer;
 @Description("Class for sythesis of missing languages")
 public class MissingLanguageModel extends MissingDataModel {
 	public Input<Double> rateInput = new Input<Double>("rate", "missing language rate");
-	
+
 	/** rate */
 	protected double rate;
-	
+
 	public MissingLanguageModel() throws Exception {
 	}
-	
+
 	public MissingLanguageModel(double r) {
 		this.setRate(r);
 	}
@@ -35,7 +35,7 @@ public class MissingLanguageModel extends MissingDataModel {
 	public void initAndValidate() {
 		this.rate = rateInput.get();
 	}
-	
+
 	@Override
 	public ArrayList<Sequence> generateMissingData(ArrayList<Sequence> a) throws Exception {
 		// Last Sequence is Meaning Classes (ignored in this model).
@@ -46,9 +46,12 @@ public class MissingLanguageModel extends MissingDataModel {
 		}
 		return a;
 	}
+
 	/*
 	 * Converts a language to a series of '?'
+	 * 
 	 * @param s Sequence to convert.
+	 * 
 	 * @return Sequence of '?'.
 	 */
 	private Sequence languageToUnknown(Sequence s) throws Exception {
@@ -58,9 +61,9 @@ public class MissingLanguageModel extends MissingDataModel {
 		for (int i = 0; i < seq.length(); i++) {
 			unknown += "?";
 		}
-		return new Sequence(taxa, unknown);	
+		return new Sequence(taxa, unknown);
 	}
-	
+
 	public double getRate() {
 		return rate;
 	}

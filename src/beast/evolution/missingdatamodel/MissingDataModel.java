@@ -18,18 +18,20 @@ import beast.evolution.alignment.Sequence;
  */
 @Description("Abstract class for generating missing data")
 public abstract class MissingDataModel extends CalculationNode {
-	
+
 	/*
 	 * ABSTRACT METHODS
 	 */
-	
-	
+
 	/*
 	 * BEAST Object required class.
-	 * @see beast.evolution.substitutionmodel.SubstitutionModel.Base#initAndValidate()
+	 * 
+	 * @see
+	 * beast.evolution.substitutionmodel.SubstitutionModel.Base#initAndValidate(
+	 * )
 	 */
 	public abstract void initAndValidate();
-	
+
 	public abstract ArrayList<Sequence> generateMissingData(ArrayList<Sequence> a) throws Exception;
 
 }

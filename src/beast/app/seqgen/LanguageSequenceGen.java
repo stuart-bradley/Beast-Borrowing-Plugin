@@ -6,7 +6,6 @@ import java.io.FileReader;
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import beast.core.BEASTInterface;
 import beast.core.Input;
@@ -14,7 +13,6 @@ import beast.core.Input.Validate;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.Sequence;
 import beast.evolution.missingdatamodel.MissingDataModel;
-import beast.evolution.missingdatamodel.MissingLanguageModel;
 import beast.evolution.substitutionmodel.LanguageSubsitutionModel;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
@@ -23,24 +21,27 @@ import beast.util.XMLProducer;
 
 public class LanguageSequenceGen extends beast.core.Runnable {
 	public Input<Sequence> m_rootInput = new Input<Sequence>("root", "inital language", Validate.REQUIRED);
-	public Input<LanguageSubsitutionModel> m_subModelInput = new Input<LanguageSubsitutionModel>("subModel", "subsitution model for tree", Validate.REQUIRED);
-	public Input<Tree> m_treeInput = new Input<Tree>("tree", "phylogenetic beast.tree with sequence data in the leafs", Validate.REQUIRED);
-	public Input<MissingDataModel> m_missingModelInput = new Input<MissingDataModel>("missingModel", "missing data model for alignment", Validate.REQUIRED);
-	
-    protected static Sequence root;
-    protected static LanguageSubsitutionModel m_subModel;
-    protected static Tree m_tree;
-    protected static MissingDataModel m_missingModel;
-    
-    @Override
+	public Input<LanguageSubsitutionModel> m_subModelInput = new Input<LanguageSubsitutionModel>("subModel",
+			"subsitution model for tree", Validate.REQUIRED);
+	public Input<Tree> m_treeInput = new Input<Tree>("tree", "phylogenetic beast.tree with sequence data in the leafs",
+			Validate.REQUIRED);
+	public Input<MissingDataModel> m_missingModelInput = new Input<MissingDataModel>("missingModel",
+			"missing data model for alignment", Validate.REQUIRED);
+
+	protected static Sequence root;
+	protected static LanguageSubsitutionModel m_subModel;
+	protected static Tree m_tree;
+	protected static MissingDataModel m_missingModel;
+
+	@Override
 	public void initAndValidate() throws Exception {
 	}
-	
-	public HashMap<Alignment,String> simulate(Integer numMeaningClasses) throws Exception {
+
+	public HashMap<Alignment, String> simulate(Integer numMeaningClasses) throws Exception {
 		Alignment cognateSet = new Alignment();
 		ArrayList<Sequence> newSeqs = new ArrayList<Sequence>();
 		String meaningClasses = "0";
-		
+
 		for (int i = 0; i < numMeaningClasses; i++) {
 			Tree newTree;
 			m_tree.getRoot().setMetaData("lang", root);
@@ -59,14 +60,14 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 					tmp.add(LanguageSubsitutionModel.getSequence(n));
 					tmp_taxon.add(n.getID());
 				}
-				
+
 				meaningClasses += " " + newSeqs.get(1).getData().length();
 				for (int j = 0; j < newSeqs.size(); j++) {
 					String newSeq = newSeqs.get(j).getData();
 					newSeq += tmp.get(j).getData();
 					// Create sequence.
 					Sequence d = new Sequence(tmp_taxon.get(j), newSeq);
-					newSeqs.set(j,d);
+					newSeqs.set(j, d);
 				}
 			}
 		}
@@ -82,12 +83,12 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		result.put(cognateSet, meaningClasses);
 		return result;
 	}
-	
-	private static ArrayList<Sequence> removeEmptyColumns (ArrayList<Sequence> oldS) throws Exception {
+
+	private static ArrayList<Sequence> removeEmptyColumns(ArrayList<Sequence> oldS) throws Exception {
 		ArrayList<Sequence> newS = new ArrayList<Sequence>();
 		ArrayList<Integer> emptyColumns = new ArrayList<Integer>();
 		int seqLength = oldS.get(0).getData().length();
-		
+
 		for (int i = 0; i < seqLength; i++) {
 			boolean empty = true;
 			for (Sequence s : oldS) {
@@ -110,76 +111,76 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 			Sequence newSeq = new Sequence(s.getTaxon(), sb.toString());
 			newS.add(newSeq);
 		}
-		
+
 		return newS;
 	}
-	
-	
-	
+
 	public static void printUsageAndExit() {
-        System.out.println("Usage: java " + SequenceSimulator.class.getName() + " <beast file> <nr of instantiations> [<output file>]");
-        System.out.println("Produces an alignment of languages simulated from a tree, and a root language.");
-        System.out.println("<beast file> is name of the path beast file containing the treelikelihood.");
-        System.out.println("<nr of instantiations> is the number of instantiations to produce an alignment with the No Empty Trait Assumption.");
-        System.out.println("<output file> optional name of the file to write the sequence to. By default, the sequence is written to standard output.");
-        System.exit(0);
-    } // printUsageAndExit
+		System.out.println("Usage: java " + SequenceSimulator.class.getName()
+				+ " <beast file> <nr of instantiations> [<output file>]");
+		System.out.println("Produces an alignment of languages simulated from a tree, and a root language.");
+		System.out.println("<beast file> is name of the path beast file containing the treelikelihood.");
+		System.out.println(
+				"<nr of instantiations> is the number of instantiations to produce an alignment with the No Empty Trait Assumption.");
+		System.out.println(
+				"<output file> optional name of the file to write the sequence to. By default, the sequence is written to standard output.");
+		System.exit(0);
+	} // printUsageAndExit
 
-	 @SuppressWarnings("unchecked")
-	    public static void main(String[] args) {
-	        try {
-	            // parse arguments
-	            if (args.length < 2) {
-	                printUsageAndExit();
-	            }
-	            String sFile = args[0];
-	            PrintStream out = System.out;
-	            if (args.length == 3) {
-	                File file = new File(args[2]);
-	                out = new PrintStream(file);
-	            }
+	@SuppressWarnings("unchecked")
+	public static void main(String[] args) {
+		try {
+			// parse arguments
+			if (args.length < 2) {
+				printUsageAndExit();
+			}
+			String sFile = args[0];
+			PrintStream out = System.out;
+			if (args.length == 3) {
+				File file = new File(args[2]);
+				out = new PrintStream(file);
+			}
 
-	            // grab the file
-	            String sXML = "";
-	            BufferedReader fin = new BufferedReader(new FileReader(sFile));
-	            while (fin.ready()) {
-	                sXML += fin.readLine();
-	            }
-	            fin.close();
+			// grab the file
+			String sXML = "";
+			BufferedReader fin = new BufferedReader(new FileReader(sFile));
+			while (fin.ready()) {
+				sXML += fin.readLine();
+			}
+			fin.close();
 
-	            // parse the xml
-	            XMLParser parser = new XMLParser();
-	            BEASTInterface plugin = parser.parseFragment(sXML, true);
-	            
-	            root = ((Input<Sequence>) plugin.getInput("root")).get();
-	            root.initAndValidate();
-	            m_tree = ((Input<Tree>) plugin.getInput("tree")).get();
-	            m_tree.initAndValidate();
-	            m_subModel = ((Input<LanguageSubsitutionModel>) plugin.getInput("subModel")).get();
-	            m_subModel.initAndValidate();
-	            m_missingModel = ((Input<MissingDataModel>) plugin.getInput("missingModel")).get();
-	            m_subModel.initAndValidate();
-	            
+			// parse the xml
+			XMLParser parser = new XMLParser();
+			BEASTInterface plugin = parser.parseFragment(sXML, true);
 
-	            // feed to sequence simulator and generate leaves
-	            LanguageSequenceGen treeSimulator = new LanguageSequenceGen();
-	            XMLProducer producer = new XMLProducer();
-	            HashMap<Alignment, String> alignmentHash = treeSimulator.simulate(Integer.parseInt(args[1]));
-	            Alignment alignment = (Alignment) alignmentHash.keySet().toArray()[0];
-	            String meaningClasses = alignmentHash.get(alignment);
-	            sXML = producer.toRawXML(alignment);
-	            out.println("<beast version='2.0'>");
-	            out.print(sXML);
-	            out.println("<!-- Meaning Classes: " + meaningClasses + " -->");
-	            out.println("</beast>");
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	    }
+			root = ((Input<Sequence>) plugin.getInput("root")).get();
+			root.initAndValidate();
+			m_tree = ((Input<Tree>) plugin.getInput("tree")).get();
+			m_tree.initAndValidate();
+			m_subModel = ((Input<LanguageSubsitutionModel>) plugin.getInput("subModel")).get();
+			m_subModel.initAndValidate();
+			m_missingModel = ((Input<MissingDataModel>) plugin.getInput("missingModel")).get();
+			m_subModel.initAndValidate();
+
+			// feed to sequence simulator and generate leaves
+			LanguageSequenceGen treeSimulator = new LanguageSequenceGen();
+			XMLProducer producer = new XMLProducer();
+			HashMap<Alignment, String> alignmentHash = treeSimulator.simulate(Integer.parseInt(args[1]));
+			Alignment alignment = (Alignment) alignmentHash.keySet().toArray()[0];
+			String meaningClasses = alignmentHash.get(alignment);
+			sXML = producer.toRawXML(alignment);
+			out.println("<beast version='2.0'>");
+			out.print(sXML);
+			out.println("<!-- Meaning Classes: " + meaningClasses + " -->");
+			out.println("</beast>");
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	@Override
 	public void run() throws Exception {
 		// TODO Auto-generated method stub
-		
+
 	}
 }

@@ -1,8 +1,6 @@
 # Rate checking code
 
-langs = ["00000","10011","11101"]
-m = 0.5
-b = 0.5
+import random
 
 def getposition(pos):
 	t = ""
@@ -40,24 +38,41 @@ def births():
 
 # MAIN
 
-for l in langs:
-	print l
+for i in range(100):
+	print 
+	print i
+	#l1 = ''.join(random.choice(["0","1"]) for _ in range(5))
+	#l2 = ''.join(random.choice(["0","1"]) for _ in range(5))
+	#l3 = ''.join(random.choice(["0","1"]) for _ in range(5))
+	l1 = "10101"
+	l2 = "11111"
+	l3 = "10101"
+	langs = [l1,l2,l3]
+	m = 0.5
+	b = 0.5
 
-print ''
+	for l in langs:
+		print l
 
-# Rate matrix calc
-print "Rate matrix calc:"
-print ''
-res = 0.0
-for i in range(len(langs[0])):
-	res += getRateMatrixResult(getposition(i))
-print ''
-print "Rate matrix total rate = " + str(res)
+	print ''
 
-# Simulation calc
-print ''
-print "Simulation calc:"
-print ''
-totalRateCalc = m*(3*5) + b * m * (birthreduction(births()))
+	# Rate matrix calc
+	print "Rate matrix calc:"
+	print ''
+	res = 0.0
+	for i in range(len(langs[0])):
+		res += getRateMatrixResult(getposition(i))
+	print ''
+	print "Rate matrix total rate = " + str(res)
 
-print "Simulation total rate = " + str(totalRateCalc)
+	# Simulation calc
+	print ''
+	print "Simulation calc:"
+	print ''
+	p = (birthreduction(births()))
+	print m*(3+5)
+	print (b*m)
+	print p
+	totalRateCalc = m*(3*5) + b * m * p
+
+	print "Simulation total rate = " + str(totalRateCalc)
