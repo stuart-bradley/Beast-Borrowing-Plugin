@@ -59,8 +59,8 @@ public class BeastBorrowingPluginTest {
 		
 		//SDTreeValidation();
 		//GTRTreeValidation();
-		//GTRTreeBorrowingValidationTwoLanguages();
-		//GTRTreeBorrowingValidationThreeLanguages();
+		GTRTreeBorrowingValidationTwoLanguages();
+		GTRTreeBorrowingValidationThreeLanguages();
 		SDTreeBorrowingValidation();
 		//NoEmptyTraitTest();
 		//MissingLanguageValidation();
@@ -261,7 +261,7 @@ public class BeastBorrowingPluginTest {
 			System.out.println(i);
 			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5,0.5,0.0, false);
 			String seq = "";
-			for (int j = 0; j < 50; j++) {
+			for (int j = 0; j < 20; j++) {
 				seq += Integer.toString(Randomizer.nextInt(2));
 			}
 			Sequence l = new Sequence("",seq);
@@ -278,7 +278,7 @@ public class BeastBorrowingPluginTest {
 			int zeroOneInt = 0;
 			int oneZeroInt = 0;
 			int oneOneInt = 0;
-			for (int j = 0; j < 50; j++) {
+			for (int j = 0; j < 20; j++) {
 				if (l1.charAt(j) == '0' && l2.charAt(j) == '0') {
 					zeroZeroInt += 1;
 				} else if (l1.charAt(j) == '0' && l2.charAt(j) == '1') {
