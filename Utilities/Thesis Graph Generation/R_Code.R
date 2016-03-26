@@ -58,7 +58,7 @@ par(mfrow=c(1, 1))
 
 # GTR Whole Tree Borrowing Validation (2 Languages)
 p = c(0.2222,0.2222,0.2222,0.3333)
-cognates = 50
+cognates = 20
 plot(density(rmultinom(400000,cognates,p), adjust=10), col="green",lwd=2, 
      main="Simulation of 100,000 language evolutions under the GTR borrowing model", xlab="Number of cogantes", xlim=range(0:cognates))
 p = c(mean(gtr00$V1)/cognates,mean(gtr01$V1)/cognates,mean(gtr10$V1)/cognates,median(gtr11$V1)/cognates)
