@@ -59,9 +59,9 @@ public class BeastBorrowingPluginTest {
 		
 		//SDTreeValidation();
 		//GTRTreeValidation();
-		GTRTreeBorrowingValidationTwoLanguages();
+		//GTRTreeBorrowingValidationTwoLanguages();
 		//GTRTreeBorrowingValidationThreeLanguages();
-		//SDTreeBorrowingValidation();
+		SDTreeBorrowingValidation();
 		//NoEmptyTraitTest();
 		//MissingLanguageValidation();
 		//MissingMeaningClassesValidation();
