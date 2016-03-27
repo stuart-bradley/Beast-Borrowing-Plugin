@@ -45,20 +45,20 @@ public class BeastBorrowingPluginTest {
 		// SDTest(seq);
 		// TreeGenTest(seq);
 		// TreeSDBorrowingTest(seq);
-		// TreeGTRBorrowingTest(seq);
+		//TreeGTRBorrowingTest(seq);
 		//countsTest();
 
 		// SDTreeValidation();
 		// GTRTreeValidation();
-		GTRTreeBorrowingValidationTwoLanguages();
-		GTRTreeBorrowingValidationThreeLanguages();
-		SDTreeBorrowingValidation();
+		//GTRTreeBorrowingValidationTwoLanguages();
+		//GTRTreeBorrowingValidationThreeLanguages();
+		//SDTreeBorrowingValidation();
 		// NoEmptyTraitTest();
 		// MissingLanguageValidation();
 		// MissingMeaningClassesValidation();
 		// SpeedTestNonBorrowing();
 
-		// SeqGenTest();
+		 SeqGenTest();
 		// randomTreeTest();
 
 	}
@@ -261,7 +261,7 @@ public class BeastBorrowingPluginTest {
 		ArrayList<Integer> oneOne = new ArrayList<Integer>();
 		for (int i = 0; i < 10000; i++) {
 			System.out.println(i);
-			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.5, 0.0, false);
+			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.0, 0.0, false);
 			String seq = "";
 			for (int j = 0; j < 20; j++) {
 				seq += Integer.toString(Randomizer.nextInt(2));
@@ -501,9 +501,9 @@ public class BeastBorrowingPluginTest {
 
 	private static void SeqGenTest() throws Exception {
 		String[] args = {
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/GTR_Borrow_0_Input.xml",
+				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/GTR_Borrow_50_Input.xml",
 				"200",
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/GTR_Borrow_0_Output_t.xml" };
+				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/GTR_Borrow_50_Output.xml" };
 		// String[] args =
 		// {"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/testSeqLangGen.xml","2","/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/output.xml"};
 

@@ -142,7 +142,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 */
 	public Tree mutateOverTreeBorrowing(Tree base) throws Exception {
 		setSubTreeLanguages(base.getRoot(), (Sequence) base.getRoot().getMetaData("lang"));
-		Double treeHeight = getTreeHeight(base);
+		Double treeHeight = Math.abs(getTreeHeight(base));
 		// Get root node.
 		ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
 		ArrayList<Node> aliveNodesNew;

@@ -1,6 +1,8 @@
 package beast.evolution.substitutionmodel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 
 import beast.core.CalculationNode;
 import beast.core.Description;
@@ -145,19 +147,20 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 
 	/*
 	 * Gets height of tree.
-	 * 
 	 * @param base Tree.
-	 * 
-	 * @return height of base.
+	 * @return height of base. 
 	 */
 	protected Double getTreeHeight(Tree base) {
-		Double height = 0.0;
-		for (Node c : base.getExternalNodes()) {
-			if (Math.abs(c.getHeight()) > height) {
-				height = Math.abs(c.getHeight());
-			}
-		}
-		return height;
+		Node[] nodes = base.getNodesAsArray();
+		// Comparator that sorts nodes on height.
+	    Arrays.sort(nodes, new Comparator<Node>() {
+	        @Override
+	        public int compare(Node o1, Node o2) {
+	            return new Double (o1.getHeight()).compareTo(o2.getHeight());
+	        }
+	    });	
+	    // Gets largest node.
+	    return nodes[nodes.length-1].getHeight();
 	}
 
 	/*

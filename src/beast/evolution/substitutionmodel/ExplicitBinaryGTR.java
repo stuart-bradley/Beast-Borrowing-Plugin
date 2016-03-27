@@ -135,7 +135,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	 */
 	public Tree mutateOverTreeBorrowing(Tree base) throws Exception {
 		setSubTreeLanguages(base.getRoot(), (Sequence) base.getRoot().getMetaData("lang"));
-		Double treeHeight = getTreeHeight(base);
+		Double treeHeight = Math.abs(getTreeHeight(base));
 		// Get root node.
 		ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
 		ArrayList<Node> aliveNodesNew;
@@ -247,16 +247,18 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	}
 	
 	protected static double birthReduction(ArrayList<Node> aliveNodes, double borrowSum) {
-		int seq_length = ((Sequence) aliveNodes.get(0).getMetaData("lang")).getData().length();
-		for (int j = 0; j < seq_length; j++) {
-			String t = getPositionState(aliveNodes, j);
-			int births = (int) t.chars().filter(ch -> ch =='1').count();
-			if (births == t.length()) {
-				//System.out.println("All 1's, " + births + " not important.");
-				borrowSum -= births;
-			} else if (births > 0) {
-				//System.out.println(births + " 1's, "+ (births -1)+" not important.");
-				borrowSum -= (births-1);
+		if (aliveNodes.size() > 0) { 
+			int seq_length = ((Sequence) aliveNodes.get(0).getMetaData("lang")).getData().length();
+			for (int j = 0; j < seq_length; j++) {
+				String t = getPositionState(aliveNodes, j);
+				int births = (int) t.chars().filter(ch -> ch =='1').count();
+				if (births == t.length()) {
+					//System.out.println("All 1's, " + births + " not important.");
+					borrowSum -= births;
+				} else if (births > 0) {
+					//System.out.println(births + " 1's, "+ (births -1)+" not important.");
+					borrowSum -= (births-1);
+				}
 			}
 		}
 		return borrowSum;
