@@ -50,15 +50,16 @@ public class BeastBorrowingPluginTest {
 
 		// SDTreeValidation();
 		// GTRTreeValidation();
-		//GTRTreeBorrowingValidationTwoLanguages();
-		//GTRTreeBorrowingValidationThreeLanguages();
+		GTRTreeBorrowingValidationTwoLanguages();
+		GTRTreeBorrowingValidationThreeLanguages();
 		//SDTreeBorrowingValidation();
 		// NoEmptyTraitTest();
 		// MissingLanguageValidation();
 		// MissingMeaningClassesValidation();
 		// SpeedTestNonBorrowing();
 
-		 SeqGenTest();
+		 //SeqGenTest();
+		// misspecGeneration();
 		// randomTreeTest();
 
 	}
@@ -318,7 +319,7 @@ public class BeastBorrowingPluginTest {
 		ArrayList<Integer> oneOneOne = new ArrayList<Integer>();
 		for (int i = 0; i < 10000; i++) {
 			System.out.println(i);
-			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.5, 0.0, false);
+			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.0, 0.0, false);
 			String seq = "";
 			for (int j = 0; j < 20; j++) {
 				seq += Integer.toString(Randomizer.nextInt(2));
@@ -501,13 +502,34 @@ public class BeastBorrowingPluginTest {
 
 	private static void SeqGenTest() throws Exception {
 		String[] args = {
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/GTR_Borrow_50_Input.xml",
-				"200",
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/GTR_Borrow_50_Output.xml" };
+				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/SD_Borrow_0_Input.xml",
+				"1",
+				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/SD_Borrow_0_Output.xml" };
 		// String[] args =
 		// {"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/testSeqLangGen.xml","2","/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/output.xml"};
 
 		LanguageSequenceGen.main(args);
+	}
+	
+	private static void misspecGeneration() throws Exception {
+		int[] borrowingRates = {0,1,5,10,15,20,30,40,50};
+		String[] models = {"GTR","SD"};
+		for (String model : models) {
+			System.out.println(model);
+			for (int b : borrowingRates) {
+				long startTime = System.currentTimeMillis();
+				System.out.println(b);
+				System.out.println();
+				String[] args = {
+						"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/"+model+ "_Borrow_"+b+"_Input.xml",
+						"1",
+						"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/"+model+"_Borrow_"+b+"_Output.xml" 
+				};
+				LanguageSequenceGen.main(args);
+				long endTime = System.currentTimeMillis();
+				System.out.println("That took " + (endTime - startTime) + " milliseconds");
+			}
+		}
 	}
 
 	private static void randomTreeTest() throws Exception {
