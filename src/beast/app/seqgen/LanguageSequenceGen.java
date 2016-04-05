@@ -4,7 +4,9 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.PrintStream;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 
 import beast.core.BEASTInterface;
@@ -45,7 +47,11 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		for (int i = 0; i < numMeaningClasses; i++) {
 			Tree newTree;
 			m_tree.getRoot().setMetaData("lang", root);
-			newTree = m_subModel.mutateOverTreeBorrowing(m_tree);
+			if (m_subModel.getBorrowRate() == 0.0) {
+				newTree = m_subModel.mutateOverTree(m_tree);
+			} else {
+				newTree = m_subModel.mutateOverTreeBorrowing(m_tree);
+			}
 			// Base Case.
 			if (i == 0) {
 				newSeqs = new ArrayList<Sequence>();
@@ -169,9 +175,11 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 			Alignment alignment = (Alignment) alignmentHash.keySet().toArray()[0];
 			String meaningClasses = alignmentHash.get(alignment);
 			sXML = producer.toRawXML(alignment);
+			String timestamp = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss.SSS").format(new Date());
 			out.println("<beast version='2.0'>");
 			out.print(sXML);
 			out.println("<!-- Meaning Classes: " + meaningClasses + " -->");
+			out.println("<!-- Created at: " + timestamp + " -->");
 			out.println("</beast>");
 		} catch (Exception e) {
 			e.printStackTrace();

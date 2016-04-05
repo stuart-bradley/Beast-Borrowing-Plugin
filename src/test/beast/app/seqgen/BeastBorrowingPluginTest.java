@@ -59,7 +59,7 @@ public class BeastBorrowingPluginTest {
 		// SpeedTestNonBorrowing();
 
 		 //SeqGenTest();
-		misspecGeneration();
+		//misspecGeneration();
 		// randomTreeTest();
 
 	}
@@ -306,7 +306,7 @@ public class BeastBorrowingPluginTest {
 			tree = randomYuleTree3Branch(3, 0.01);
 			tree.getRoot().setMetaData("lang", l);
 			tree = gtr_mod.mutateOverTreeBorrowing(tree);
-			List<Node> ext = tree.getRoot().getChildren();
+			List<Node> ext = tree.getExternalNodes();
 			String l1 = ((Sequence) ext.get(0).getMetaData("lang")).getData();
 			String l2 = ((Sequence) ext.get(1).getMetaData("lang")).getData();
 			String l3 = ((Sequence) ext.get(2).getMetaData("lang")).getData();
@@ -682,45 +682,7 @@ public class BeastBorrowingPluginTest {
 	}
 	
 	private static Tree randomYuleTree3Branch (int nodes, double l) throws Exception {
-		Tree tr = new Tree();
-		ArrayList<Node> nodeList = new ArrayList<Node>();
-		double t = 0.0;
-		int label = 1;
-		for (int i = 0; i < nodes; i++) {
-			Node n = new Node();
-			n.setHeight(t);
-			n.setNr(label);
-			label++;
-			nodeList.add(n);
-		}
-		
-		while (nodeList.size() > 1) {
-			t += Randomizer.nextExponential(nodeList.size()*l);
-			
-			int p_1_index = Randomizer.nextInt(nodeList.size());
-			Node p1 = nodeList.remove(p_1_index);
-			int p_2_index = Randomizer.nextInt(nodeList.size());
-			Node p2 = nodeList.remove(p_2_index);
-			int p_3_index = Randomizer.nextInt(nodeList.size());
-			Node p3 = nodeList.remove(p_3_index);
-			
-			Node parent = new Node();
-			parent.setHeight(t);
-
-			parent.setNr(label);
-			label++;
-			p1.setParent(parent);
-			parent.addChild(p1);
-			p2.setParent(parent);
-			parent.addChild(p2);
-			p3.setParent(parent);
-			parent.addChild(p3);
-			
-			nodeList.add(parent);
-		}
-		tr.setRoot(nodeList.get(0));
-		return new Tree(tr.toString());
-		
+		return new Tree("(0:100,1:100,2:100)3:0.0");	
 	}
 
 }

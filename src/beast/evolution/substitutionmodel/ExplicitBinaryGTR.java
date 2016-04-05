@@ -1,7 +1,6 @@
 package beast.evolution.substitutionmodel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -152,7 +151,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		for (int i = 0; i < events.length - 1; i++) {
 			System.out.println();
 			System.out.println("On branch event: " + i+ " out of " + events.length + ". Next event at " + events[i+1]);
-			Double t = events[i] - Randomizer.nextExponential(totalRate);;
+			Double t = events[i] - Randomizer.nextExponential(totalRate);
 			while (t > events[i+1]) {
 				System.out.print("\r"+t);
 				// Return array of event probabilities and pick one.
@@ -304,7 +303,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		double[] probs;
 		for (int i = 0; i < events.length - 1; i++) {
 			System.out.println();
-			System.out.println("On branch event: " + i+ " out of " + events.length + ". Next event at " + events[i+1]);
+			System.out.println("On branch event: " + i + " out of " + events.length + ". Next event at " + events[i+1]);
 			Double t = events[i] - Randomizer.nextExponential(totalRate);;
 			while (t > events[i+1]) {
 				System.out.print("\r"+t);
