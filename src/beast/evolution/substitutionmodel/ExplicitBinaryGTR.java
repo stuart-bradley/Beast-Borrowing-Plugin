@@ -1,6 +1,7 @@
 package beast.evolution.substitutionmodel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -134,24 +135,26 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	 * @return base Tree with languages added.
 	 */
 	public Tree mutateOverTreeBorrowing(Tree base) throws Exception {
+		Double[] events = getEvents(base);
 		setSubTreeLanguages(base.getRoot(), (Sequence) base.getRoot().getMetaData("lang"));
-		Double treeHeight = base.getRoot().getHeight();
 		// Get root node.
 		ArrayList<Node> aliveNodes = new ArrayList<Node>();
 		aliveNodes.addAll(base.getRoot().getChildren());
-		ArrayList<Node> aliveNodesNew;
 		// Get first event.
 		Double totalRate = totalRate(aliveNodes);
-		Double t = treeHeight - Randomizer.nextExponential(totalRate);
+		//Double t = treeHeight - Randomizer.nextExponential(totalRate);
 		// Variable declarations.
 		Node ranNode = null, ranNode2 = null;
 		Sequence nodeLang = null, nodeLang2 = null, newNodeLang;
 		String s;
 		int idx;
 		double[] probs;
-		while (t > 0.0) {
-			aliveNodesNew = getAliveNodes(base, t);
-			if (compareAliveNodes(aliveNodes, aliveNodesNew)) {
+		for (int i = 0; i < events.length - 1; i++) {
+			System.out.println();
+			System.out.println("On branch event: " + i+ " out of " + events.length + ". Next event at " + events[i+1]);
+			Double t = events[i] - Randomizer.nextExponential(totalRate);;
+			while (t > events[i+1]) {
+				System.out.print("\r"+t);
 				// Return array of event probabilities and pick one.
 				probs = BorrowingProbs(aliveNodes);
 				Integer choice = Randomizer.randomChoicePDF(probs);
@@ -186,21 +189,19 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 
 						if (localDist(ranNode, ranNode2)) {
 							// Randomly iterate through language and find a 1.
-							int i = getRandomBirthIndex(nodeLang);
+							int ind = getRandomBirthIndex(nodeLang);
 							// Give the 1 to the receiving language.
-							s = replaceCharAt(nodeLang2.getData(), i, Integer.toString(1));
+							s = replaceCharAt(nodeLang2.getData(), ind, Integer.toString(1));
 							newNodeLang = new Sequence("", s);
 							newNodeLang.dataInput.setValue(s, newNodeLang);
 							setSubTreeLanguages(ranNode2, newNodeLang);
 						}
 					}
 				}
-			} else {
-				t = getGreatestHeight(aliveNodes);
-				aliveNodes = aliveNodesNew;
-				totalRate = totalRate(aliveNodes);
+				t -= Randomizer.nextExponential(totalRate);
 			}
-			t -= Randomizer.nextExponential(totalRate);
+			aliveNodes = getAliveNodes(base, t);
+			totalRate = totalRate(aliveNodes);
 		}
 		return base;
 	}
@@ -283,28 +284,30 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	/*
 	 * Code used to validate the GTR borrowing method.
 	 */
-
+	
 	public HashMap<String, Integer> mutateOverTreeBorrowingWithEvents(Tree base) throws Exception {
-		HashMap<String, Integer> events = new HashMap<String, Integer>();
+		HashMap<String, Integer> hevents = new HashMap<String, Integer>();
+		Double[] events = getEvents(base);
 		setSubTreeLanguages(base.getRoot(), (Sequence) base.getRoot().getMetaData("lang"));
-		Double treeHeight = base.getRoot().getHeight();
 		// Get root node.
 		ArrayList<Node> aliveNodes = new ArrayList<Node>();
 		aliveNodes.addAll(base.getRoot().getChildren());
-		ArrayList<Node> aliveNodesNew;
 		// Get first event.
 		Double totalRate = totalRate(aliveNodes);
-		Double t = treeHeight - Randomizer.nextExponential(totalRate);
+		//Double t = treeHeight - Randomizer.nextExponential(totalRate);
 		// Variable declarations.
 		Node ranNode = null, ranNode2 = null;
 		Sequence nodeLang = null, nodeLang2 = null, newNodeLang;
 		String s;
 		int idx;
-		double[] probs;
 		int pos = 0;
-		while (t >= 0.0) {
-			aliveNodesNew = getAliveNodes(base, t);
-			if (compareAliveNodes(aliveNodes, aliveNodesNew)) {
+		double[] probs;
+		for (int i = 0; i < events.length - 1; i++) {
+			System.out.println();
+			System.out.println("On branch event: " + i+ " out of " + events.length + ". Next event at " + events[i+1]);
+			Double t = events[i] - Randomizer.nextExponential(totalRate);;
+			while (t > events[i+1]) {
+				System.out.print("\r"+t);
 				// Return array of event probabilities and pick one.
 				probs = BorrowingProbs(aliveNodes);
 				Integer choice = Randomizer.randomChoicePDF(probs);
@@ -339,28 +342,25 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 
 						if (localDist(ranNode, ranNode2)) {
 							// Randomly iterate through language and find a 1.
-							pos = getRandomBirthIndex(nodeLang);
+							int ind = getRandomBirthIndex(nodeLang);
 							// Give the 1 to the receiving language.
-							s = replaceCharAt(nodeLang2.getData(), pos, Integer.toString(1));
+							s = replaceCharAt(nodeLang2.getData(), ind, Integer.toString(1));
 							newNodeLang = new Sequence("", s);
 							newNodeLang.dataInput.setValue(s, newNodeLang);
 							setSubTreeLanguages(ranNode2, newNodeLang);
 						}
 					}
 				}
-			} else {
-				//t = getSmallestHeight(aliveNodes);
-				aliveNodes = aliveNodesNew;
-				totalRate = totalRate(aliveNodes);
+				t -= Randomizer.nextExponential(totalRate);
+				int count = hevents.getOrDefault(getPositionState(aliveNodes, pos), 0);
+				hevents.put(getPositionState(aliveNodes, pos), count + 1);
+				count = hevents.getOrDefault("total", 0);
+				hevents.put("total", count + 1);
 			}
-			// Next Events
-			t += Randomizer.nextExponential(totalRate);
-			int count = events.getOrDefault(getPositionState(aliveNodes, pos), 0);
-			events.put(getPositionState(aliveNodes, pos), count + 1);
-			count = events.getOrDefault("total", 0);
-			events.put("total", count + 1);
+			aliveNodes = getAliveNodes(base, t);
+			totalRate = totalRate(aliveNodes);
 		}
-		return events;
+		return hevents;
 	}
 
 	public static String getPositionState(ArrayList<Node> aliveNodes, int pos) {

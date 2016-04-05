@@ -2,6 +2,7 @@ package beast.evolution.substitutionmodel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 
 import beast.core.CalculationNode;
@@ -254,14 +255,14 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * 
 	 * @return double of smallest height.
 	 */
-	protected double getGreatestHeight(ArrayList<Node> aliveNodes) {
-		double largest = 0.0;
+	protected double getSmallestHeight(ArrayList<Node> aliveNodes) {
+		double smallest = Double.MAX_VALUE;
 		for (Node n : aliveNodes) {
-			if (n.getHeight() > largest) {
-				largest = n.getHeight();
+			if (n.getHeight() < smallest) {
+				smallest = n.getHeight();
 			}
 		}
-		return largest;
+		return smallest;
 	}
 
 	/*
@@ -317,6 +318,16 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 			}
 		}
 		return birthIndicies.get(Randomizer.nextInt(birthIndicies.size()));
+	}
+	
+	protected Double[] getEvents(Tree tr) {
+		Node[] nodes = tr.getNodesAsArray();
+		Double[] events = new Double[nodes.length];
+		for (int i = 0; i < nodes.length; i++) {
+			events[i] = nodes[i].getHeight();
+		}
+		Arrays.sort(events, Collections.reverseOrder());
+		return events;
 	}
 
 	/*
