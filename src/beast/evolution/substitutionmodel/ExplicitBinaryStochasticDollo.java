@@ -142,18 +142,19 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 */
 	public Tree mutateOverTreeBorrowing(Tree base) throws Exception {
 		setSubTreeLanguages(base.getRoot(), (Sequence) base.getRoot().getMetaData("lang"));
-		Double treeHeight = Math.abs(getTreeHeight(base));
+		Double treeHeight = base.getRoot().getHeight();
 		// Get root node.
-		ArrayList<Node> aliveNodes = getAliveNodes(base, 0.0);
+		ArrayList<Node> aliveNodes = new ArrayList<Node>();
+		aliveNodes.addAll(base.getRoot().getChildren());
 		ArrayList<Node> aliveNodesNew;
 		Double totalRate = totalRate(aliveNodes);
-		Double t = Randomizer.nextExponential(totalRate);
+		Double t = treeHeight - Randomizer.nextExponential(totalRate);
 		Node ranNode = null, ranNode2 = null;
 		Sequence nodeLang = null, nodeLang2 = null, newNodeLang = null;
 		String s;
 		int idx;
 		double[] probs = new double[3];
-		while (t < treeHeight) {
+		while (t > 0.0) {
 			// If t has changed rate, ignore event.
 			aliveNodesNew = getAliveNodes(base, t);
 			if (compareAliveNodes(aliveNodes, aliveNodesNew)) {
@@ -208,11 +209,11 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 					}
 				}
 			} else {
-				t = getSmallestHeight(aliveNodes);
+				t = getGreatestHeight(aliveNodes);
 				aliveNodes = aliveNodesNew;
 				totalRate = totalRate(aliveNodes);
 			}
-			t += Randomizer.nextExponential(totalRate);
+			t -= Randomizer.nextExponential(totalRate);
 		}
 		return base;
 	}
@@ -327,5 +328,17 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		String s = "";
 		s += "SD";
 		return s;
+	}
+	
+	private static ArrayList<Node> getLeafNodes (Node child) {
+		ArrayList<Node> leaves = new ArrayList<Node>();
+		if (child.getChildren().isEmpty()) {
+	        leaves.add(child);
+	    } else {
+	        for (Node c : child.getChildren()) {
+	            leaves.addAll(getLeafNodes(c));
+	        }
+	    }
+		return leaves;
 	}
 }

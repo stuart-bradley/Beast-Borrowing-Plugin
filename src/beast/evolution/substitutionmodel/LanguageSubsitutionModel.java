@@ -146,24 +146,6 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	}
 
 	/*
-	 * Gets height of tree.
-	 * @param base Tree.
-	 * @return height of base. 
-	 */
-	protected Double getTreeHeight(Tree base) {
-		Node[] nodes = base.getNodesAsArray();
-		// Comparator that sorts nodes on height.
-	    Arrays.sort(nodes, new Comparator<Node>() {
-	        @Override
-	        public int compare(Node o1, Node o2) {
-	            return new Double (o1.getHeight()).compareTo(o2.getHeight());
-	        }
-	    });	
-	    // Gets largest node.
-	    return nodes[nodes.length-1].getHeight();
-	}
-
-	/*
 	 * Sets the language of a node and all its decendents.
 	 * 
 	 * @param subRoot Node, root node.
@@ -191,7 +173,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 
 		Node root = base.getRoot();
 		for (Node child : root.getChildren()) {
-			if (child.getHeight() >= t) {
+			if (child.getHeight() <= t) {
 				aliveNodes.add(child);
 			} else {
 				aliveNodes.addAll(aliveNodes(child, t));
@@ -266,20 +248,20 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	}
 
 	/*
-	 * Gets smallest rate change node.
+	 * Gets largest rate change node.
 	 * 
 	 * @param aliveNodes.
 	 * 
 	 * @return double of smallest height.
 	 */
-	protected double getSmallestHeight(ArrayList<Node> aliveNodes) {
-		double smallest = Double.MAX_VALUE;
+	protected double getGreatestHeight(ArrayList<Node> aliveNodes) {
+		double largest = 0.0;
 		for (Node n : aliveNodes) {
-			if (n.getHeight() < smallest) {
-				smallest = n.getHeight();
+			if (n.getHeight() > largest) {
+				largest = n.getHeight();
 			}
 		}
-		return smallest;
+		return largest;
 	}
 
 	/*

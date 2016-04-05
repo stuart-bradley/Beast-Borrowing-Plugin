@@ -52,13 +52,13 @@ public class BeastBorrowingPluginTest {
 		// GTRTreeValidation();
 		//GTRTreeBorrowingValidationTwoLanguages();
 		//GTRTreeBorrowingValidationThreeLanguages();
-		//SDTreeBorrowingValidation();
+		SDTreeBorrowingValidation();
 		// NoEmptyTraitTest();
 		// MissingLanguageValidation();
 		// MissingMeaningClassesValidation();
 		// SpeedTestNonBorrowing();
 
-		 SeqGenTest();
+		 //SeqGenTest();
 		// misspecGeneration();
 		// randomTreeTest();
 
@@ -91,11 +91,7 @@ public class BeastBorrowingPluginTest {
 		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5, 0.0, 0.0, false);
 
 		System.out.println("Tree generation test");
-		Node rootNode = new Node();
-		rootNode.setMetaData("lang", l);
-		rootNode.setHeight(0);
-		Tree tree = new Tree(rootNode);
-		tree = randomTree(tree, 4, 0.6);
+		Tree tree = randomYuleTree(4, 0.6);
 		tree.getRoot().setMetaData("lang", l);
 		sd_mod.mutateOverTree(tree);
 		for (Node n : tree.getExternalNodes()) {
@@ -116,11 +112,8 @@ public class BeastBorrowingPluginTest {
 				false);
 
 		System.out.println("Tree SD Borrowing Test");
-		Node rootNode = new Node();
-		rootNode.setMetaData("lang", l);
-		rootNode.setHeight(0);
-		Tree tree = new Tree(rootNode);
-		tree = randomTree(tree, 4, 0.01);
+		Tree tree = randomYuleTree(4, 0.01);
+		tree.getRoot().setMetaData("lang", l);
 		sd_mod.mutateOverTreeBorrowing(tree);
 		for (Node n : tree.getExternalNodes()) {
 			Sequence l2 = (Sequence) n.getMetaData("lang");
@@ -133,11 +126,8 @@ public class BeastBorrowingPluginTest {
 		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 1.2, 0.0, false);
 
 		System.out.println("Tree GTR Borrowing Test");
-		Node rootNode = new Node();
-		rootNode.setMetaData("lang", l);
-		rootNode.setHeight(0);
-		Tree tree = new Tree(rootNode);
-		tree = randomTree(tree, 2, 0.01);
+		Tree tree = randomYuleTree(2, 0.01);
+		tree.getRoot().setMetaData("lang", l);
 		gtr_mod.mutateOverTreeBorrowing(tree);
 		for (Node n : tree.getExternalNodes()) {
 			Sequence l2 = (Sequence) n.getMetaData("lang");
@@ -150,11 +140,8 @@ public class BeastBorrowingPluginTest {
 		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.5, 0.0, false);
 
 		System.out.println("Tree GTR Borrowing Test");
-		Node rootNode = new Node();
-		rootNode.setMetaData("lang", l);
-		rootNode.setHeight(0);
-		Tree tree = new Tree(rootNode);
-		tree = randomTree3Branch(tree, 3, 0.01);
+		Tree tree = randomYuleTree3Branch(3, 0.01);
+		tree.getRoot().setMetaData("lang", l);
 		gtr_mod.mutateOverTreeBorrowing(tree);
 		for (Node n : tree.getExternalNodes()) {
 			Sequence l2 = (Sequence) n.getMetaData("lang");
@@ -209,11 +196,8 @@ public class BeastBorrowingPluginTest {
 				seq += Integer.toString(Randomizer.nextInt(2));
 			}
 			Sequence l = new Sequence("", seq);
-			Node rootNode = new Node();
-			rootNode.setMetaData("lang", l);
-			rootNode.setHeight(0);
-			Tree tree = new Tree(rootNode);
-			tree = randomTree(tree, 8, 0.6);
+			Tree tree = randomYuleTree(8, 0.6);
+			tree.getRoot().setMetaData("lang", l);
 			tree = gtr_mod.mutateOverTree(tree);
 			for (Node n : tree.getExternalNodes()) {
 				Sequence l2 = (Sequence) n.getMetaData("lang");
@@ -236,11 +220,8 @@ public class BeastBorrowingPluginTest {
 			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5, 0.0, 0.0, false);
 			String seq = "";
 			Sequence l = new Sequence("", seq);
-			Node rootNode = new Node();
-			rootNode.setMetaData("lang", l);
-			rootNode.setHeight(0);
-			Tree tree = new Tree(rootNode);
-			tree = randomTree(tree, 8, 0.01);
+			Tree tree = randomYuleTree(8, 0.01);
+			tree.getRoot().setMetaData("lang", l);
 			tree = sd_mod.mutateOverTree(tree);
 			for (Node n : tree.getExternalNodes()) {
 				Sequence l2 = (Sequence) n.getMetaData("lang");
@@ -262,19 +243,16 @@ public class BeastBorrowingPluginTest {
 		ArrayList<Integer> oneOne = new ArrayList<Integer>();
 		for (int i = 0; i < 10000; i++) {
 			System.out.println(i);
-			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.0, 0.0, false);
+			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.5, 0.0, false);
 			String seq = "";
 			for (int j = 0; j < 20; j++) {
 				seq += Integer.toString(Randomizer.nextInt(2));
 			}
 			Sequence l = new Sequence("", seq);
-			Node rootNode = new Node();
-			rootNode.setMetaData("lang", l);
-			rootNode.setHeight(0);
-			tree = new Tree(rootNode);
-			tree = randomTree(tree, 2, 0.01);
+			tree = randomYuleTree(2, 0.01);
+			tree.getRoot().setMetaData("lang", l);
 			tree = gtr_mod.mutateOverTreeBorrowing(tree);
-			List<Node> ext = tree.getExternalNodes();
+			List<Node> ext = tree.getRoot().getChildren();
 			String l1 = ((Sequence) ext.get(0).getMetaData("lang")).getData();
 			String l2 = ((Sequence) ext.get(1).getMetaData("lang")).getData();
 			int zeroZeroInt = 0;
@@ -319,19 +297,16 @@ public class BeastBorrowingPluginTest {
 		ArrayList<Integer> oneOneOne = new ArrayList<Integer>();
 		for (int i = 0; i < 10000; i++) {
 			System.out.println(i);
-			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.0, 0.0, false);
+			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.5, 0.0, false);
 			String seq = "";
 			for (int j = 0; j < 20; j++) {
 				seq += Integer.toString(Randomizer.nextInt(2));
 			}
 			Sequence l = new Sequence("", seq);
-			Node rootNode = new Node();
-			rootNode.setMetaData("lang", l);
-			rootNode.setHeight(0);
-			tree = new Tree(rootNode);
-			tree = randomTree3Branch(tree, 3, 0.01);
+			tree = randomYuleTree3Branch(3, 0.01);
+			tree.getRoot().setMetaData("lang", l);
 			tree = gtr_mod.mutateOverTreeBorrowing(tree);
-			List<Node> ext = tree.getExternalNodes();
+			List<Node> ext = tree.getRoot().getChildren();
 			String l1 = ((Sequence) ext.get(0).getMetaData("lang")).getData();
 			String l2 = ((Sequence) ext.get(1).getMetaData("lang")).getData();
 			String l3 = ((Sequence) ext.get(2).getMetaData("lang")).getData();
@@ -406,13 +381,15 @@ public class BeastBorrowingPluginTest {
 			Sequence l = new Sequence("", seq);
 			Node rootNode = new Node();
 			rootNode.setMetaData("lang", l);
-			rootNode.setHeight(0);
-			tree = new Tree(rootNode);
-			tree = randomTree(tree, 8, 0.1);
+			tree = randomYuleTree(8, 0.1);
+			tree = new Tree(tree.toString());
+			tree.getRoot().setMetaData("lang", l);
 			tree = sd_mod.mutateOverTreeBorrowing(tree);
-			for (Node n : tree.getExternalNodes()) {
-				Sequence l2 = (Sequence) n.getMetaData("lang");
-				births.add(LanguageSubsitutionModel.getBirths(l2));
+			for (Node n : tree.getNodesAsArray()) {
+				if (n.isLeaf()) {
+					Sequence l2 = (Sequence) n.getMetaData("lang");
+					births.add(LanguageSubsitutionModel.getBirths(l2));
+				}
 			}
 		}
 		listToCSV(births,
@@ -436,11 +413,8 @@ public class BeastBorrowingPluginTest {
 				seq += '1';
 			}
 			Sequence l = new Sequence("", seq);
-			Node rootNode = new Node();
-			rootNode.setMetaData("lang", l);
-			rootNode.setHeight(0);
-			tree = new Tree(rootNode);
-			tree = randomTree(tree, 8, 0.06);
+			tree = randomYuleTree(8, 0.06);
+			tree.getRoot().setMetaData("lang", l);
 
 			startTime = System.nanoTime();
 			tree = gtr_mod.mutateOverTree(tree);
@@ -482,11 +456,8 @@ public class BeastBorrowingPluginTest {
 				seq += Integer.toString(Randomizer.nextInt(2));
 			}
 			Sequence l = new Sequence("", seq);
-			Node rootNode = new Node();
-			rootNode.setMetaData("lang", l);
-			rootNode.setHeight(0);
-			Tree tree = new Tree(rootNode);
-			tree = randomTree3Branch(tree, 3, 0.01);
+			Tree tree = randomYuleTree3Branch(3, 0.01);
+			tree.getRoot().setMetaData("lang", l);
 			HashMap<String, Integer> events = gtr_mod.mutateOverTreeBorrowingWithEvents(tree);
 			results.putAll(events);
 		}
@@ -556,11 +527,8 @@ public class BeastBorrowingPluginTest {
 		Sequence l = new Sequence("", "");
 
 		System.out.println("Tree GTR Borrowing Test");
-		Node rootNode = new Node();
-		rootNode.setMetaData("lang", l);
-		rootNode.setHeight(0);
-		Tree tree = new Tree(rootNode);
-		tree = randomTree(tree, 2, 0.01);
+		Tree tree = randomYuleTree(2, 0.01);
+		tree.getRoot().setMetaData("lang", l);
 		System.out.println(TreeUtils.getTreeLength(tree, tree.getRoot()));
 
 	}
@@ -569,11 +537,8 @@ public class BeastBorrowingPluginTest {
 		for (int i = 0; i < 1; i++) {
 			System.out.println(i);
 			Sequence l = new Sequence("", "00000000000001");
-			Node rootNode = new Node();
-			rootNode.setMetaData("lang", l);
-			rootNode.setHeight(0);
-			Tree tree = new Tree(rootNode);
-			tree = randomTree(tree, 3, 0.06);
+			Tree tree = randomYuleTree(3, 0.06);
+			tree.getRoot().setMetaData("lang", l);
 			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.0, 0.5, 0.0, 0.0, true);
 			tree = sd_mod.mutateOverTree(tree);
 
@@ -652,14 +617,6 @@ public class BeastBorrowingPluginTest {
 				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/missing_lang.csv");
 	}
 
-	private static void printTree(Tree base) {
-		System.out.println("Printing Tree");
-
-		for (Node node : base.listNodesPostOrder(base.getRoot(), null)) {
-			System.out.println(((Sequence) node.getMetaData("lang")).getData());
-		}
-	}
-
 	private static <T> void listToCSV(ArrayList<T> l, String fileName) {
 		final String NEW_LINE_SEPARATOR = "\n";
 		FileWriter fW = null;
@@ -685,84 +642,85 @@ public class BeastBorrowingPluginTest {
 
 		}
 	}
-
-	private static Tree randomTree(Tree rootTree, Integer numLeaves, Double branchRate) {
-		ArrayList<Node> currLeaves = new ArrayList<Node>();
-		ArrayList<Node> newLeaves = new ArrayList<Node>();
-		currLeaves.add(rootTree.getRoot());
-		Sequence rootLang = (Sequence) rootTree.getRoot().getMetaData("lang");
-		Node childLeft, childRight;
-
-		while (currLeaves.size() < numLeaves) {
-			for (Node parent : currLeaves) {
-				childLeft = new Node();
-				childRight = new Node();
-
-				// Left child.
-				double t = Randomizer.nextExponential(branchRate);
-				childLeft.setParent(parent);
-				parent.addChild(childLeft);
-				childLeft.setHeight(parent.getHeight() + t);
-				childLeft.setMetaData("lang", rootLang);
-				newLeaves.add(childLeft);
-				rootTree.addNode(childLeft);
-				// Right child.
-				// t = Randomizer.nextExponential(branchRate);
-				childRight.setParent(parent);
-				parent.addChild(childRight);
-				childRight.setHeight(parent.getHeight() + t);
-				childRight.setMetaData("lang", rootLang);
-				newLeaves.add(childRight);
-				rootTree.addNode(childRight);
-			}
-			currLeaves = new ArrayList<Node>(newLeaves);
-			newLeaves = new ArrayList<Node>();
+	
+	private static Tree randomYuleTree (int nodes, double l) throws Exception {
+		Tree tr = new Tree();
+		ArrayList<Node> nodeList = new ArrayList<Node>();
+		double t = 0.0;
+		int label = 1;
+		for (int i = 0; i < nodes; i++) {
+			Node n = new Node();
+			n.setHeight(t);
+			n.setNr(label);
+			label++;
+			nodeList.add(n);
 		}
-		return rootTree;
+		
+		while (nodeList.size() > 1) {
+			t += Randomizer.nextExponential(nodeList.size()*l);
+			
+			int p_1_index = Randomizer.nextInt(nodeList.size());
+			Node p1 = nodeList.remove(p_1_index);
+			int p_2_index = Randomizer.nextInt(nodeList.size());
+			Node p2 = nodeList.remove(p_2_index);
+			
+			Node parent = new Node();
+			parent.setHeight(t);
+
+			parent.setNr(label);
+			label++;
+			p1.setParent(parent);
+			parent.addChild(p1);
+			p2.setParent(parent);
+			parent.addChild(p2);
+			
+			nodeList.add(parent);
+		}
+		tr.setRoot(nodeList.get(0));
+		return new Tree(tr.toString());
+		
 	}
-
-	private static Tree randomTree3Branch(Tree rootTree, Integer numLeaves, Double branchRate) {
-		ArrayList<Node> currLeaves = new ArrayList<Node>();
-		ArrayList<Node> newLeaves = new ArrayList<Node>();
-		currLeaves.add(rootTree.getRoot());
-		Sequence rootLang = (Sequence) rootTree.getRoot().getMetaData("lang");
-		Node childLeft, childMiddle, childRight;
-
-		while (currLeaves.size() < numLeaves) {
-			for (Node parent : currLeaves) {
-				childLeft = new Node();
-				childMiddle = new Node();
-				childRight = new Node();
-
-				// Left child.
-				double t = Randomizer.nextExponential(branchRate);
-				childLeft.setParent(parent);
-				parent.addChild(childLeft);
-				childLeft.setHeight(parent.getHeight() + t);
-				childLeft.setMetaData("lang", rootLang);
-				newLeaves.add(childLeft);
-				rootTree.addNode(childLeft);
-				// Middle child.
-				// t = Randomizer.nextExponential(branchRate);
-				childMiddle.setParent(parent);
-				parent.addChild(childMiddle);
-				childMiddle.setHeight(parent.getHeight() + t);
-				childMiddle.setMetaData("lang", rootLang);
-				newLeaves.add(childMiddle);
-				rootTree.addNode(childMiddle);
-				// Right child.
-				// t = Randomizer.nextExponential(branchRate);
-				childRight.setParent(parent);
-				parent.addChild(childRight);
-				childRight.setHeight(parent.getHeight() + t);
-				childRight.setMetaData("lang", rootLang);
-				newLeaves.add(childRight);
-				rootTree.addNode(childRight);
-			}
-			currLeaves = new ArrayList<Node>(newLeaves);
-			newLeaves = new ArrayList<Node>();
+	
+	private static Tree randomYuleTree3Branch (int nodes, double l) throws Exception {
+		Tree tr = new Tree();
+		ArrayList<Node> nodeList = new ArrayList<Node>();
+		double t = 0.0;
+		int label = 1;
+		for (int i = 0; i < nodes; i++) {
+			Node n = new Node();
+			n.setHeight(t);
+			n.setNr(label);
+			label++;
+			nodeList.add(n);
 		}
-		return rootTree;
+		
+		while (nodeList.size() > 1) {
+			t += Randomizer.nextExponential(nodeList.size()*l);
+			
+			int p_1_index = Randomizer.nextInt(nodeList.size());
+			Node p1 = nodeList.remove(p_1_index);
+			int p_2_index = Randomizer.nextInt(nodeList.size());
+			Node p2 = nodeList.remove(p_2_index);
+			int p_3_index = Randomizer.nextInt(nodeList.size());
+			Node p3 = nodeList.remove(p_3_index);
+			
+			Node parent = new Node();
+			parent.setHeight(t);
+
+			parent.setNr(label);
+			label++;
+			p1.setParent(parent);
+			parent.addChild(p1);
+			p2.setParent(parent);
+			parent.addChild(p2);
+			p3.setParent(parent);
+			parent.addChild(p3);
+			
+			nodeList.add(parent);
+		}
+		tr.setRoot(nodeList.get(0));
+		return new Tree(tr.toString());
+		
 	}
 
 }
