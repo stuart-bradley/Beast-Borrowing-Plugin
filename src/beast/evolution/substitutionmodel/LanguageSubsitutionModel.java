@@ -137,8 +137,8 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 			}
 
 			// Reduce height: leaves -> root.
-			dist1 = L1.getHeight() - parent1.getHeight();
-			dist2 = L2.getHeight() - parent2.getHeight();
+			dist1 = Math.abs(L1.getHeight() - parent1.getHeight());
+			dist2 = Math.abs(L2.getHeight() - parent2.getHeight());
 
 			L1 = parent1;
 			L2 = parent2;
