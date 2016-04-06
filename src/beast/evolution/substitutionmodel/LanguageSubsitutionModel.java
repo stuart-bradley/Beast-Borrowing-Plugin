@@ -193,7 +193,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	protected ArrayList<Node> aliveNodes(Node curr, Double t) {
 		ArrayList<Node> aN = new ArrayList<Node>();
 		for (Node child : curr.getChildren()) {
-			if (child.getHeight() >= t) {
+			if (child.getHeight() <= t) {
 				aN.add(child);
 			} else {
 				aN.addAll(aliveNodes(child, t));

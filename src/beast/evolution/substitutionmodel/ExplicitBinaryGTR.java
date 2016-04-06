@@ -1,6 +1,7 @@
 package beast.evolution.substitutionmodel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -200,6 +201,9 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 				t -= Randomizer.nextExponential(totalRate);
 			}
 			aliveNodes = getAliveNodes(base, t);
+			if (aliveNodes.size() == 0) {
+				break;
+			}
 			totalRate = totalRate(aliveNodes);
 		}
 		return base;
@@ -293,7 +297,6 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		aliveNodes.addAll(base.getRoot().getChildren());
 		// Get first event.
 		Double totalRate = totalRate(aliveNodes);
-		//Double t = treeHeight - Randomizer.nextExponential(totalRate);
 		// Variable declarations.
 		Node ranNode = null, ranNode2 = null;
 		Sequence nodeLang = null, nodeLang2 = null, newNodeLang;
@@ -302,11 +305,8 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		int pos = 0;
 		double[] probs;
 		for (int i = 0; i < events.length - 1; i++) {
-			System.out.println();
-			System.out.println("On branch event: " + i + " out of " + events.length + ". Next event at " + events[i+1]);
-			Double t = events[i] - Randomizer.nextExponential(totalRate);;
+			Double t = events[i] - Randomizer.nextExponential(totalRate);
 			while (t > events[i+1]) {
-				System.out.print("\r"+t);
 				// Return array of event probabilities and pick one.
 				probs = BorrowingProbs(aliveNodes);
 				Integer choice = Randomizer.randomChoicePDF(probs);
@@ -351,12 +351,17 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 					}
 				}
 				t -= Randomizer.nextExponential(totalRate);
-				int count = hevents.getOrDefault(getPositionState(aliveNodes, pos), 0);
-				hevents.put(getPositionState(aliveNodes, pos), count + 1);
-				count = hevents.getOrDefault("total", 0);
-				hevents.put("total", count + 1);
+				//int count = hevents.getOrDefault(getPositionState(aliveNodes, pos), 0);
+				int count = hevents.getOrDefault(ranNode.getNr()+"", 0);
+				//hevents.put(getPositionState(aliveNodes, pos), count + 1);
+				hevents.put(ranNode.getNr()+"", count + 1);
+				//count = hevents.getOrDefault("total", 0);
+				//hevents.put("total", count + 1);
 			}
 			aliveNodes = getAliveNodes(base, t);
+			if (aliveNodes.size() == 0) {
+				break;
+			}
 			totalRate = totalRate(aliveNodes);
 		}
 		return hevents;

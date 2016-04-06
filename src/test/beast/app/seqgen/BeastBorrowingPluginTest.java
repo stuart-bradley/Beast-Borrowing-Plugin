@@ -58,9 +58,10 @@ public class BeastBorrowingPluginTest {
 		// MissingMeaningClassesValidation();
 		// SpeedTestNonBorrowing();
 
-		 //SeqGenTest();
+		 SeqGenTest();
 		//misspecGeneration();
 		// randomTreeTest();
+		//mutationsPerBranches();
 
 	}
 
@@ -478,7 +479,7 @@ public class BeastBorrowingPluginTest {
 				//"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/SD_Borrow_0_Output.xml" };
 		String[] args = {
 				"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/YuleGTR0.2_Borrow_0_Input.xml",
-				"200",
+				"1",
 				"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/YuleGTR0.2_Borrow_0_Output.xml"};
 
 		LanguageSequenceGen.main(args);
@@ -615,6 +616,22 @@ public class BeastBorrowingPluginTest {
 
 		listToCSV(missingLangs,
 				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/missing_lang.csv");
+	}
+	
+	private static void mutationsPerBranches() throws Exception {
+		Tree tr = new Tree("((0:100,1:100)2:100,(3:100,4:100)5:100)6:0.0");
+			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.0, 0.0, false);
+			String seq = "";
+			for (int j = 0; j < 20; j++) {
+				seq += Integer.toString(Randomizer.nextInt(2));
+			}
+			Sequence l = new Sequence("", seq);
+			tr.getRoot().setMetaData("lang", l);
+			HashMap<String, Integer> events = gtr_mod.mutateOverTreeBorrowingWithEvents(tr);
+			
+		for (String name : events.keySet()) {
+			System.out.println(name + ": " + events.get(name));
+		}
 	}
 
 	private static <T> void listToCSV(ArrayList<T> l, String fileName) {
