@@ -139,9 +139,8 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		setSubTreeLanguages(base.getRoot(), (Sequence) base.getRoot().getMetaData("lang"));
 		// Get root node.
 		ArrayList<Node> aliveNodes = new ArrayList<Node>();
-		aliveNodes.addAll(base.getRoot().getChildren());
 		// Get first event.
-		Double totalRate = totalRate(aliveNodes);
+		Double totalRate = null;
 		//Double t = treeHeight - Randomizer.nextExponential(totalRate);
 		// Variable declarations.
 		Node ranNode = null, ranNode2 = null;
@@ -150,11 +149,16 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		int idx;
 		double[] probs;
 		for (int i = 0; i < events.length - 1; i++) {
-			System.out.println();
-			System.out.println("On branch event: " + i+ " out of " + events.length + ". Next event at " + events[i+1]);
+			if (events[i] == 0.0) {
+				break;
+			}
 			Double t = events[i] - Randomizer.nextExponential(totalRate);
+			aliveNodes = getAliveNodes(base, events[i+1]);
+			totalRate = totalRate(aliveNodes);
+			System.out.println();
+			System.out.println("On branch event: " + i+ " out of " + (events.length/2-1) + ". Next event at " + events[i+1]);
 			while (t > events[i+1]) {
-				//System.out.print("\r"+t);
+				System.out.print("\r"+t);
 				// Return array of event probabilities and pick one.
 				probs = BorrowingProbs(aliveNodes);
 				Integer choice = Randomizer.randomChoicePDF(probs);
@@ -200,11 +204,6 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 				}
 				t -= Randomizer.nextExponential(totalRate);
 			}
-			aliveNodes = getAliveNodes(base, t);
-			if (aliveNodes.size() == 0) {
-				break;
-			}
-			totalRate = totalRate(aliveNodes);
 		}
 		return base;
 	}

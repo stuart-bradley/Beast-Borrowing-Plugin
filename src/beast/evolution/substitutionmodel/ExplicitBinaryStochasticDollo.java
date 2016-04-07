@@ -1,6 +1,7 @@
 package beast.evolution.substitutionmodel;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import beast.core.Description;
@@ -145,17 +146,21 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		setSubTreeLanguages(base.getRoot(), (Sequence) base.getRoot().getMetaData("lang"));
 		// Get root node.
 		ArrayList<Node> aliveNodes = new ArrayList<Node>();
-		aliveNodes.addAll(base.getRoot().getChildren());
-		Double totalRate = totalRate(aliveNodes);
+		Double totalRate = 0.0;
 		Node ranNode = null, ranNode2 = null;
 		Sequence nodeLang = null, nodeLang2 = null, newNodeLang = null;
 		String s;
 		int idx;
 		double[] probs = new double[3];
 		for (int i = 0; i < events.length - 1; i++) {
+			if (events[i] == 0.0) {
+				break;
+			}
+			Double t = events[i] - Randomizer.nextExponential(totalRate);
+			aliveNodes = getAliveNodes(base, events[i+1]);
+			totalRate = totalRate(aliveNodes);
 			System.out.println();
-			System.out.println("On branch event: " + i+ " out of " + events.length + ". Next event at " + events[i+1]);
-			Double t = events[i] - Randomizer.nextExponential(totalRate);;
+			System.out.println("On branch event: " + i+ " out of " + (events.length/2-1) + ". Next event at " + events[i+1]);
 			while (t > events[i+1]) {
 				System.out.print("\r"+t);
 				probs = BorrowingProbs(aliveNodes);
@@ -210,11 +215,6 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 				}
 				t -= Randomizer.nextExponential(totalRate);
 			}
-			aliveNodes = getAliveNodes(base, t);
-			if (aliveNodes.size() == 0) {
-				break;
-			}
-			totalRate = totalRate(aliveNodes);
 		}
 		return base;
 	}
@@ -254,14 +254,14 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 * @return Double, total rate.
 	 */
 	protected Double totalRate(ArrayList<Node> aliveNodes) throws Exception {
-		Double totalRate = aliveNodes.size() * getB();
-		Double birthSum = 0.0;
+		Double birthRate = aliveNodes.size() * getB();
+		Double deathSum = 0.0;
+		Double borrowSum = 0.0;
 		for (Node n : aliveNodes) {
-			totalRate += getD() * getBirths(getSequence(n));
-			birthSum += getBirths(getSequence(n));
+			deathSum += getD() * getBirths(getSequence(n));
+			borrowSum += getBirths(getSequence(n));
 		}
-		totalRate += getD() * borrowRate * birthSum;
-		return totalRate;
+		return birthRate + deathSum + (getBorrowRate()*borrowSum);
 	}
 
 	/*

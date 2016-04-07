@@ -40,15 +40,18 @@ public class BeastBorrowingPluginTest {
 		 * System.out.println(newSeq); test.dataInput.setValue(newSeq, test);
 		 * System.out.println(test.getData());
 		 */
+		
+		//System.out.println(randomYuleTree(20,0.00045).toString());
+		
 
 		// GTRTest(seq);
 		// SDTest(seq);
 		// TreeGenTest(seq);
-		// TreeSDBorrowingTest(seq);
+		//TreeSDBorrowingTest(seq);
 		//TreeGTRBorrowingTest(seq);
 		//countsTest();
 
-		// SDTreeValidation();
+		//SDTreeValidation();
 		// GTRTreeValidation();
 		//GTRTreeBorrowingValidationTwoLanguages();
 		//GTRTreeBorrowingValidationThreeLanguages();
@@ -103,17 +106,16 @@ public class BeastBorrowingPluginTest {
 
 	private static void TreeSDBorrowingTest(String seq) throws Exception {
 		seq = "";
-		double pos = Randomizer.nextPoisson(10.0);
-		for (int j = 0; j < pos; j++) {
+		for (int j = 0; j < 20; j++) {
 			seq += '1';
 		}
 		Sequence l = new Sequence("", seq);
 
-		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.0022314355, 0.00022314355, 0.1, 0.0,
+		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.0022314355, 0.00022314355, 0.0, 0.0,
 				false);
 
 		System.out.println("Tree SD Borrowing Test");
-		Tree tree = randomYuleTree(4, 0.01);
+		Tree tree = randomYuleTree(5, 0.1);
 		tree.getRoot().setMetaData("lang", l);
 		sd_mod.mutateOverTreeBorrowing(tree);
 		for (Node n : tree.getExternalNodes()) {
@@ -487,7 +489,7 @@ public class BeastBorrowingPluginTest {
 	
 	private static void misspecGeneration() throws Exception {
 		int[] borrowingRates = {0,1,5,10,15,20,30,40,50};
-		String[] models = {"GTR","SD"};
+		String[] models = {"SD","GTR"};
 		for (String model : models) {
 			System.out.println(model);
 			for (int b : borrowingRates) {
