@@ -58,8 +58,8 @@ public class BeastBorrowingPluginTest {
 		// MissingMeaningClassesValidation();
 		// SpeedTestNonBorrowing();
 
-		 SeqGenTest();
-		//misspecGeneration();
+		 //SeqGenTest();
+		misspecGeneration();
 		// randomTreeTest();
 		//mutationsPerBranches();
 

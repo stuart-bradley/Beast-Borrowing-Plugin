@@ -154,7 +154,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 			System.out.println("On branch event: " + i+ " out of " + events.length + ". Next event at " + events[i+1]);
 			Double t = events[i] - Randomizer.nextExponential(totalRate);
 			while (t > events[i+1]) {
-				System.out.print("\r"+t);
+				//System.out.print("\r"+t);
 				// Return array of event probabilities and pick one.
 				probs = BorrowingProbs(aliveNodes);
 				Integer choice = Randomizer.randomChoicePDF(probs);
