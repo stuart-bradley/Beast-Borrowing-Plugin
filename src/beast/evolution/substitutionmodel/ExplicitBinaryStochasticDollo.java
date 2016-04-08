@@ -160,10 +160,10 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 			aliveNodes = getAliveNodes(base, events[i+1]);
 			totalRate = totalRate(stringAliveNodes);
 			Double t = events[i] - Randomizer.nextExponential(totalRate);
-			//System.out.println();
-			//System.out.println("On branch event: " + i+ " out of " + (events.length/2-1) + ". Next event at " + events[i+1]);
+			System.out.println();
+			System.out.println("On branch event: " + i+ " out of " + (events.length/2-1) + ". Next event at " + events[i+1]);
 			while (t > events[i+1]) {
-				//System.out.print("\r"+t);
+				System.out.print("\r"+t);
 				probs = BorrowingProbs(stringAliveNodes, totalRate);
 				Integer choice = Randomizer.randomChoicePDF(probs);
 				if (choice == 0) {

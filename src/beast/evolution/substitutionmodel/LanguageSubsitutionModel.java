@@ -247,6 +247,20 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 			}
 		}
 	}
+	
+	protected boolean noEmptyTraitCheck(String l) {
+		// Traits are removal if noEmptyTrait flag is not set.
+		if (noEmptyTrait == false) {
+			return true;
+		} else {
+			// Check if removing a trait kills meaning class.
+			if (l.chars().filter(ch -> ch =='1').count() > 1) {
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
 
 	/*
 	 * Gets largest rate change node.
@@ -302,6 +316,37 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 
 		return nodes;
 	}
+	
+	protected int[] getBorrowingNodes(String[] aliveNodes) {
+		double totalCognates = 0.0;
+		int[] nodes = new int[2];
+		for (String n : aliveNodes) {
+			totalCognates += n.chars().filter(ch -> ch =='1').count();
+		}
+		double[] probs = new double[aliveNodes.length];
+		for (int i = 0; i < aliveNodes.length; i++) {
+			probs[i] = aliveNodes[i].chars().filter(ch -> ch =='1').count() / totalCognates;
+		}
+		// Check to see if two values have probabilities > 0.0.
+		ArrayList<Double> posProbs = new ArrayList<Double>();
+		for (double i : probs) {
+			if (i > 0.0) {
+				posProbs.add(i);
+			}
+		}
+
+		if (posProbs.size() > 1) {
+			do {
+				nodes[0] = Randomizer.randomChoicePDF(probs);
+				nodes[1] = Randomizer.randomChoicePDF(probs);
+			} while (nodes[0] == nodes[1]);
+		} else {
+			nodes[0] = Randomizer.randomChoicePDF(probs);
+			nodes[1] = Randomizer.randomChoicePDF(probs);
+		}
+
+		return nodes;
+	}
 
 	/*
 	 * Returns the index of a random birth/
@@ -314,6 +359,16 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 		ArrayList<Integer> birthIndicies = new ArrayList<Integer>();
 		for (int i = 0; i < s.getData().length(); i++) {
 			if ((Character.getNumericValue(s.getData().charAt(i)) == 1)) {
+				birthIndicies.add(i);
+			}
+		}
+		return birthIndicies.get(Randomizer.nextInt(birthIndicies.size()));
+	}
+	
+	protected int getRandomBirthIndex(String s) {
+		ArrayList<Integer> birthIndicies = new ArrayList<Integer>();
+		for (int i = 0; i < s.length(); i++) {
+			if ((Character.getNumericValue(s.charAt(i)) == 1)) {
 				birthIndicies.add(i);
 			}
 		}
@@ -341,7 +396,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	
 	protected void setLangs(ArrayList<Node> aliveNodes, String[] seqs) throws Exception {
 		for (int i = 0; i < aliveNodes.size(); i++) {
-			setSubTreeLanguages(aliveNodes.get(0), new Sequence("", seqs[i]));
+			setSubTreeLanguages(aliveNodes.get(i), new Sequence("", seqs[i]));
 		}
 	}
 

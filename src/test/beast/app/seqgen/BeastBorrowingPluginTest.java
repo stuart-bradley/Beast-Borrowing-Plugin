@@ -53,9 +53,9 @@ public class BeastBorrowingPluginTest {
 
 		//SDTreeValidation();
 		// GTRTreeValidation();
-		//GTRTreeBorrowingValidationTwoLanguages();
-		GTRTreeBorrowingValidationThreeLanguages();
-		SDTreeBorrowingValidation();
+		GTRTreeBorrowingValidationTwoLanguages();
+		//GTRTreeBorrowingValidationThreeLanguages();
+		//SDTreeBorrowingValidation();
 		// NoEmptyTraitTest();
 		// MissingLanguageValidation();
 		// MissingMeaningClassesValidation();
@@ -490,14 +490,14 @@ public class BeastBorrowingPluginTest {
 	}
 
 	private static void SeqGenTest() throws Exception {
-		//String[] args = {
-				//"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/SD_Borrow_0_Input.xml",
-				//"1",
-				//"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/SD_Borrow_0_Output.xml" };
 		String[] args = {
-				"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/GTR_Borrow_1_Input.xml",
+				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/GTR_Borrow_1_Input.xml",
 				"1",
-				"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/Outputs/GTR_Borrow_1_Output.xml"};
+				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/GTR_Borrow_1_Output.xml" };
+		//String[] args = {
+				//"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/SD_Borrow_1_Input.xml",
+				//"1",
+				//"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/Outputs/SD_Borrow_1_Output.xml"};
 		
 		Long startTime = System.nanoTime();
 		LanguageSequenceGen.main(args);
