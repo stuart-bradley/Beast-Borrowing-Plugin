@@ -338,6 +338,12 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 		}
 		return seqs;
 	}
+	
+	protected void setLangs(ArrayList<Node> aliveNodes, String[] seqs) throws Exception {
+		for (int i = 0; i < aliveNodes.size(); i++) {
+			setSubTreeLanguages(aliveNodes.get(0), new Sequence("", seqs[i]));
+		}
+	}
 
 	/*
 	 * Gets Sequence from Node.

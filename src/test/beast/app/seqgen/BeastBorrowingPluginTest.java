@@ -53,7 +53,7 @@ public class BeastBorrowingPluginTest {
 
 		//SDTreeValidation();
 		// GTRTreeValidation();
-		GTRTreeBorrowingValidationTwoLanguages();
+		//GTRTreeBorrowingValidationTwoLanguages();
 		GTRTreeBorrowingValidationThreeLanguages();
 		SDTreeBorrowingValidation();
 		// NoEmptyTraitTest();
@@ -61,7 +61,7 @@ public class BeastBorrowingPluginTest {
 		// MissingMeaningClassesValidation();
 		// SpeedTestNonBorrowing();
 
-		 SeqGenTest();
+		 //SeqGenTest();
 		//misspecGeneration();
 		// randomTreeTest();
 		//mutationsPerBranches();
@@ -129,7 +129,7 @@ public class BeastBorrowingPluginTest {
 		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 1.2, 0.0, false);
 
 		System.out.println("Tree GTR Borrowing Test");
-		Tree tree = randomYuleTree(2, 0.01);
+		Tree tree = randomYuleTree(3, 0.01);
 		tree.getRoot().setMetaData("lang", l);
 		gtr_mod.mutateOverTreeBorrowing(tree);
 		for (Node n : tree.getExternalNodes()) {
@@ -281,7 +281,7 @@ public class BeastBorrowingPluginTest {
 		
 
 		String absPath = "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/";
-		//absPath = "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/";
+		absPath = "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/";
 
 		
 		listToCSV(zeroZero,
@@ -357,7 +357,7 @@ public class BeastBorrowingPluginTest {
 		}
 		
 		String absPath = "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/";
-		//absPath = "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/";
+		absPath = "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/";
 
 		listToCSV(zeroZeroZero,
 				absPath + "Utilities/Thesis Graph Generation/gtr000.csv");
@@ -407,7 +407,7 @@ public class BeastBorrowingPluginTest {
 		
 
 		String absPath = "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/";
-		//absPath = "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/";
+		absPath = "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/";
 
 		
 		listToCSV(births,

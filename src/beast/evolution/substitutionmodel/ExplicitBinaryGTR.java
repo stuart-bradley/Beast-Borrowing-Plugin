@@ -205,6 +205,8 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 					}
 				}
 				t -= Randomizer.nextExponential(totalRate);
+				stringAliveNodes = getSequences(aliveNodes);
+				totalRate = totalRate(stringAliveNodes);
 			}
 		}
 		return base;
@@ -252,7 +254,6 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	}
 	
 	protected static double birthReduction(String[] aliveNodes, double borrowSum, int seq_length) {
-		System.out.println("Borrow Sum(Before): "+ borrowSum);
 		if (aliveNodes.length > 0) { 
 			String[] positionStates = getAllPositionStates(aliveNodes, seq_length);
 			for (int j = 0; j < seq_length; j++) {
@@ -260,15 +261,14 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 				String t = positionStates[j];
 				int births = (int) t.chars().filter(ch -> ch =='1').count();
 				if (births == t.length()) {
-					System.out.println("All 1's, " + births + " not important.");
+					//System.out.println("All 1's, " + births + " not important.");
 					borrowSum -= births;
 				} else if (births > 0) {
-					System.out.println(births + " 1's, "+ (births -1)+" not important.");
+					//System.out.println(births + " 1's, "+ (births -1)+" not important.");
 					borrowSum -= (births-1);
 				}
 			}
 		}
-		System.out.println("Borrow Sum(After): "+ borrowSum);
 		return borrowSum;
 	}
 	
@@ -375,6 +375,8 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 					}
 				}
 				t -= Randomizer.nextExponential(totalRate);
+				stringAliveNodes = getSequences(aliveNodes);
+				totalRate = totalRate(stringAliveNodes);
 				//int count = hevents.getOrDefault(getPositionState(aliveNodes, pos), 0);
 				int count = hevents.getOrDefault(ranNode.getNr()+"", 0);
 				//hevents.put(getPositionState(aliveNodes, pos), count + 1);
