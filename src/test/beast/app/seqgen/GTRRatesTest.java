@@ -50,7 +50,8 @@ public class GTRRatesTest {
 			System.out.println();
 			System.out.println("In code calc: ");
 			ExplicitBinaryGTR gtr = new ExplicitBinaryGTR(m,b,0.0,false);
-			javaRate = gtr.totalRate(aliveNodes);
+			String[]stringAliveNodes = getSequences(aliveNodes);
+			javaRate = gtr.totalRate(stringAliveNodes);
 			System.out.println("In code total rate = " + javaRate);
 			
 			if (! javaRate.equals(simRate) || ! javaRate.equals(mathRate) || ! simRate.equals(mathRate)) {
@@ -120,6 +121,7 @@ public class GTRRatesTest {
 	}
 	
 	protected static double birthReduction(ArrayList<Node> aliveNodes, double borrowSum) {
+		System.out.println("Borrow Sum (Before):" + borrowSum);
 		int seq_length = ((Sequence) aliveNodes.get(0).getMetaData("lang")).getData().length();
 		for (int j = 0; j < seq_length; j++) {
 			String t = getPositionState(aliveNodes, j);
@@ -132,6 +134,7 @@ public class GTRRatesTest {
 				borrowSum -= (births-1);
 			}
 		}
+		System.out.println("Borrow Sum (After):" + borrowSum);
 		return borrowSum;
 	}
 
@@ -146,6 +149,15 @@ public class GTRRatesTest {
 			aliveNodes.add(n);
 		}
 		return aliveNodes;
+	}
+	
+	protected static String[] getSequences(ArrayList<Node> aliveNodes) {
+		int aNSize = aliveNodes.size();
+		String[] seqs = new String[aNSize];
+		for (int i = 0; i < aNSize; i++) {
+			seqs[i] = ((Sequence) aliveNodes.get(i).getMetaData("lang")).getData();
+		}
+		return seqs;
 	}
 		
 }

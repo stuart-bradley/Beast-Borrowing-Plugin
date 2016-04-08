@@ -1,0 +1,47 @@
+<beast version='2.0'>
+<data id='GTR' dataType='binary'>
+    <sequence taxon='1' value='0'/>
+
+    <sequence taxon='10' value='1'/>
+
+    <sequence taxon='11' value='1'/>
+
+    <sequence taxon='12' value='1'/>
+
+    <sequence taxon='13' value='1'/>
+
+    <sequence taxon='14' value='1'/>
+
+    <sequence taxon='15' value='1'/>
+
+    <sequence taxon='16' value='1'/>
+
+    <sequence taxon='17' value='1'/>
+
+    <sequence taxon='18' value='1'/>
+
+    <sequence taxon='19' value='1'/>
+
+    <sequence taxon='2' value='1'/>
+
+    <sequence taxon='20' value='1'/>
+
+    <sequence taxon='3' value='1'/>
+
+    <sequence taxon='4' value='1'/>
+
+    <sequence taxon='5' value='1'/>
+
+    <sequence taxon='6' value='1'/>
+
+    <sequence taxon='7' value='1'/>
+
+    <sequence taxon='8' value='1'/>
+
+    <sequence taxon='9' value='1'/>
+
+</data>
+
+<!-- Meaning Classes: 0 -->
+<!-- Created at: 2016-04-08 11:31:43.592 -->
+</beast>

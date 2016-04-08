@@ -53,16 +53,16 @@ public class BeastBorrowingPluginTest {
 
 		//SDTreeValidation();
 		// GTRTreeValidation();
-		//GTRTreeBorrowingValidationTwoLanguages();
-		//GTRTreeBorrowingValidationThreeLanguages();
-		//SDTreeBorrowingValidation();
+		GTRTreeBorrowingValidationTwoLanguages();
+		GTRTreeBorrowingValidationThreeLanguages();
+		SDTreeBorrowingValidation();
 		// NoEmptyTraitTest();
 		// MissingLanguageValidation();
 		// MissingMeaningClassesValidation();
 		// SpeedTestNonBorrowing();
 
-		 //SeqGenTest();
-		misspecGeneration();
+		 SeqGenTest();
+		//misspecGeneration();
 		// randomTreeTest();
 		//mutationsPerBranches();
 
@@ -278,14 +278,20 @@ public class BeastBorrowingPluginTest {
 			oneZero.add(oneZeroInt);
 			oneOne.add(oneOneInt);
 		}
+		
+
+		String absPath = "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/";
+		//absPath = "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/";
+
+		
 		listToCSV(zeroZero,
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr00.csv");
+				absPath + "Utilities/Thesis Graph Generation/gtr00.csv");
 		listToCSV(zeroOne,
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr01.csv");
+				absPath + "Utilities/Thesis Graph Generation/gtr01.csv");
 		listToCSV(oneZero,
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr10.csv");
+				absPath + "Utilities/Thesis Graph Generation/gtr10.csv");
 		listToCSV(oneOne,
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr11.csv");
+				absPath + "Utilities/Thesis Graph Generation/gtr11.csv");
 	}
 
 	private static void GTRTreeBorrowingValidationThreeLanguages() throws Exception {
@@ -349,23 +355,26 @@ public class BeastBorrowingPluginTest {
 			zeroOneOne.add(zeroOneOneInt);
 			oneOneOne.add(oneOneOneInt);
 		}
+		
+		String absPath = "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/";
+		//absPath = "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/";
 
 		listToCSV(zeroZeroZero,
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr000.csv");
+				absPath + "Utilities/Thesis Graph Generation/gtr000.csv");
 		listToCSV(oneZeroZero,
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr100.csv");
+				absPath + "Utilities/Thesis Graph Generation/gtr100.csv");
 		listToCSV(zeroOneZero,
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr010.csv");
+				absPath + "Utilities/Thesis Graph Generation/gtr010.csv");
 		listToCSV(zeroZeroOne,
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr001.csv");
+				absPath + "Utilities/Thesis Graph Generation/gtr001.csv");
 		listToCSV(oneOneZero,
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr110.csv");
+				absPath + "Utilities/Thesis Graph Generation/gtr110.csv");
 		listToCSV(oneZeroOne,
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr101.csv");
+				absPath + "Utilities/Thesis Graph Generation/gtr101.csv");
 		listToCSV(zeroOneOne,
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr011.csv");
+				absPath + "Utilities/Thesis Graph Generation/gtr011.csv");
 		listToCSV(oneOneOne,
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr111.csv");
+				absPath + "Utilities/Thesis Graph Generation/gtr111.csv");
 
 	}
 
@@ -395,8 +404,14 @@ public class BeastBorrowingPluginTest {
 				}
 			}
 		}
+		
+
+		String absPath = "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/";
+		//absPath = "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/";
+
+		
 		listToCSV(births,
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/sdtreeborrowing.csv");
+				absPath + "Utilities/Thesis Graph Generation/sdtreeborrowing.csv");
 	}
 
 	private static void SpeedTestNonBorrowing() throws Exception {
@@ -480,11 +495,16 @@ public class BeastBorrowingPluginTest {
 				//"1",
 				//"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/SD_Borrow_0_Output.xml" };
 		String[] args = {
-				"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/YuleGTR0.2_Borrow_0_Input.xml",
+				"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/GTR_Borrow_1_Input.xml",
 				"1",
-				"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/YuleGTR0.2_Borrow_0_Output.xml"};
-
+				"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/Outputs/GTR_Borrow_1_Output.xml"};
+		
+		Long startTime = System.nanoTime();
 		LanguageSequenceGen.main(args);
+		Long endTime = System.nanoTime();
+		System.out.println();
+		System.out.println("Time: "+ (endTime - startTime) / 1000000);
+		
 	}
 	
 	private static void misspecGeneration() throws Exception {

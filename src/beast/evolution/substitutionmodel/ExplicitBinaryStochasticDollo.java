@@ -146,7 +146,8 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		setSubTreeLanguages(base.getRoot(), (Sequence) base.getRoot().getMetaData("lang"));
 		// Get root node.
 		ArrayList<Node> aliveNodes = new ArrayList<Node>();
-		Double totalRate = 0.0;
+		String[] stringAliveNodes = {};
+		Double totalRate = null;
 		Node ranNode = null, ranNode2 = null;
 		Sequence nodeLang = null, nodeLang2 = null, newNodeLang = null;
 		String s;
@@ -156,14 +157,14 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 			if (events[i] == 0.0) {
 				break;
 			}
-			Double t = events[i] - Randomizer.nextExponential(totalRate);
 			aliveNodes = getAliveNodes(base, events[i+1]);
-			totalRate = totalRate(aliveNodes);
-			System.out.println();
-			System.out.println("On branch event: " + i+ " out of " + (events.length/2-1) + ". Next event at " + events[i+1]);
+			totalRate = totalRate(stringAliveNodes);
+			Double t = events[i] - Randomizer.nextExponential(totalRate);
+			//System.out.println();
+			//System.out.println("On branch event: " + i+ " out of " + (events.length/2-1) + ". Next event at " + events[i+1]);
 			while (t > events[i+1]) {
-				System.out.print("\r"+t);
-				probs = BorrowingProbs(aliveNodes);
+				//System.out.print("\r"+t);
+				probs = BorrowingProbs(stringAliveNodes, totalRate);
 				Integer choice = Randomizer.randomChoicePDF(probs);
 				if (choice == 0) {
 					idx = Randomizer.nextInt(aliveNodes.size());
@@ -228,19 +229,19 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 * 
 	 * @return double[], array of probabilities.
 	 */
-	protected double[] BorrowingProbs(ArrayList<Node> aliveNodes) throws Exception {
+	protected double[] BorrowingProbs(String[] aliveNodes, Double totalRate) throws Exception {
 		double[] probs = new double[3];
 		Double death = 0.0, bo = 0.0;
-		for (Node n : aliveNodes) {
+		for (String n : aliveNodes) {
+			int births = (int) n.chars().filter(ch -> ch =='1').count();
 			// mu*k1 + ... + mu*kn
-			death += getD() * getBirths(getSequence(n));
+			death += getD() * births;
 			// b*(k1 + ... + kn)
-			bo += getBirths(getSequence(n));
+			bo += births;
 		}
-		Double tR = totalRate(aliveNodes);
-		probs[0] = (aliveNodes.size() * getB()) / tR; // Birth
-		probs[1] = (death) / tR; // Death
-		probs[2] = (getD() * borrowRate * bo) / tR; // Borrow
+		probs[0] = (aliveNodes.length * getB()) / totalRate; // Birth
+		probs[1] = (death) / totalRate; // Death
+		probs[2] = (getD() * borrowRate * bo) / totalRate; // Borrow
 		return probs;
 	}
 
@@ -253,13 +254,14 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 * 
 	 * @return Double, total rate.
 	 */
-	protected Double totalRate(ArrayList<Node> aliveNodes) throws Exception {
-		Double birthRate = aliveNodes.size() * getB();
+	protected Double totalRate(String[] aliveNodes) throws Exception {
+		Double birthRate = aliveNodes.length * getB();
 		Double deathSum = 0.0;
 		Double borrowSum = 0.0;
-		for (Node n : aliveNodes) {
-			deathSum += getD() * getBirths(getSequence(n));
-			borrowSum += getBirths(getSequence(n));
+		for (String n : aliveNodes) {
+			int births = (int) n.chars().filter(ch -> ch =='1').count();
+			deathSum += getD() * births;
+			borrowSum += births;
 		}
 		return birthRate + deathSum + (getBorrowRate()*borrowSum);
 	}
