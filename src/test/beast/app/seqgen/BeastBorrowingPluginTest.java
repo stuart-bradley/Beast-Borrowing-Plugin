@@ -49,13 +49,12 @@ public class BeastBorrowingPluginTest {
 		// TreeGenTest(seq);
 		//TreeSDBorrowingTest(seq);
 		//TreeGTRBorrowingTest(seq);
-		//countsTest();
 
 		//SDTreeValidation();
-		// GTRTreeValidation();
-		GTRTreeBorrowingValidationTwoLanguages();
+		//GTRTreeValidation();
+		//GTRTreeBorrowingValidationTwoLanguages();
 		//GTRTreeBorrowingValidationThreeLanguages();
-		//SDTreeBorrowingValidation();
+		SDTreeBorrowingValidation();
 		// NoEmptyTraitTest();
 		// MissingLanguageValidation();
 		// MissingMeaningClassesValidation();
@@ -64,7 +63,6 @@ public class BeastBorrowingPluginTest {
 		 //SeqGenTest();
 		//misspecGeneration();
 		// randomTreeTest();
-		//mutationsPerBranches();
 
 	}
 
@@ -106,16 +104,16 @@ public class BeastBorrowingPluginTest {
 
 	private static void TreeSDBorrowingTest(String seq) throws Exception {
 		seq = "";
-		for (int j = 0; j < 20; j++) {
+		for (int j = 0; j < 5; j++) {
 			seq += '1';
 		}
 		Sequence l = new Sequence("", seq);
 
-		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.0022314355, 0.00022314355, 0.0, 0.0,
+		ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.1, 0.2, 0.0, 0.0,
 				false);
 
 		System.out.println("Tree SD Borrowing Test");
-		Tree tree = randomYuleTree(5, 0.1);
+		Tree tree = randomYuleTree(2, 0.01);
 		tree.getRoot().setMetaData("lang", l);
 		sd_mod.mutateOverTreeBorrowing(tree);
 		for (Node n : tree.getExternalNodes()) {
@@ -129,7 +127,7 @@ public class BeastBorrowingPluginTest {
 		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 1.2, 0.0, false);
 
 		System.out.println("Tree GTR Borrowing Test");
-		Tree tree = randomYuleTree(3, 0.01);
+		Tree tree = randomYuleTree(2, 0.01);
 		tree.getRoot().setMetaData("lang", l);
 		gtr_mod.mutateOverTreeBorrowing(tree);
 		for (Node n : tree.getExternalNodes()) {
@@ -218,14 +216,14 @@ public class BeastBorrowingPluginTest {
 	private static void SDTreeValidation() throws Exception {
 		ArrayList<Integer> births = new ArrayList<Integer>();
 
-		for (int i = 0; i < 100000; i++) {
+		for (int i = 0; i < 1; i++) {
 			System.out.println(i);
 			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5, 0.0, 0.0, false);
 			String seq = "";
 			Sequence l = new Sequence("", seq);
-			Tree tree = randomYuleTree(8, 0.01);
+			Tree tree = randomYuleTree(2, 0.01);
 			tree.getRoot().setMetaData("lang", l);
-			tree = sd_mod.mutateOverTree(tree);
+			tree = sd_mod.mutateOverTreeBorrowing(tree);
 			for (Node n : tree.getExternalNodes()) {
 				Sequence l2 = (Sequence) n.getMetaData("lang");
 				births.add(LanguageSubsitutionModel.getBirths(l2));
@@ -465,30 +463,6 @@ public class BeastBorrowingPluginTest {
 		}
 	}
 
-	private static void countsTest() throws Exception {
-		HashMap<String, Integer> results = new HashMap<String, Integer>();
-		ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.0, 0.0, false);
-		for (int i = 0; i < 1; i++) {
-			String seq = "";
-			for (int j = 0; j < 100; j++) {
-				seq += Integer.toString(Randomizer.nextInt(2));
-			}
-			Sequence l = new Sequence("", seq);
-			Tree tree = randomYuleTree3Branch(3, 0.01);
-			tree.getRoot().setMetaData("lang", l);
-			HashMap<String, Integer> events = gtr_mod.mutateOverTreeBorrowingWithEvents(tree);
-			results.putAll(events);
-		}
-		Double total = results.get("total") + 0.0;
-		for (String name : results.keySet()) {
-			String key = name.toString();
-			if (key != "total") {
-				Integer value = results.get(name);
-				System.out.println(key + " " + value / total);
-			}
-		}
-	}
-
 	private static void SeqGenTest() throws Exception {
 		String[] args = {
 				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/GTR_Borrow_1_Input.xml",
@@ -638,22 +612,6 @@ public class BeastBorrowingPluginTest {
 
 		listToCSV(missingLangs,
 				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/missing_lang.csv");
-	}
-	
-	private static void mutationsPerBranches() throws Exception {
-		Tree tr = new Tree("((0:100,1:100)2:100,(3:100,4:100)5:100)6:0.0");
-			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.0, 0.0, false);
-			String seq = "";
-			for (int j = 0; j < 20; j++) {
-				seq += Integer.toString(Randomizer.nextInt(2));
-			}
-			Sequence l = new Sequence("", seq);
-			tr.getRoot().setMetaData("lang", l);
-			HashMap<String, Integer> events = gtr_mod.mutateOverTreeBorrowingWithEvents(tr);
-			
-		for (String name : events.keySet()) {
-			System.out.println(name + ": " + events.get(name));
-		}
 	}
 
 	private static <T> void listToCSV(ArrayList<T> l, String fileName) {

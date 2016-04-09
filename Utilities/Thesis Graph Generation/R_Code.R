@@ -46,11 +46,11 @@ legend('topright',c("Poisson Distribution","SD Algorithm"), lty=c(1,1), lwd=c(2,
 
 # GTR/SD Simple Tree Validation
 par(mfrow=c(2, 1))
-plot(density(rbinom(800000,20,0.5), adjust=10), col="green",lwd=2, 
+plot(density(rbinom(80000,20,0.5), adjust=10), col="green",lwd=2, 
      main="Simulation of 100,000 whole tree evolutions under the GTR model", xlab="Number of cogantes", xlim=range(0:20))
 lines(density(gtrtree$V1, adjust=10), col="blue", lwd=2)
 legend('topright',c("Binomial Distribution","GTR Algorithm"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
-plot(density(rpois(800000,(0.5/0.5)), adjust=10), col="green",lwd=2, 
+plot(density(rpois(80000,(0.5/0.5)), adjust=10), col="green",lwd=2, 
      main="Simulation of 100,000 whole tree evolutions under the Stochastic-Dollo model", xlab="Number of birthed traits", xlim=range(0:20))
 lines(density(sdtree$V1, adjust=10), col="blue", lwd=2)
 legend('topright',c("Poisson Distribution","SD Algorithm"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
