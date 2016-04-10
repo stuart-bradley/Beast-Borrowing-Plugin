@@ -54,14 +54,14 @@ public class BeastBorrowingPluginTest {
 		//GTRTreeValidation();
 		//GTRTreeBorrowingValidationTwoLanguages();
 		//GTRTreeBorrowingValidationThreeLanguages();
-		SDTreeBorrowingValidation();
+		//SDTreeBorrowingValidation();
 		// NoEmptyTraitTest();
 		// MissingLanguageValidation();
 		// MissingMeaningClassesValidation();
 		// SpeedTestNonBorrowing();
 
 		 //SeqGenTest();
-		//misspecGeneration();
+		misspecGeneration();
 		// randomTreeTest();
 
 	}
@@ -465,9 +465,9 @@ public class BeastBorrowingPluginTest {
 
 	private static void SeqGenTest() throws Exception {
 		String[] args = {
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/GTR_Borrow_1_Input.xml",
+				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/SD_Borrow_0_Input.xml",
 				"1",
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/GTR_Borrow_1_Output.xml" };
+				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/SD_Borrow_0_Output.xml" };
 		//String[] args = {
 				//"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/SD_Borrow_1_Input.xml",
 				//"1",
@@ -482,8 +482,8 @@ public class BeastBorrowingPluginTest {
 	}
 	
 	private static void misspecGeneration() throws Exception {
-		int[] borrowingRates = {0,1,5,10,15,20,30,40,50};
-		String[] models = {"SD","GTR"};
+		int[] borrowingRates = {5,10,15,20,30,40,50};
+		String[] models = {"SD"};
 		for (String model : models) {
 			System.out.println(model);
 			for (int b : borrowingRates) {
