@@ -60,8 +60,8 @@ public class BeastBorrowingPluginTest {
 		// MissingMeaningClassesValidation();
 		// SpeedTestNonBorrowing();
 
-		 //SeqGenTest();
-		misspecGeneration();
+		 SeqGenTest();
+	//	misspecGeneration();
 		// randomTreeTest();
 
 	}
@@ -464,14 +464,14 @@ public class BeastBorrowingPluginTest {
 	}
 
 	private static void SeqGenTest() throws Exception {
-		String[] args = {
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/SD_Borrow_0_Input.xml",
-				"1",
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/SD_Borrow_0_Output.xml" };
 		//String[] args = {
-				//"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/SD_Borrow_1_Input.xml",
+			//	"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/SD_Borrow_1_Input.xml",
 				//"1",
-				//"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/Outputs/SD_Borrow_1_Output.xml"};
+				//"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/SD_Borrow_1_Output.xml" };
+		String[] args = {
+				"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/SD_Borrow_1_Input.xml",
+				"1",
+				"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/Outputs/SD_Borrow_1_Output.xml"};
 		
 		Long startTime = System.nanoTime();
 		LanguageSequenceGen.main(args);
@@ -482,18 +482,21 @@ public class BeastBorrowingPluginTest {
 	}
 	
 	private static void misspecGeneration() throws Exception {
-		int[] borrowingRates = {5,10,15,20,30,40,50};
-		String[] models = {"SD"};
+		int[] borrowingRates = {0,1,5,10};
+		String[] models = {"GTR"};
 		for (String model : models) {
 			System.out.println(model);
 			for (int b : borrowingRates) {
 				long startTime = System.currentTimeMillis();
 				System.out.println(b);
 				System.out.println();
+
+				String absPath = "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/";
+				//absPath = "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/";
 				String[] args = {
-						"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/"+model+ "_Borrow_"+b+"_Input.xml",
+						absPath + "examples/BorrowingMisspec/"+model+ "_Borrow_"+b+"_Input.xml",
 						"1",
-						"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/"+model+"_Borrow_"+b+"_Output.xml" 
+						absPath + "examples/BorrowingMisspec/Outputs/"+model+"_Borrow_"+b+"_Output.xml" 
 				};
 				LanguageSequenceGen.main(args);
 				long endTime = System.currentTimeMillis();

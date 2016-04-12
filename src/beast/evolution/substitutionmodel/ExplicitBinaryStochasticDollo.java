@@ -194,7 +194,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 						}
 					}
 				}
-				//totalRate = totalRate(stringAliveNodes);
+				totalRate = totalRate(stringAliveNodes);
 				t -= Randomizer.nextExponential(totalRate);
 			}
 			setLangs(aliveNodes, stringAliveNodes);

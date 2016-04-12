@@ -234,37 +234,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		for (String n : aliveNodes) {
 			borrowSum += n.chars().filter(ch -> ch =='1').count();
 		}
-		return rate * (aliveNodes.length * seq_length) + borrowRate * rate * birthReduction(aliveNodes,borrowSum,seq_length);
-	}
-	
-	protected static double birthReduction(String[] aliveNodes, double borrowSum, int seq_length) {
-		if (aliveNodes.length > 0) { 
-			String[] positionStates = getAllPositionStates(aliveNodes, seq_length);
-			for (int j = 0; j < seq_length; j++) {
-				//String t = getPositionState(aliveNodes, j);
-				String t = positionStates[j];
-				int births = (int) t.chars().filter(ch -> ch =='1').count();
-				if (births == t.length()) {
-					//System.out.println("All 1's, " + births + " not important.");
-					borrowSum -= births;
-				} else if (births > 0) {
-					//System.out.println(births + " 1's, "+ (births -1)+" not important.");
-					borrowSum -= (births-1);
-				}
-			}
-		}
-		return borrowSum;
-	}
-	
-	public static String[] getAllPositionStates(String[] aliveNodes, int seqLength) {
-		String[] sbArray = new String[seqLength];
-		for (int i = 0; i < seqLength; i++) {
-				sbArray[i] = "";
-			for (int j = 0; j < aliveNodes.length; j++) {
-				sbArray[i] += aliveNodes[j].charAt(i);
-			}
-		}
-		return sbArray;
+		return rate * (aliveNodes.length * seq_length) + borrowRate * rate * borrowSum;
 	}
 	
 	public void setBirthRate(Double r) {
