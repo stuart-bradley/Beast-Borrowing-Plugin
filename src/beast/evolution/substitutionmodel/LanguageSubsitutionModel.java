@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
 import beast.core.CalculationNode;
 import beast.core.Description;
@@ -325,13 +326,13 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @return random birth index.
 	 */	
 	protected int getRandomBirthIndex(String s) {
-		ArrayList<Integer> birthIndicies = new ArrayList<Integer>();
-		for (int i = 0; i < s.length(); i++) {
-			if ((Character.getNumericValue(s.charAt(i)) == 1)) {
-				birthIndicies.add(i);
-			}
-		}
-		return birthIndicies.get(Randomizer.nextInt(birthIndicies.size()));
+	    List<Integer> birthIndicies = new ArrayList<>();
+	    int index = s.indexOf('1');
+	    while (index > -1) {
+	        birthIndicies.add(index);
+	        index = s.indexOf('1', index + 1);
+	    }
+	    return birthIndicies.get(Randomizer.nextInt(birthIndicies.size()));
 	}
 	
 	protected Double[] getEvents(Tree tr) {
