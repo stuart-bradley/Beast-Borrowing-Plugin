@@ -54,13 +54,13 @@ public class BeastBorrowingPluginTest {
 		//GTRTreeValidation();
 		//GTRTreeBorrowingValidationTwoLanguages();
 		//GTRTreeBorrowingValidationThreeLanguages();
-		//SDTreeBorrowingValidation();
+		SDTreeBorrowingValidation();
 		// NoEmptyTraitTest();
 		// MissingLanguageValidation();
 		// MissingMeaningClassesValidation();
 		// SpeedTestNonBorrowing();
 
-		 SeqGenTest();
+		 //SeqGenTest();
 	//	misspecGeneration();
 		// randomTreeTest();
 
