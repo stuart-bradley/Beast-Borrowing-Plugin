@@ -43,7 +43,7 @@ public class GTRRatesTest {
 			
 			System.out.println();
 			System.out.println("Simulation calc:");
-			Double p = (birthReduction(aliveNodes, births(aliveNodes)));
+			Double p = births(aliveNodes);
 			simRate = (m*(3*5) + b * m * p);
 			System.out.println("Simulation total rate = " + simRate);
 			
@@ -51,7 +51,8 @@ public class GTRRatesTest {
 			System.out.println("In code calc: ");
 			ExplicitBinaryGTR gtr = new ExplicitBinaryGTR(m,b,0.0,false);
 			String[]stringAliveNodes = getSequences(aliveNodes);
-			javaRate = gtr.totalRate(stringAliveNodes);
+			int[] traits = getBirths(stringAliveNodes, aliveNodes.size());
+			javaRate = gtr.totalRate(stringAliveNodes, traits, aliveNodes.size());
 			System.out.println("In code total rate = " + javaRate);
 			
 			if (! javaRate.equals(simRate) || ! javaRate.equals(mathRate) || ! simRate.equals(mathRate)) {
@@ -69,7 +70,7 @@ public class GTRRatesTest {
 			borrowSum += getBirths(getSequence(n));
 			mutateSum += (getSequence(n)).getData().length();
 		}
-		return rate * mutateSum + borrowRate * rate * birthReduction(aliveNodes, borrowSum);
+		return rate * mutateSum + borrowRate * rate * borrowSum;
 	}
 	
 	protected static Sequence getSequence(Node n) throws Exception {
@@ -119,24 +120,6 @@ public class GTRRatesTest {
 		}
 		return births;
 	}
-	
-	protected static double birthReduction(ArrayList<Node> aliveNodes, double borrowSum) {
-		System.out.println("Borrow Sum (Before):" + borrowSum);
-		int seq_length = ((Sequence) aliveNodes.get(0).getMetaData("lang")).getData().length();
-		for (int j = 0; j < seq_length; j++) {
-			String t = getPositionState(aliveNodes, j);
-			int births = (int) t.chars().filter(ch -> ch =='1').count();
-			if (births == t.length()) {
-				System.out.println(t + ": "+births+" positions make no difference");
-				borrowSum -= births;
-			} else if (births > 0) {
-				System.out.println(t + ": "+(births-1)+" positions make no difference");
-				borrowSum -= (births-1);
-			}
-		}
-		System.out.println("Borrow Sum (After):" + borrowSum);
-		return borrowSum;
-	}
 
 	
 	protected static ArrayList<Node> determineInput() throws Exception {
@@ -158,6 +141,14 @@ public class GTRRatesTest {
 			seqs[i] = ((Sequence) aliveNodes.get(i).getMetaData("lang")).getData();
 		}
 		return seqs;
+	}
+	
+	protected static int[] getBirths(String[] aliveNodes, int numberOfLangs) {
+		int[] births = new int[numberOfLangs];
+		for (int i =0; i < numberOfLangs; i++) {
+			births[i] = (int) aliveNodes[i].chars().filter(ch -> ch =='1').count();
+		}
+		return births;
 	}
 		
 }

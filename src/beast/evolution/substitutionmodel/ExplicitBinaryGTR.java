@@ -140,6 +140,8 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		// Get root node.
 		ArrayList<Node> aliveNodes = new ArrayList<Node>();
 		String[] stringAliveNodes = {};
+		int[] traits = {};
+		int numberOfLangs = 0;
 		// Get first event.
 		Double totalRate = null;
 		//Double t = treeHeight - Randomizer.nextExponential(totalRate);
@@ -152,14 +154,16 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 			}
 			aliveNodes = getAliveNodes(base, events[i+1]);
 			stringAliveNodes = getSequences(aliveNodes);
-			totalRate = totalRate(stringAliveNodes);
+			numberOfLangs = stringAliveNodes.length;
+			traits = getBirths(stringAliveNodes, numberOfLangs);
+			totalRate = totalRate(stringAliveNodes, traits, numberOfLangs);
 			Double t = events[i] - Randomizer.nextExponential(totalRate);
 			System.out.println();
 			System.out.println("On branch event: " + (i+1)+ " out of " + (events.length/2) + ". Next event at " + events[i+1]);
 			while (t > events[i+1]) {
 				System.out.print("\r"+t);
 				// Return array of event probabilities and pick one.
-				probs = BorrowingProbs(stringAliveNodes, totalRate);
+				probs = BorrowingProbs(stringAliveNodes, totalRate, traits, numberOfLangs);
 				Integer choice = Randomizer.randomChoicePDF(probs);
 				// Mutate.
 				if (choice == 0) {
@@ -173,7 +177,14 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 						stringAliveNodes[idx] = stringAliveNodes[idx];
 					} else {
 						stringAliveNodes[idx] = replaceCharAt(stringAliveNodes[idx], pos, Integer.toString((1 - currentTrait)));
+					} 
+					// Change trait structure
+					if (stringAliveNodes[idx].charAt(pos) == '1') {
+						traits[idx]++;
+					} else {
+						traits[idx]--;
 					}
+					
 					// Borrow.
 				} else if (choice == 1) {
 					if (aliveNodes.size() > 1) {
@@ -183,12 +194,16 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 						if (localDist(aliveNodes.get(bN[0]), aliveNodes.get(bN[1]))) {
 							// Randomly iterate through language and find a 1.
 							int ind = getRandomBirthIndex(stringAliveNodes[bN[0]]);
+							// If recieving language is going 0 -> 1.
+							if (stringAliveNodes[bN[1]].charAt(ind) == '0') {
+								traits[bN[1]]++;
+							}
 							// Give the 1 to the receiving language.
 							stringAliveNodes[bN[1]] = replaceCharAt(stringAliveNodes[bN[1]], ind, Integer.toString(1));
 						}
 					}
 				}
-				totalRate = totalRate(stringAliveNodes);
+				totalRate = totalRate(stringAliveNodes, traits, numberOfLangs);
 				t -= Randomizer.nextExponential(totalRate);
 			}
 			setLangs(aliveNodes, stringAliveNodes);
@@ -205,16 +220,14 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	 * 
 	 * @return double[], array of probabilities.
 	 */
-	protected double[] BorrowingProbs(String[] aliveNodes, Double totalRate) throws Exception {
+	protected double[] BorrowingProbs(String[] aliveNodes, Double totalRate, int[] traits, int numberOfLangs) throws Exception {
 		Double borrowSum = 0.0;
-		Double mutateSum = 0.0;
 		int seq_length = aliveNodes[0].length();
-		for (String n : aliveNodes) {
-			borrowSum += n.chars().filter(ch -> ch =='1').count();
-			mutateSum += seq_length;
+		for (int n : traits) {
+			borrowSum += n;
 		}
 		double[] probs = new double[2];
-		probs[0] = rate * mutateSum / totalRate;
+		probs[0] = rate * (numberOfLangs * seq_length) / totalRate;
 		probs[1] = borrowRate * rate * borrowSum / totalRate;
 		return probs;
 	}
@@ -228,13 +241,13 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 	 * 
 	 * @return Double, total rate,
 	 */
-	public Double totalRate(String[] aliveNodes) throws Exception {
+	public Double totalRate(String[] aliveNodes, int[] traits, int numberOfLangs) throws Exception {
 		Double borrowSum = 0.0;
 		int seq_length = aliveNodes[0].length();
-		for (String n : aliveNodes) {
-			borrowSum += n.chars().filter(ch -> ch =='1').count();
+		for (int n : traits) {
+			borrowSum += n;
 		}
-		return rate * (aliveNodes.length * seq_length) + borrowRate * rate * borrowSum;
+		return rate * (numberOfLangs * seq_length) + borrowRate * rate * borrowSum;
 	}
 	
 	public void setBirthRate(Double r) {

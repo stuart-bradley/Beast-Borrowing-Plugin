@@ -147,6 +147,8 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		// Get root node.
 		ArrayList<Node> aliveNodes = new ArrayList<Node>();
 		String[] stringAliveNodes = {};
+		int[] traits = {};
+		int numberOfLangs = 0;
 		Double totalRate = null;
 		int idx;
 		double[] probs = new double[3];
@@ -156,18 +158,22 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 			}
 			aliveNodes = getAliveNodes(base, events[i+1]);
 			stringAliveNodes = getSequences(aliveNodes);
-			totalRate = totalRate(stringAliveNodes);
+			numberOfLangs = stringAliveNodes.length;
+			traits = getBirths(stringAliveNodes, numberOfLangs);
+			totalRate = totalRate(stringAliveNodes, traits, numberOfLangs);
 			Double t = events[i] - Randomizer.nextExponential(totalRate);
 			System.out.println();
 			System.out.println("On branch event: " + (i+1)+ " out of " + (events.length/2) + ". Next event at " + events[i+1]);
 			while (t > events[i+1]) {
 				System.out.print("\r"+t);
-				probs = BorrowingProbs(stringAliveNodes, totalRate);
+				probs = BorrowingProbs(stringAliveNodes, totalRate,traits, numberOfLangs);
 				Integer choice = Randomizer.randomChoicePDF(probs);
+				// Birth.
 				if (choice == 0) {
 					idx = Randomizer.nextInt(stringAliveNodes.length);
 					stringAliveNodes[idx] = stringAliveNodes[idx] + "1";
 					stringAliveNodes = addEmptyTrait(stringAliveNodes, idx);
+					traits[idx]++;
 					// Death.
 				} else if (choice == 1) {
 					idx = Randomizer.nextInt(stringAliveNodes.length);
@@ -176,6 +182,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 						if (Character.getNumericValue(stringAliveNodes[idx].charAt(j)) != 0) {
 							if (noEmptyTraitCheck(stringAliveNodes[idx])) {
 								stringAliveNodes[idx] = replaceCharAt(stringAliveNodes[idx], j, Integer.toString(0));
+								traits[idx]--;
 							}
 							break;
 						}
@@ -189,12 +196,16 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 						if (localDist(aliveNodes.get(bN[0]), aliveNodes.get(bN[1]))) {
 							// Randomly iterate through language and find a 1.
 							int ind = getRandomBirthIndex(stringAliveNodes[bN[0]]);
+							// If recieving language is going 0 -> 1.
+							if (stringAliveNodes[bN[1]].charAt(ind) == '0') {
+								traits[bN[1]]++;
+							}
 							// Give the 1 to the receiving language.
 							stringAliveNodes[bN[1]] = replaceCharAt(stringAliveNodes[bN[1]], ind, Integer.toString(1));
 						}
 					}
 				}
-				totalRate = totalRate(stringAliveNodes);
+				totalRate = totalRate(stringAliveNodes, traits, numberOfLangs);
 				t -= Randomizer.nextExponential(totalRate);
 			}
 			setLangs(aliveNodes, stringAliveNodes);
@@ -211,17 +222,16 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 * 
 	 * @return double[], array of probabilities.
 	 */
-	protected double[] BorrowingProbs(String[] aliveNodes, Double totalRate) throws Exception {
+	protected double[] BorrowingProbs(String[] aliveNodes, Double totalRate, int[] traits, int numberOfLangs) throws Exception {
 		double[] probs = new double[3];
 		Double death = 0.0, bo = 0.0;
-		for (String n : aliveNodes) {
-			int births = (int) n.chars().filter(ch -> ch =='1').count();
+		for (int n : traits) {
 			// mu*k1 + ... + mu*kn
-			death += getD() * births;
+			death += getD() * n;
 			// b*(k1 + ... + kn)
-			bo += births;
+			bo += n;
 		}
-		probs[0] = (aliveNodes.length * getB()) / totalRate; // Birth
+		probs[0] = (numberOfLangs * getB()) / totalRate; // Birth
 		probs[1] = (death) / totalRate; // Death
 		probs[2] = (borrowRate * bo) / totalRate; // Borrow
 		return probs;
@@ -236,14 +246,13 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 	 * 
 	 * @return Double, total rate.
 	 */
-	public Double totalRate(String[] aliveNodes) throws Exception {
-		Double birthRate = aliveNodes.length * getB();
+	public Double totalRate(String[] aliveNodes, int[] traits, int numberOfLangs) throws Exception {
+		Double birthRate = numberOfLangs * getB();
 		Double deathSum = 0.0;
 		Double borrowSum = 0.0;
-		for (String n : aliveNodes) {
-			int births = (int) n.chars().filter(ch -> ch =='1').count();
-			deathSum += getD() * births;
-			borrowSum += births;
+		for (int n : traits) {
+			deathSum += getD() * n;
+			borrowSum += n;
 		}
 		return birthRate + deathSum + (getBorrowRate()*borrowSum);
 	}

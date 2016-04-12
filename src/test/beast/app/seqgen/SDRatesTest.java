@@ -49,7 +49,8 @@ public class SDRatesTest {
 			System.out.println("In code calc: ");
 			ExplicitBinaryStochasticDollo sd = new ExplicitBinaryStochasticDollo(b,d,br,0.0,false);
 			String[]stringAliveNodes = getSequences(aliveNodes);
-			javaRate = sd.totalRate(stringAliveNodes);
+			int[] traits = getBirths(stringAliveNodes, aliveNodes.size());
+			javaRate = sd.totalRate(stringAliveNodes, traits, aliveNodes.size());
 			System.out.println("In code total rate = " + javaRate);
 			
 			if (! javaRate.equals(simRate)) {
@@ -84,5 +85,13 @@ public class SDRatesTest {
 			}
 		}
 		return count;
+	}
+	
+	protected static int[] getBirths(String[] aliveNodes, int numberOfLangs) {
+		int[] births = new int[numberOfLangs];
+		for (int i =0; i < numberOfLangs; i++) {
+			births[i] = (int) aliveNodes[i].chars().filter(ch -> ch =='1').count();
+		}
+		return births;
 	}
 }

@@ -88,7 +88,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * 
 	 * @return double[], array of probabilities.
 	 */
-	protected abstract double[] BorrowingProbs(String[] aliveNodes, Double totalRate) throws Exception;
+	protected abstract double[] BorrowingProbs(String[] aliveNodes, Double totalRate, int[] traits, int numberOfLangs) throws Exception;
 
 	/*
 	 * Total rate of mutation.
@@ -99,7 +99,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * 
 	 * @return Double, total rate,
 	 */
-	protected abstract Double totalRate(String[] aliveNodes) throws Exception;
+	protected abstract Double totalRate(String[] aliveNodes, int[] traits, int numberOfLangs) throws Exception;
 
 	public abstract String toString();
 
@@ -285,38 +285,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @param aliveNodes.
 	 * 
 	 * @return node[0] as giver and node[1] as reciever.
-	 */
-	protected Node[] getBorrowingNodes(ArrayList<Node> aliveNodes) {
-		double totalCognates = 0.0;
-		Node[] nodes = new Node[2];
-		for (Node n : aliveNodes) {
-			totalCognates += getBirths((Sequence) n.getMetaData("lang"));
-		}
-		double[] probs = new double[aliveNodes.size()];
-		for (int i = 0; i < aliveNodes.size(); i++) {
-			probs[i] = getBirths((Sequence) aliveNodes.get(i).getMetaData("lang")) / totalCognates;
-		}
-		// Check to see if two values have probabilities > 0.0.
-		ArrayList<Double> posProbs = new ArrayList<Double>();
-		for (double i : probs) {
-			if (i > 0.0) {
-				posProbs.add(i);
-			}
-		}
-
-		if (posProbs.size() > 1) {
-			do {
-				nodes[0] = aliveNodes.get(Randomizer.randomChoicePDF(probs));
-				nodes[1] = aliveNodes.get(Randomizer.randomChoicePDF(probs));
-			} while (nodes[0] == nodes[1]);
-		} else {
-			nodes[0] = aliveNodes.get(Randomizer.randomChoicePDF(probs));
-			nodes[1] = aliveNodes.get(Randomizer.randomChoicePDF(probs));
-		}
-
-		return nodes;
-	}
-	
+	 */	
 	protected int[] getBorrowingNodes(String[] aliveNodes) {
 		double totalCognates = 0.0;
 		int[] nodes = new int[2];
@@ -354,17 +323,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @ s Sequence from which birth is determined.
 	 * 
 	 * @return random birth index.
-	 */
-	protected int getRandomBirthIndex(Sequence s) {
-		ArrayList<Integer> birthIndicies = new ArrayList<Integer>();
-		for (int i = 0; i < s.getData().length(); i++) {
-			if ((Character.getNumericValue(s.getData().charAt(i)) == 1)) {
-				birthIndicies.add(i);
-			}
-		}
-		return birthIndicies.get(Randomizer.nextInt(birthIndicies.size()));
-	}
-	
+	 */	
 	protected int getRandomBirthIndex(String s) {
 		ArrayList<Integer> birthIndicies = new ArrayList<Integer>();
 		for (int i = 0; i < s.length(); i++) {
@@ -392,6 +351,14 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 			seqs[i] = ((Sequence) aliveNodes.get(i).getMetaData("lang")).getData();
 		}
 		return seqs;
+	}
+	
+	protected int[] getBirths(String[] aliveNodes, int numberOfLangs) {
+		int[] births = new int[numberOfLangs];
+		for (int i =0; i < numberOfLangs; i++) {
+			births[i] = (int) aliveNodes[i].chars().filter(ch -> ch =='1').count();
+		}
+		return births;
 	}
 	
 	protected void setLangs(ArrayList<Node> aliveNodes, String[] seqs) throws Exception {
