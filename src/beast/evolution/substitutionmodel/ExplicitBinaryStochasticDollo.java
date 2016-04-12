@@ -150,7 +150,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		int[] traits = {};
 		int numberOfLangs = 0;
 		Double totalRate = null;
-		int idx;
+		int idx, ind;
 		double[] probs = new double[3];
 		for (int i = 0; i < events.length - 1; i++) {
 			if (events[i] == 0.0) {
@@ -178,14 +178,10 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 				} else if (choice == 1) {
 					idx = Randomizer.nextInt(stringAliveNodes.length);
 					// Find random alive trait, and kill it.
-					for (Integer j : Randomizer.shuffled(stringAliveNodes[idx].length())) {
-						if (Character.getNumericValue(stringAliveNodes[idx].charAt(j)) != 0) {
-							if (noEmptyTraitCheck(stringAliveNodes[idx])) {
-								stringAliveNodes[idx] = replaceCharAt(stringAliveNodes[idx], j, Integer.toString(0));
-								traits[idx]--;
-							}
-							break;
-						}
+					ind = getRandomBirthIndex(stringAliveNodes[idx], traits[idx]);
+					if (noEmptyTraitCheck(stringAliveNodes[idx]) && ind > -1) {
+						stringAliveNodes[idx] = replaceCharAt(stringAliveNodes[idx], ind, Integer.toString(0));
+						traits[idx]--;
 					}
 				// Borrowing.
 				} else if (choice == 2) {
@@ -195,9 +191,9 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 
 						if (localDist(aliveNodes.get(bN[0]), aliveNodes.get(bN[1]))) {
 							// Randomly iterate through language and find a 1.
-							int ind = getRandomBirthIndex(stringAliveNodes[bN[0]]);
+								ind = getRandomBirthIndex(stringAliveNodes[bN[0]], traits[bN[0]]);
 							// If recieving language is going 0 -> 1.
-							if (stringAliveNodes[bN[1]].charAt(ind) == '0') {
+							if (ind > 1 && stringAliveNodes[bN[1]].charAt(ind) == '0') {
 								traits[bN[1]]++;
 							}
 							// Give the 1 to the receiving language.

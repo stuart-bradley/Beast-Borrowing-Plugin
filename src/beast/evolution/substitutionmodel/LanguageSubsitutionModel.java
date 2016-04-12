@@ -89,7 +89,8 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * 
 	 * @return double[], array of probabilities.
 	 */
-	protected abstract double[] BorrowingProbs(String[] aliveNodes, Double totalRate, int[] traits, int numberOfLangs) throws Exception;
+	protected abstract double[] BorrowingProbs(String[] aliveNodes, Double totalRate, int[] traits, int numberOfLangs)
+			throws Exception;
 
 	/*
 	 * Total rate of mutation.
@@ -223,14 +224,14 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 			}
 		}
 	}
-	
+
 	protected boolean noEmptyTraitCheck(String l) {
 		// Traits are removal if noEmptyTrait flag is not set.
 		if (noEmptyTrait == false) {
 			return true;
 		} else {
 			// Check if removing a trait kills meaning class.
-			if (l.chars().filter(ch -> ch =='1').count() > 1) {
+			if (l.chars().filter(ch -> ch == '1').count() > 1) {
 				return true;
 			} else {
 				return false;
@@ -261,7 +262,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @param aliveNodes.
 	 * 
 	 * @return node[0] as giver and node[1] as reciever.
-	 */	
+	 */
 	protected int[] getBorrowingNodes(String[] aliveNodes, int[] traits, int numberOfLangs) {
 		double totalCognates = 0.0;
 		int[] nodes = new int[2];
@@ -299,30 +300,31 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * @ s Sequence from which birth is determined.
 	 * 
 	 * @return random birth index.
-	 */	
-	
-	/*
-	protected int getRandomBirthIndex(String s) {
-	    List<Integer> birthIndicies = new ArrayList<>();
-	    int index = s.indexOf('1');
-	    while (index > -1) {
-	        birthIndicies.add(index);
-	        index = s.indexOf('1', index + 1);
-	    }
-	    return birthIndicies.get(Randomizer.nextInt(birthIndicies.size()));
-	}
-	*/
-	
-	protected int getRandomBirthIndex(String s) {
-		int[] indexes = Randomizer.shuffled(s.length());
-		for (int i = 0; i < indexes.length; i++) {
-			if (s.charAt(indexes[i]) == '1') {
-				return indexes[i];
+	 */
+	protected int getRandomBirthIndex(String s, int births) {
+		if (births == 0) {
+			return -1;
+		} else if (births  == 1) {
+			return s.indexOf('1');
+		}
+		int tmp;
+		int[] indices = new int[s.length()]; 
+		for (int i = 0; i < s.length(); ++i) indices[i] = i;
+		
+		for (int i = 0; i < s.length(); i++) {
+			int j = Randomizer.nextInt(indices.length - i) + i;
+			if (j != i) { // swap to shuffle
+				tmp = indices[i];
+				indices[i] = indices[j];
+				indices[j] = tmp;
+			}
+			if ((s.charAt(indices[i]) == '1')) {
+				return indices[i];
 			}
 		}
-		return s.indexOf('1');
+		return -1;
 	}
-	
+
 	protected Double[] getEvents(Tree tr) {
 		Node[] nodes = tr.getNodesAsArray();
 		Double[] events = new Double[nodes.length];
@@ -332,7 +334,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 		Arrays.sort(events, Collections.reverseOrder());
 		return events;
 	}
-	
+
 	protected String[] getSequences(ArrayList<Node> aliveNodes) {
 		int aNSize = aliveNodes.size();
 		String[] seqs = new String[aNSize];
@@ -341,15 +343,15 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 		}
 		return seqs;
 	}
-	
+
 	protected int[] getBirths(String[] aliveNodes, int numberOfLangs) {
 		int[] births = new int[numberOfLangs];
-		for (int i =0; i < numberOfLangs; i++) {
-			births[i] = (int) aliveNodes[i].chars().filter(ch -> ch =='1').count();
+		for (int i = 0; i < numberOfLangs; i++) {
+			births[i] = (int) aliveNodes[i].chars().filter(ch -> ch == '1').count();
 		}
 		return births;
 	}
-	
+
 	protected void setLangs(ArrayList<Node> aliveNodes, String[] seqs) throws Exception {
 		for (int i = 0; i < aliveNodes.size(); i++) {
 			setSubTreeLanguages(aliveNodes.get(i), new Sequence("", seqs[i]));

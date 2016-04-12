@@ -193,9 +193,9 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 
 						if (localDist(aliveNodes.get(bN[0]), aliveNodes.get(bN[1]))) {
 							// Randomly iterate through language and find a 1.
-							int ind = getRandomBirthIndex(stringAliveNodes[bN[0]]);
+							int ind = getRandomBirthIndex(stringAliveNodes[bN[0]], traits[bN[0]]);
 							// If recieving language is going 0 -> 1.
-							if (stringAliveNodes[bN[1]].charAt(ind) == '0') {
+							if (ind > -1 && stringAliveNodes[bN[1]].charAt(ind) == '0') {
 								traits[bN[1]]++;
 							}
 							// Give the 1 to the receiving language.
