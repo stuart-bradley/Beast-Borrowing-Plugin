@@ -204,31 +204,6 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	}
 
 	/*
-	 * Determines whether two lists of alive nodes are equal.
-	 * 
-	 * @param oldAliveNodes.
-	 * 
-	 * @param newAliveNodes.
-	 * 
-	 * @return boolean as to whether they are the same.
-	 */
-	protected boolean compareAliveNodes(ArrayList<Node> oldAliveNodes, ArrayList<Node> newAliveNodes) {
-		ArrayList<Node> oldAN = new ArrayList<Node>(oldAliveNodes);
-		ArrayList<Node> newAN = new ArrayList<Node>(newAliveNodes);
-
-		// Newer list will always be equal or larger (Tree structure).
-		newAN.removeAll(oldAliveNodes);
-		oldAN.removeAll(newAliveNodes);
-
-		// If all are removed, then lists are equal.
-		if (newAN.isEmpty() && oldAN.isEmpty()) {
-			return true;
-		} else {
-			return false;
-		}
-	}
-
-	/*
 	 * No Empty Trait Check.
 	 * 
 	 * @param l Sequence.
@@ -325,6 +300,8 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * 
 	 * @return random birth index.
 	 */	
+	
+	/*
 	protected int getRandomBirthIndex(String s) {
 	    List<Integer> birthIndicies = new ArrayList<>();
 	    int index = s.indexOf('1');
@@ -333,6 +310,17 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	        index = s.indexOf('1', index + 1);
 	    }
 	    return birthIndicies.get(Randomizer.nextInt(birthIndicies.size()));
+	}
+	*/
+	
+	protected int getRandomBirthIndex(String s) {
+		int[] indexes = Randomizer.shuffled(s.length());
+		for (int i = 0; i < indexes.length; i++) {
+			if (s.charAt(indexes[i]) == '1') {
+				return indexes[i];
+			}
+		}
+		return s.indexOf('1');
 	}
 	
 	protected Double[] getEvents(Tree tr) {
