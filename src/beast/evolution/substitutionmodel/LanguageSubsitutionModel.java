@@ -286,15 +286,15 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 	 * 
 	 * @return node[0] as giver and node[1] as reciever.
 	 */	
-	protected int[] getBorrowingNodes(String[] aliveNodes) {
+	protected int[] getBorrowingNodes(String[] aliveNodes, int[] traits, int numberOfLangs) {
 		double totalCognates = 0.0;
 		int[] nodes = new int[2];
-		for (String n : aliveNodes) {
-			totalCognates += n.chars().filter(ch -> ch =='1').count();
+		for (int n : traits) {
+			totalCognates += n;
 		}
-		double[] probs = new double[aliveNodes.length];
-		for (int i = 0; i < aliveNodes.length; i++) {
-			probs[i] = aliveNodes[i].chars().filter(ch -> ch =='1').count() / totalCognates;
+		double[] probs = new double[numberOfLangs];
+		for (int i = 0; i < numberOfLangs; i++) {
+			probs[i] = traits[i] / totalCognates;
 		}
 		// Check to see if two values have probabilities > 0.0.
 		ArrayList<Double> posProbs = new ArrayList<Double>();

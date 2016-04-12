@@ -191,7 +191,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 				} else if (choice == 2) {
 					if (aliveNodes.size() > 1) {
 						// Pick two distinct languages at random.
-						int[] bN = getBorrowingNodes(stringAliveNodes);
+						int[] bN = getBorrowingNodes(stringAliveNodes, traits, numberOfLangs);
 
 						if (localDist(aliveNodes.get(bN[0]), aliveNodes.get(bN[1]))) {
 							// Randomly iterate through language and find a 1.
