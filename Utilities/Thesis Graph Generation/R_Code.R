@@ -31,6 +31,8 @@ speed_sd_a2 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimu
 missing_lang <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/missing_lang.csv", quote="\"")
 missing_mc <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/missing_mc.csv", quote="\"")
 
+gtr_quart <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr_quart.csv", header=FALSE)
+
 # GTR Lineage Validation
 plot(density(rbinom(100000,20,0.5), adjust=10), col="green",lwd=2, 
      main="Simulation of 100,000 language evolutions under the GTR model", xlab="Number of cogantes", xlim=range(0:20))
@@ -103,3 +105,14 @@ plot(density(rbinom(100000,10,0.5), adjust=10), col="green",lwd=2,
 lines(density(missing_mc$V1, adjust=10), col="blue", lwd=2)
 legend('topright',c("Binomial Distribution","Missing Meaning Classes Algorithm"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
 par(mfrow=c(1, 1))
+
+# GTR Quartet
+gtr_quart <- data.matrix(gtr_quart)
+plot(gtr_quart[1:9,], xaxt="n", main="Quartet Distances under various levels of GTR borrowing", xlab="Borrowing (%)", ylab="Quartet Distance")
+axis(1, at=1:9, labels=c(0,1,5,10,15,20,30,40,50))
+# GTR Height
+gtr_heights <- data.matrix(gtr_heights)
+diff_fun <- function(x) abs(7080.7-x)
+diffs <- sapply(gtr_heights[,2], diff_fun)
+plot(diffs, type="l", xaxt="n", main="Differences in tree height under various levels of GTR borrowing", xlab="Borrowing (%)", ylab="Height Difference (years)")
+axis(1, at=1:9, labels=c(0,1,5,10,15,20,30,40,50))

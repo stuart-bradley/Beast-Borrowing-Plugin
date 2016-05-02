@@ -60,8 +60,8 @@ public class BeastBorrowingPluginTest {
 		// MissingMeaningClassesValidation();
 		// SpeedTestNonBorrowing();
 
-		 SeqGenTest();
-	//	misspecGeneration();
+		 //SeqGenTest();
+	misspecGeneration();
 		// randomTreeTest();
 
 	}
@@ -482,8 +482,8 @@ public class BeastBorrowingPluginTest {
 	}
 	
 	private static void misspecGeneration() throws Exception {
-		int[] borrowingRates = {0,1,5,10};
-		String[] models = {"GTR"};
+		int[] borrowingRates = {0,1,5,10,15,20,30,40,50};
+		String[] models = {"GTR","SD"};
 		for (String model : models) {
 			System.out.println(model);
 			for (int b : borrowingRates) {
@@ -492,7 +492,7 @@ public class BeastBorrowingPluginTest {
 				System.out.println();
 
 				String absPath = "/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/";
-				//absPath = "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/";
+				absPath = "C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/";
 				String[] args = {
 						absPath + "examples/BorrowingMisspec/"+model+ "_Borrow_"+b+"_Input.xml",
 						"1",
