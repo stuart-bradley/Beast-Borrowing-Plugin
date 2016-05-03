@@ -284,11 +284,11 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 		if (posProbs.size() > 1) {
 			do {
 				nodes[0] = Randomizer.randomChoicePDF(probs);
-				nodes[1] = Randomizer.randomChoicePDF(probs);
+				nodes[1] = Randomizer.nextInt(probs.length);
 			} while (nodes[0] == nodes[1]);
 		} else {
 			nodes[0] = Randomizer.randomChoicePDF(probs);
-			nodes[1] = Randomizer.randomChoicePDF(probs);
+			nodes[1] = Randomizer.nextInt(probs.length);
 		}
 
 		return nodes;
