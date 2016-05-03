@@ -176,7 +176,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 					traits[idx]++;
 					// Death.
 				} else if (choice == 1) {
-					idx = Randomizer.nextInt(stringAliveNodes.length);
+					idx = getDeathNode(stringAliveNodes, traits, numberOfLangs);
 					// Find random alive trait, and kill it.
 					ind = getRandomBirthIndex(stringAliveNodes[idx], traits[idx]);
 					if (noEmptyTraitCheck(stringAliveNodes[idx]) && ind > -1) {
@@ -293,6 +293,19 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 			aliveNodes[i] = aliveNodes[i] + "0";
 		}
 		return aliveNodes;
+	}
+	
+
+	protected int getDeathNode(String[] aliveNodes, int[] traits, int numberOfLangs) {
+		double totalCognates = 0.0;
+		for (int n : traits) {
+			totalCognates += n;
+		}
+		double[] probs = new double[numberOfLangs];
+		for (int i = 0; i < numberOfLangs; i++) {
+			probs[i] = traits[i] / totalCognates;
+		}
+		return Randomizer.randomChoicePDF(probs);
 	}
 
 	public void setBirthRate(Double r) {
