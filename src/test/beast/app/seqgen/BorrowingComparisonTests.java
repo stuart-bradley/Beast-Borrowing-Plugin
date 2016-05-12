@@ -14,6 +14,7 @@ import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import java.io.*;
 
@@ -41,13 +42,29 @@ public class BorrowingComparisonTests {
 			Document seqs = dBuilder.parse("BorrowingComparisons/GTR_Borrow_" + rate + "_Output.xml");
 			Element dataElem = (Element) seqs.getElementsByTagName("data").item(0);
 			dataElem.setAttribute("id", "GTR1");
-			dataElem.setAttribute("name", "Alignment");
+			dataElem.setAttribute("name", "alignment");
 			NodeList sequences = seqs.getElementsByTagName("sequence");
 			for (int i = 0; i < sequences.getLength(); i++) {
 				Element s = (Element) sequences.item(i);
 				s.setAttribute("totalcount", "2");
-				s.setAttribute("id", "Sequence."+i);
+				s.setAttribute("id", "Sequence.0"+i);
 			}
+			
+			Element dataElemOld = (Element) docNew.getElementsByTagName("data").item(0);
+			Element dataElemNew = (Element) seqs.getElementsByTagName("data").item(0);
+			org.w3c.dom.Node importedNode = docNew.importNode(dataElemNew, true);
+		    dataElemOld.getParentNode().replaceChild(importedNode, dataElemOld);
+		    
+		    
+		    
+			TransformerFactory transformerFactory =
+			         TransformerFactory.newInstance();
+			         Transformer transformer =
+			         transformerFactory.newTransformer();
+			DOMSource source = new DOMSource(docNew);
+			StreamResult consoleResult =
+			         new StreamResult(System.out);
+			         transformer.transform(source, consoleResult);
 		}
 	}
 
