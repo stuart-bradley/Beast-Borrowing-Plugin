@@ -60,8 +60,8 @@ public class BeastBorrowingPluginTest {
 		// MissingMeaningClassesValidation();
 		// SpeedTestNonBorrowing();
 
-		 //SeqGenTest();
-	misspecGeneration();
+		 SeqGenTest(); 
+	//misspecGeneration();
 		// randomTreeTest();
 
 	}
@@ -469,9 +469,9 @@ public class BeastBorrowingPluginTest {
 				//"1",
 				//"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/SD_Borrow_1_Output.xml" };
 		String[] args = {
-				"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/SD_Borrow_1_Input.xml",
+				"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/SD_Borrow_50_Input.xml",
 				"1",
-				"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/Outputs/SD_Borrow_1_Output.xml"};
+				"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/Outputs/SD_Borrow_50_Output.xml"};
 		
 		Long startTime = System.nanoTime();
 		LanguageSequenceGen.main(args);
