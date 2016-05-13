@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import beast.app.beastapp.BeastMain;
 import beast.app.seqgen.LanguageSequenceGen;
 import beast.evolution.tree.Node;
 import beast.evolution.tree.Tree;
@@ -11,6 +12,7 @@ import beast.util.Randomizer;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
@@ -30,16 +32,44 @@ public class BorrowingComparisonTests {
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(inputFile);
 		doc.getDocumentElement().normalize();
+		
 		for (int rate : BORROWRATES) {
 			System.out.println();
 			Tree yuleNew = randomYuleTree(POPSIZE, TREERATE);
-			Document constraints = generateConstraints(yuleNew, 2000.0);
+			Document constraints = generateConstraints(yuleNew, 2500.0);
 			Document docNew = documentCopy(doc);
+			Document rateInputFileNew = documentCopy(dBuilder.parse("BorrowingComparisons/"+args[1]+"_Borrow_" + rate +"_Input.xml"));
 			
-			String[] langSeqGenArgs = {"BorrowingComparisons/GTR_Borrow_" + rate + "_Input.xml","1","BorrowingComparisons/GTR_Borrow_" + rate + "_Output.xml"};
+			// Change Yule tree. 
+			Element treeOld = (Element) rateInputFileNew.getElementsByTagName("tree").item(0);
+			treeOld.setAttribute("newick", yuleNew.getRoot().toNewick());
+			writeXML(rateInputFileNew, "BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Input.xml");
+			
+			// Run LangSeqGen.
+			String[] langSeqGenArgs = {"BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Input.xml","1","BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Output.xml"};
 			LanguageSequenceGen.main(langSeqGenArgs);
 			
-			Document seqs = dBuilder.parse("BorrowingComparisons/GTR_Borrow_" + rate + "_Output.xml");
+			// Replace constraints.
+			NodeList dataElemOldList = docNew.getElementsByTagName("distribution");
+			NodeList dataElemNewList = constraints.getElementsByTagName("distribution");
+			for (int i = 0; i < dataElemOldList.getLength(); i++) {
+				Element dist = (Element) dataElemOldList.item(i);
+				String distID = dist.getAttribute("id");
+				if (distID.endsWith(".prior")) {
+					for (int j = 0; j < dataElemNewList.getLength(); j++) {
+						Element distNew = (Element) dataElemNewList.item(j);
+						String distIDNew = distNew.getAttribute("id");
+						if (distID.equals(distIDNew)) {
+							// Replace old data.
+							org.w3c.dom.Node importedNode = docNew.importNode(distNew, true);
+						    dist.getParentNode().replaceChild(importedNode, dist);
+						}
+					}
+				}
+			}
+			
+			// Get new data.
+			Document seqs = dBuilder.parse("BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Output.xml");
 			Element dataElem = (Element) seqs.getElementsByTagName("data").item(0);
 			dataElem.setAttribute("id", "GTR1");
 			dataElem.setAttribute("name", "alignment");
@@ -50,21 +80,35 @@ public class BorrowingComparisonTests {
 				s.setAttribute("id", "Sequence.0"+i);
 			}
 			
+			// Replace old data.
 			Element dataElemOld = (Element) docNew.getElementsByTagName("data").item(0);
 			Element dataElemNew = (Element) seqs.getElementsByTagName("data").item(0);
 			org.w3c.dom.Node importedNode = docNew.importNode(dataElemNew, true);
 		    dataElemOld.getParentNode().replaceChild(importedNode, dataElemOld);
 		    
+		    //Edit logging files.
+		    dataElemOldList = docNew.getElementsByTagName("logger");
+		    for (int i = 0; i < dataElemOldList.getLength(); i++) {
+				Element logger = (Element) dataElemOldList.item(i);
+				if (logger.hasAttribute("fileName")) {
+					String loggerFileName = logger.getAttribute("fileName");
+					String loggerFileExtension = loggerFileName.replaceAll(".*\\.", "");
+					logger.setAttribute("fileName", args[1]+"_new_" + rate + "_"+args[2]+"."+loggerFileExtension);
+				}
+		    }
 		    
 		    
-			TransformerFactory transformerFactory =
-			         TransformerFactory.newInstance();
-			         Transformer transformer =
-			         transformerFactory.newTransformer();
-			DOMSource source = new DOMSource(docNew);
-			StreamResult consoleResult =
-			         new StreamResult(System.out);
-			         transformer.transform(source, consoleResult);
+		    // Write to XML file.
+		    writeXML(docNew, "BorrowingComparisons/BeastXMLs/"+args[1]+"_new_" + rate + "_"+args[2]+".xml");
+		    
+		    // BEAST Run.
+		    String[] beastArgs = {"-overwrite", "-working","BorrowingComparisons/BeastXMLs/"+args[1]+"_new_" + rate + "_"+args[2]+".xml"};
+		    while (true) {
+			    try {
+			    	BeastMain.main(beastArgs);
+			    	break;
+			    } catch (Exception e) {}
+		    }
 		}
 	}
 
@@ -76,6 +120,15 @@ public class BorrowingComparisonTests {
 		tx.transform(source,result);
 		return (Document)result.getNode();
 	}
+	
+	private static void writeXML (Document doc, String loc) throws Exception {
+		TransformerFactory transformerFactory = TransformerFactory.newInstance();
+		Transformer transformer = transformerFactory.newTransformer();
+		DOMSource source = new DOMSource(doc);
+		//StreamResult result = new StreamResult(System.out);
+		StreamResult result = new StreamResult(new File(loc));
+		transformer.transform(source, result);
+	}
 
 	private static Document generateConstraints (Tree tree, double minConstraintHeight) throws Exception {
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
@@ -86,7 +139,7 @@ public class BorrowingComparisonTests {
 		doc.appendChild(rootElem);
 		for (int i = 0; i < constraintNodes.size(); i++) {
 			Node n = constraintNodes.get(i);
-			List<Node> children = n.getAllChildNodes();
+			List<Node> children = n.getAllLeafNodes();
 
 			Element distElem = doc.createElement("distribution");
 			distElem.setAttribute("id", "Constraint_"+(i+1)+".prior");
