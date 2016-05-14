@@ -27,90 +27,89 @@ public class BorrowingComparisonTests {
 
 	public static void main(String[] args) throws Exception {
 		String fileLoc = args[0];
+		String rate = args[3];
 		File inputFile = new File(fileLoc);
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
 		Document doc = dBuilder.parse(inputFile);
 		doc.getDocumentElement().normalize();
-		
-		for (int rate : BORROWRATES) {
-			System.out.println();
-			Tree yuleNew = randomYuleTree(POPSIZE, TREERATE);
-			Document constraints = generateConstraints(yuleNew, 2500.0);
-			Document docNew = documentCopy(doc);
-			Document rateInputFileNew = documentCopy(dBuilder.parse("BorrowingComparisons/"+args[1]+"_Borrow_" + rate +"_Input.xml"));
-			
-			// Change Yule tree. 
-			Element treeOld = (Element) rateInputFileNew.getElementsByTagName("tree").item(0);
-			treeOld.setAttribute("newick", yuleNew.getRoot().toNewick());
-			writeXML(rateInputFileNew, "BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Input.xml");
-			
-			// Run LangSeqGen.
-			String[] langSeqGenArgs = {"BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Input.xml","1","BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Output.xml"};
-			LanguageSequenceGen.main(langSeqGenArgs);
-			
-			// Replace constraints.
-			NodeList dataElemOldList = docNew.getElementsByTagName("distribution");
-			NodeList dataElemNewList = constraints.getElementsByTagName("distribution");
-			for (int i = 0; i < dataElemOldList.getLength(); i++) {
-				Element dist = (Element) dataElemOldList.item(i);
-				String distID = dist.getAttribute("id");
-				if (distID.endsWith(".prior")) {
-					for (int j = 0; j < dataElemNewList.getLength(); j++) {
-						Element distNew = (Element) dataElemNewList.item(j);
-						String distIDNew = distNew.getAttribute("id");
-						if (distID.equals(distIDNew)) {
-							// Replace old data.
-							org.w3c.dom.Node importedNode = docNew.importNode(distNew, true);
-						    dist.getParentNode().replaceChild(importedNode, dist);
-						}
+
+		Tree yuleNew = randomYuleTree(POPSIZE, TREERATE);
+		Document constraints = generateConstraints(yuleNew, 2500.0);
+		Document docNew = documentCopy(doc);
+		Document rateInputFileNew = documentCopy(dBuilder.parse("BorrowingComparisons/"+args[1]+"_Borrow_" + rate +"_Input.xml"));
+
+		// Change Yule tree. 
+		Element treeOld = (Element) rateInputFileNew.getElementsByTagName("tree").item(0);
+		treeOld.setAttribute("newick", yuleNew.getRoot().toNewick());
+		writeXML(rateInputFileNew, "BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Input.xml");
+
+		// Run LangSeqGen.
+		String[] langSeqGenArgs = {"BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Input.xml","1","BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Output.xml"};
+		LanguageSequenceGen.main(langSeqGenArgs);
+
+		// Replace constraints.
+		NodeList dataElemOldList = docNew.getElementsByTagName("distribution");
+		NodeList dataElemNewList = constraints.getElementsByTagName("distribution");
+		for (int i = 0; i < dataElemOldList.getLength(); i++) {
+			Element dist = (Element) dataElemOldList.item(i);
+			String distID = dist.getAttribute("id");
+			if (distID.endsWith(".prior")) {
+				for (int j = 0; j < dataElemNewList.getLength(); j++) {
+					Element distNew = (Element) dataElemNewList.item(j);
+					String distIDNew = distNew.getAttribute("id");
+					if (distID.equals(distIDNew)) {
+						// Replace old data.
+						org.w3c.dom.Node importedNode = docNew.importNode(distNew, true);
+						dist.getParentNode().replaceChild(importedNode, dist);
 					}
 				}
 			}
-			
-			// Get new data.
-			Document seqs = dBuilder.parse("BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Output.xml");
-			Element dataElem = (Element) seqs.getElementsByTagName("data").item(0);
-			dataElem.setAttribute("id", "GTR1");
-			dataElem.setAttribute("name", "alignment");
-			NodeList sequences = seqs.getElementsByTagName("sequence");
-			for (int i = 0; i < sequences.getLength(); i++) {
-				Element s = (Element) sequences.item(i);
-				s.setAttribute("totalcount", "2");
-				s.setAttribute("id", "Sequence.0"+i);
+		}
+
+		// Get new data.
+		Document seqs = dBuilder.parse("BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Output.xml");
+		Element dataElem = (Element) seqs.getElementsByTagName("data").item(0);
+		dataElem.setAttribute("id", "GTR1");
+		dataElem.setAttribute("name", "alignment");
+		NodeList sequences = seqs.getElementsByTagName("sequence");
+		for (int i = 0; i < sequences.getLength(); i++) {
+			Element s = (Element) sequences.item(i);
+			s.setAttribute("totalcount", "2");
+			s.setAttribute("id", "Sequence.0"+i);
+		}
+
+		// Replace old data.
+		Element dataElemOld = (Element) docNew.getElementsByTagName("data").item(0);
+		Element dataElemNew = (Element) seqs.getElementsByTagName("data").item(0);
+		org.w3c.dom.Node importedNode = docNew.importNode(dataElemNew, true);
+		dataElemOld.getParentNode().replaceChild(importedNode, dataElemOld);
+
+		//Edit logging files.
+		dataElemOldList = docNew.getElementsByTagName("logger");
+		for (int i = 0; i < dataElemOldList.getLength(); i++) {
+			Element logger = (Element) dataElemOldList.item(i);
+			if (logger.hasAttribute("fileName")) {
+				String loggerFileName = logger.getAttribute("fileName");
+				String loggerFileExtension = loggerFileName.replaceAll(".*\\.", "");
+				logger.setAttribute("fileName", args[1]+"_new_" + rate + "_"+args[2]+"."+loggerFileExtension);
 			}
-			
-			// Replace old data.
-			Element dataElemOld = (Element) docNew.getElementsByTagName("data").item(0);
-			Element dataElemNew = (Element) seqs.getElementsByTagName("data").item(0);
-			org.w3c.dom.Node importedNode = docNew.importNode(dataElemNew, true);
-		    dataElemOld.getParentNode().replaceChild(importedNode, dataElemOld);
-		    
-		    //Edit logging files.
-		    dataElemOldList = docNew.getElementsByTagName("logger");
-		    for (int i = 0; i < dataElemOldList.getLength(); i++) {
-				Element logger = (Element) dataElemOldList.item(i);
-				if (logger.hasAttribute("fileName")) {
-					String loggerFileName = logger.getAttribute("fileName");
-					String loggerFileExtension = loggerFileName.replaceAll(".*\\.", "");
-					logger.setAttribute("fileName", args[1]+"_new_" + rate + "_"+args[2]+"."+loggerFileExtension);
-				}
-		    }
-		    
-		    
-		    // Write to XML file.
-		    writeXML(docNew, "BorrowingComparisons/BeastXMLs/"+args[1]+"_new_" + rate + "_"+args[2]+".xml");
-		    
-		    // BEAST Run.
-		    String[] beastArgs = {"-overwrite", "-working","BorrowingComparisons/BeastXMLs/"+args[1]+"_new_" + rate + "_"+args[2]+".xml"};
-		    while (true) {
-			    try {
-			    	BeastMain.main(beastArgs);
-			    	break;
-			    } catch (Exception e) {}
-		    }
+		}
+
+
+		// Write to XML file.
+		writeXML(docNew, "BorrowingComparisons/BeastXMLs/"+args[1]+"_new_" + rate + "_"+args[2]+".xml");
+
+		// BEAST Run.
+		String[] beastArgs = {"-overwrite", "-working","BorrowingComparisons/BeastXMLs/"+args[1]+"_new_" + rate + "_"+args[2]+".xml"};
+		while (true) {
+			try {
+				BeastMain.main(beastArgs);
+				break;
+			} catch (Exception e) {}
 		}
 	}
+
 
 	private static Document documentCopy (Document doc) throws Exception {
 		TransformerFactory tfactory = TransformerFactory.newInstance();
@@ -120,7 +119,7 @@ public class BorrowingComparisonTests {
 		tx.transform(source,result);
 		return (Document)result.getNode();
 	}
-	
+
 	private static void writeXML (Document doc, String loc) throws Exception {
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
