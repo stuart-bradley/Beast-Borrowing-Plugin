@@ -36,7 +36,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	protected static MissingDataModel m_missingModel;
 
 	@Override
-	public void initAndValidate() throws Exception {
+	public void initAndValidate() {
 	}
 
 	public HashMap<Alignment, String> simulate(Integer numMeaningClasses) throws Exception {
