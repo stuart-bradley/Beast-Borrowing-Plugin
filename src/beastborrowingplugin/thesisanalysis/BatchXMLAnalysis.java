@@ -1,6 +1,7 @@
 package beastborrowingplugin.thesisanalysis;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class BatchXMLAnalysis {
@@ -42,9 +43,29 @@ public class BatchXMLAnalysis {
 			}
 		}
 	}
+	
+	protected void analyseHeights() {
+		ArrayList<Double> heightPercentageDifferences = new ArrayList<Double>();
+		for (int rate : BORROWRATES) {
+			HashMap <String, AnalysisObject> rateObjects = analysisObjects.get(""+rate);
+			//iterating over values only
+			for (AnalysisObject a : rateObjects.values()) {
+				Double totalNumber = 0.0;
+				Double totalDiff  = 0.0;
+				Double startingTreeHeight = a.startingTreeHeight;
+				for (Double treeHeight : a.heights) {
+					totalNumber++;
+					totalDiff += Math.abs(startingTreeHeight - treeHeight);
+					
+				}
+				heightPercentageDifferences.add((totalDiff/totalNumber) /startingTreeHeight);
+			}	
+		}
+	}
 
 
 	public static void main(String[] args) { 
 		BatchXMLAnalysis analysis = new BatchXMLAnalysis("BorrowingComparisons/BeastXMLs", "BorrowingComparisons/BeastXMLs","BorrowingComparisons");
+		analysis.analyseHeights();
 	}
 }
