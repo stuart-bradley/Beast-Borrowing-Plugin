@@ -1,4 +1,4 @@
-package test.beast.app.seqgen;
+package beastborrowingplugin.thesisanalysis;
 
 import java.util.ArrayList;
 import java.util.Collections;
