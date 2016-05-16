@@ -1,12 +1,17 @@
 package beastborrowingplugin.thesisanalysis;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class BatchXMLAnalysis {
 	protected HashMap<String, File> logs = new HashMap<String, File>();
@@ -70,6 +75,80 @@ public class BatchXMLAnalysis {
 		}
 		listToCSV(heightPercentageDifferences, "BorrowingComparisons/Results/heights.csv");
 	}
+	
+	protected void analyseTopology(String loc) {
+		ArrayList<ArrayList<Double>> topologyDifferences = new ArrayList<ArrayList<Double>>();
+		File resFolder = new File(loc+"/Tmp");
+		File qtDist = new File("qDist/quartet_dist.exe");
+		resFolder.mkdir();
+		for (int rate : BORROWRATES) {
+			System.out.println("Analysing rate: " + rate);
+			HashMap <String, AnalysisObject> rateObjects = analysisObjects.get(""+rate);
+			ArrayList<Double> rateTopologies = new ArrayList<Double>();
+			rateTopologies.add((double) rate);
+			
+			for (Map.Entry<String, AnalysisObject> entry : rateObjects.entrySet()) {
+				File startPath = new File(resFolder.getPath()+"/startTree_"+entry.getKey()+".tree");
+				createTreeFile(startPath.getPath(), entry.getValue().startingTree);
+				List<String> resTrees = entry.getValue().trees;
+				Collections.shuffle(resTrees);
+				for (int i = 0; i < 300; i++) {
+					try {
+						String t = resTrees.get(i);
+						File treePath = new File(resFolder.getPath()+"/tree_"+entry.getKey()+"_"+i+".tree");
+						createTreeFile(treePath.getPath(), t);
+						
+						ProcessBuilder builder = new ProcessBuilder(
+					            "cmd.exe", "/c", qtDist.getAbsolutePath(), "-v", startPath.getAbsolutePath(), treePath.getAbsolutePath());
+						/*
+					        builder.redirectErrorStream(true);
+					        Process p = builder.start();
+					        BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+					        String line;
+					        while (true) {
+					            line = r.readLine();
+					            if (line == null) { break; }
+					            System.out.println(line);
+					        }
+					        */
+					} catch (Exception e) {}
+				}
+			}
+		}
+		try {
+			delete(resFolder);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	private void createTreeFile(String fileName, String tree) {
+		FileWriter fW = null;
+
+		try {
+			fW = new FileWriter(fileName);
+			fW.append(tree);
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				fW.flush();
+				fW.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	private void delete(File f) throws IOException {
+		  if (f.isDirectory()) {
+			    for (File c : f.listFiles())
+			      delete(c);
+			  }
+			  if (!f.delete())
+			    throw new FileNotFoundException("Failed to delete file: " + f);
+	}
 
 	private static <T> void listToCSV(ArrayList<T> l, String fileName) {
 		final String NEW_LINE_SEPARATOR = "\n";
@@ -103,22 +182,19 @@ public class BatchXMLAnalysis {
 				}
 			}
 		} catch (Exception e) {
-			System.out.println("Error in CsvFileWriter !!!");
 			e.printStackTrace();
 		} finally {
 			try {
 				fW.flush();
 				fW.close();
 			} catch (IOException e) {
-				System.out.println("Error while flushing/closing fileWriter !!!");
 				e.printStackTrace();
 			}
-
 		}
 	}
 
 	public static void main(String[] args) { 
 		BatchXMLAnalysis analysis = new BatchXMLAnalysis("BorrowingComparisons/BeastXMLs", "BorrowingComparisons/BeastXMLs","BorrowingComparisons");
-		analysis.analyseHeights("BorrowingComparisons/Results");
+		analysis.analyseTopology("BorrowingComparisons/Results");
 	}
 }
