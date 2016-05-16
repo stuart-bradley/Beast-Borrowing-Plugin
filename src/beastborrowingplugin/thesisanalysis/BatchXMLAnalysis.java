@@ -58,8 +58,8 @@ public class BatchXMLAnalysis {
 			analyseHeights("C:/Users/Stuart/Downloads/BorrowingComparisons/Results",rate);
 		}
 
-		listToCSV(heightPercentageDifferences, "BorrowingComparisons/Results/heights.csv");
-		listToCSV(topologyDifferences, "BorrowingComparisons/Results/quartet.csv");
+		listToCSV(heightPercentageDifferences, "C:/Users/Stuart/Dropbox/Results/heights.csv");
+		listToCSV(topologyDifferences, "C:/Users/Stuart/Dropbox/Results/quartet.csv");
 	}
 
 	protected void analyseHeights(String loc, int rate) {
@@ -119,6 +119,7 @@ public class BatchXMLAnalysis {
 		topologyDifferences.add(rateTopologies);
 
 		try {
+			System.out.println();
 			delete(resFolder);
 		} catch (Exception e) {
 			e.printStackTrace();

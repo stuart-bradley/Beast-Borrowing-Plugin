@@ -3,8 +3,5 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/beast2"/>
-	<classpathentry kind="lib" path="lib/Babel.jar"/>
-	<classpathentry kind="lib" path="lib/beast.jar"/>
-	<classpathentry kind="lib" path="lib/MM.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

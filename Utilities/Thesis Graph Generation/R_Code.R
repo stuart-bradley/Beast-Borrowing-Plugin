@@ -33,6 +33,8 @@ missing_mc <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimul
 
 gtr_quart <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr_quart.csv", header=FALSE)
 
+heights <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/BorrowingComparisons/Results/heights.csv", stringsAsFactors=FALSE)
+quartet <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/BorrowingComparisons/Results/quartet.csv", stringsAsFactors=FALSE)
 # GTR Lineage Validation
 plot(density(rbinom(100000,20,0.5), adjust=10), col="green",lwd=2, 
      main="Simulation of 100,000 language evolutions under the GTR model", xlab="Number of cogantes", xlim=range(0:20))
@@ -116,3 +118,9 @@ diff_fun <- function(x) abs(7080.7-x)
 diffs <- sapply(gtr_heights[,2], diff_fun)
 plot(diffs, type="l", xaxt="n", main="Differences in tree height under various levels of GTR borrowing", xlab="Borrowing (%)", ylab="Height Difference (years)")
 axis(1, at=1:9, labels=c(0,1,5,10,15,20,30,40,50))
+
+# Height and Quartet Differences
+quartet <- data.matrix(quartet)
+heights <- data.matrix(heights)
+boxplot(quartet)
+boxplot(heights)
