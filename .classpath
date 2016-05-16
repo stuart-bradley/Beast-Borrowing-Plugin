@@ -2,8 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/morph-models/build/dist/MM.jar"/>
-	<classpathentry kind="lib" path="/beast2/build/dist/beast.jar"/>
-	<classpathentry kind="lib" path="/Babel/build/dist/Babel.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/beast2"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -33,8 +33,14 @@ public class AnalysisObject {
 	}
 
 	private Double getStartingTreeHeight() {
-		Tree startingTreeBeast = new Tree(startingTree);
-		return startingTreeBeast.getRoot().getHeight();
+		Tree startingTreeBeast;
+		try {
+			startingTreeBeast = new Tree(startingTree);
+			return startingTreeBeast.getRoot().getHeight();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return 0.0;
 	}
 
 	private List<Double> processLogFile(File log) {
@@ -78,7 +84,7 @@ public class AnalysisObject {
 			Document doc = dBuilder.parse(input);
 			doc.getDocumentElement().normalize();
 			Element treeOld = (Element) doc.getElementsByTagName("tree").item(0);
-			inputTree = treeOld.getAttribute("newick");
+			inputTree = treeOld.getAttribute("newick")+";";
 		} catch (Exception e) {
 
 		}
@@ -136,6 +142,6 @@ public class AnalysisObject {
 				offset ++;
 			}
 		}	    
-		return treeOld;
+		return treeOld.substring(treeOld.indexOf("=")+1);
 	}
 }

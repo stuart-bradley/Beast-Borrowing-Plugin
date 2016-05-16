@@ -23,7 +23,7 @@ public class BatchXMLAnalysis {
 
 	public BatchXMLAnalysis(String logFileDir, String treeFileDir, String inputFileDir) {
 		String[] dirs = {logFileDir, treeFileDir, inputFileDir}; 
-
+		
 		for (String dir : dirs) {
 			File directory = new File(dir);
 			File[] files = directory.listFiles();
@@ -87,40 +87,42 @@ public class BatchXMLAnalysis {
 			ArrayList<Double> rateTopologies = new ArrayList<Double>();
 			rateTopologies.add((double) rate);
 			
+			int num = 1;
+			int totalNum = rateObjects.keySet().size();
 			for (Map.Entry<String, AnalysisObject> entry : rateObjects.entrySet()) {
+				System.out.println("Analysing object: " + num +"/"+totalNum);
+				num++;
 				File startPath = new File(resFolder.getPath()+"/startTree_"+entry.getKey()+".tree");
 				createTreeFile(startPath.getPath(), entry.getValue().startingTree);
 				List<String> resTrees = entry.getValue().trees;
-				Collections.shuffle(resTrees);
-				for (int i = 0; i < 300; i++) {
+				Double totalDiff = 0.0;
+				for (int i = 0; i < resTrees.size(); i++) {
 					try {
 						String t = resTrees.get(i);
 						File treePath = new File(resFolder.getPath()+"/tree_"+entry.getKey()+"_"+i+".tree");
 						createTreeFile(treePath.getPath(), t);
-						
 						ProcessBuilder builder = new ProcessBuilder(
-					            "cmd.exe", "/c", qtDist.getAbsolutePath(), "-v", startPath.getAbsolutePath(), treePath.getAbsolutePath());
-						/*
-					        builder.redirectErrorStream(true);
-					        Process p = builder.start();
-					        BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
-					        String line;
-					        while (true) {
-					            line = r.readLine();
-					            if (line == null) { break; }
-					            System.out.println(line);
-					        }
-					        */
+					            "cmd.exe", "/c", qtDist.getAbsolutePath(), "-v", "\""+startPath.getAbsolutePath()+"\"", "\""+treePath.getAbsolutePath()+"\"");
+					    builder.redirectErrorStream(true);
+					    Process p = builder.start();
+					    BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+					    String line;
+					    while ((line = r.readLine()) != null) {
+					    	totalDiff  += Double.parseDouble(line.split("\t")[3]);
+					    }
 					} catch (Exception e) {}
 				}
+				rateTopologies.add(totalDiff/resTrees.size());
 			}
+			topologyDifferences.add(rateTopologies);
 		}
+		
 		try {
 			delete(resFolder);
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		listToCSV(topologyDifferences, "BorrowingComparisons/Results/quartet.csv");
 	}
 	
 	private void createTreeFile(String fileName, String tree) {
@@ -194,6 +196,7 @@ public class BatchXMLAnalysis {
 	}
 
 	public static void main(String[] args) { 
+		System.out.println("here");
 		BatchXMLAnalysis analysis = new BatchXMLAnalysis("BorrowingComparisons/BeastXMLs", "BorrowingComparisons/BeastXMLs","BorrowingComparisons");
 		analysis.analyseTopology("BorrowingComparisons/Results");
 	}
