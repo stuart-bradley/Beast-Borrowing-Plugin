@@ -40,7 +40,7 @@ The format of the arguments are the same as those in the *Command Line* section.
 
 There are a number of other tests in the class that produce `csv` files, which are in turn used to validate various portions of the plugin in R. 
 
-## Explanation of the Input/Output Files.
+## Explanation of the Input/Output Files
 
 ### The BEAST File
 
@@ -78,7 +78,7 @@ The Output file is a simple BEAST2 `alignment` piped to `xml`. An example from `
 
 ```XML
 <beast version='2.0'>
-<data>
+<data dataType='binary'>
     <sequence taxon='root' value='01010101010100100010101010000100'/>
 
     <sequence taxon='' value='111111111111111111111111'/>
@@ -97,7 +97,8 @@ The Output file is a simple BEAST2 `alignment` piped to `xml`. An example from `
 
 </data>
 
-
+<!-- Meaning Classes: 0 -->
+<!-- Created at: 2016-04-26 15:09:16.506 -->
 </beast>
 
 ```
