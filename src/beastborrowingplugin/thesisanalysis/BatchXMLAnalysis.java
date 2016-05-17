@@ -72,7 +72,7 @@ public class BatchXMLAnalysis {
 			Double startingTreeHeight = a.startingTreeHeight;
 			for (Double treeHeight : a.heights) {
 				totalNumber++;
-				totalDiff += Math.abs(startingTreeHeight - treeHeight);
+				totalDiff += startingTreeHeight - treeHeight;
 
 			}
 			rateHeights.add((totalDiff/totalNumber) /startingTreeHeight);
