@@ -23,6 +23,8 @@ java LanguageSequenceGen <beast file> <nr of instantiations> [<output file>]
 
 * If an `<output file>` is not provided, the output will be written to `std.out`. 
 
+Alternately, a prepackaged `jar` is provided to provide the same commandline interface, without cloning the entire project. 
+
 ### BeastBorrowingPluginTest
 
 Like most BEAST2 plugins, this plugin has its own testing suite defined in `BeastBorrowingPluginTest`. In this class, the `SeqGenTest()` runs the plugin using arguments defined within the function: 
@@ -48,7 +50,7 @@ The BEAST file outlines how to produce the synthetic data. An example is provide
 <beast version='2.0'
        namespace='beast.evolution.alignment:beast.evolution.substitutionmodel'>
 
-    <tree id='tree' spec='beast.util.TreeParser' IsLabelledNewick='true' newick='((((human:0.02096625515232275,(chimp:0.014857143159686462,bonobo:0.014857143159686462):0.0061091119926362895):0.012862878672687175,gorilla:0.033829133825009926):0.029471223948245952,orangutan:0.06330035777325588):0.0031773962188650223,siamang:0.0664777539921209)' />
+    <tree id='tree' spec='beast.util.TreeParser' IsLabelledNewick='true' newick='((((english:0.02096625515232275,(german:0.014857143159686462,french:0.014857143159686462):0.0061091119926362895):0.012862878672687175,spanish:0.033829133825009926):0.029471223948245952,italian:0.06330035777325588):0.0031773962188650223,irish:0.0664777539921209)' />
 
 
     <run spec="beast.app.seqgen.LanguageSequenceGen" tree='@tree'>
@@ -102,6 +104,12 @@ The Output file is a simple BEAST2 `alignment` piped to `xml`. An example from `
 
 The first `sequence` is the root defined by `root` in the BEAST file, and the last `sequence` defines the positions of the first cognate in each meaning class. 
 
+## The Thesis Analysis Package
+
+Included in the repository is a number of classes inside `beastborrowingplugin/thesisanalysis`. These classes are used to do batch analysis of sythetic languages produced by this package under BEAST2 inference. 
+
+These classes are not required for the main running of the program, but may be useful if batch analysis is needed.
+
 ## Current and Future Features
 
 ### Current Features
@@ -115,11 +123,6 @@ The first `sequence` is the root defined by `root` in the BEAST file, and the la
 * Meaning classes.
   * No empty trait flag.
 * Missing data sythesis.
-
-### Future Features
-
-* No Empty Trait condition (WIP) - Stops a trait dying if it is the last trait in its meaning class.
-* Missing data simulation (WIP).
 
 ## About and Contact
 
