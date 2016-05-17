@@ -23,7 +23,7 @@ java LanguageSequenceGen <beast file> <nr of instantiations> [<output file>]
 
 * If an `<output file>` is not provided, the output will be written to `std.out`. 
 
-Alternately, a prepackaged `jar` is provided to provide the same commandline interface, without cloning the entire project. 
+Alternately, a prepackaged `jar` is provided to provide the same command line interface, without cloning the entire project. 
 
 ### BeastBorrowingPluginTest
 
