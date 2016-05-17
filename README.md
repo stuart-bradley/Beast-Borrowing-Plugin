@@ -78,23 +78,18 @@ The Output file is a simple BEAST2 `alignment` piped to `xml`. An example from `
 
 ```XML
 <beast version='2.0'>
-<data dataType='binary'>
-    <sequence taxon='root' value='01010101010100100010101010000100'/>
+<data id='SD' dataType='binary'>
+    <sequence taxon='english' value='111111111111111111111111'/>
 
-    <sequence taxon='' value='111111111111111111111111'/>
+    <sequence taxon='german' value='111111111111111111111111'/>
 
-    <sequence taxon='' value='111111111111111111111111'/>
+    <sequence taxon='french' value='111111111111111111111111'/>
 
-    <sequence taxon='' value='111111111111111111111111'/>
+    <sequence taxon='spanish' value='111111111111111111111111'/>
 
-    <sequence taxon='' value='111111111111111111111111'/>
+    <sequence taxon='italian' value='111111111111111111011111'/>
 
-    <sequence taxon='' value='111111111111111111011111'/>
-
-    <sequence taxon='' value='111111111111111101101111'/>
-
-    <sequence taxon='Meaning Class Positions' value='0 12 '/>
-
+    <sequence taxon='irish' value='111111111111111101101111'/>
 </data>
 
 <!-- Meaning Classes: 0 -->
