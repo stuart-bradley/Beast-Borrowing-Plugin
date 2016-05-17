@@ -37,15 +37,15 @@ public class BorrowingComparisonTests {
 		Tree yuleNew = randomYuleTree(POPSIZE, TREERATE);
 		Document constraints = generateConstraints(yuleNew, 2500.0);
 		Document docNew = documentCopy(doc);
-		Document rateInputFileNew = documentCopy(dBuilder.parse("BorrowingComparisons/"+args[1]+"_Borrow_" + rate +"_Input.xml"));
+		Document rateInputFileNew = documentCopy(dBuilder.parse("BorrowingComparisons/"+args[1]+"/"+args[1]+"_Borrow_" + rate +"_Input.xml"));
 
 		// Change Yule tree. 
 		Element treeOld = (Element) rateInputFileNew.getElementsByTagName("tree").item(0);
 		treeOld.setAttribute("newick", yuleNew.getRoot().toNewick());
-		writeXML(rateInputFileNew, "BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Input.xml");
+		writeXML(rateInputFileNew, "BorrowingComparisons/"+args[1]+"/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Input.xml");
 
 		// Run LangSeqGen.
-		String[] langSeqGenArgs = {"BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Input.xml","1","BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Output.xml"};
+		String[] langSeqGenArgs = {"BorrowingComparisons/"+args[1]+"/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Input.xml","1","BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Output.xml"};
 		LanguageSequenceGen.main(langSeqGenArgs);
 
 		// Replace constraints.
@@ -68,7 +68,7 @@ public class BorrowingComparisonTests {
 		}
 
 		// Get new data.
-		Document seqs = dBuilder.parse("BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Output.xml");
+		Document seqs = dBuilder.parse("BorrowingComparisons/"+args[1]+"/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Output.xml");
 		Element dataElem = (Element) seqs.getElementsByTagName("data").item(0);
 		dataElem.setAttribute("id", "GTR1");
 		dataElem.setAttribute("name", "alignment");
@@ -98,10 +98,10 @@ public class BorrowingComparisonTests {
 
 
 		// Write to XML file.
-		writeXML(docNew, "BorrowingComparisons/BeastXMLs/"+args[1]+"_new_" + rate + "_"+args[2]+".xml");
+		writeXML(docNew, "BorrowingComparisons/"+args[1]+"/BeastXMLs/"+args[1]+"_new_" + rate + "_"+args[2]+".xml");
 
 		// BEAST Run.
-		String[] beastArgs = {"-overwrite", "-working","BorrowingComparisons/BeastXMLs/"+args[1]+"_new_" + rate + "_"+args[2]+".xml"};
+		String[] beastArgs = {"-overwrite", "-working","BorrowingComparisons/"+args[1]+"/BeastXMLs/"+args[1]+"_new_" + rate + "_"+args[2]+".xml"};
 		while (true) {
 			try {
 				BeastMain.main(beastArgs);
