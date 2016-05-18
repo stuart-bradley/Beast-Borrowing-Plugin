@@ -45,7 +45,7 @@ public class BorrowingComparisonTests {
 		writeXML(rateInputFileNew, "BorrowingComparisons/"+args[1]+"/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Input.xml");
 
 		// Run LangSeqGen.
-		String[] langSeqGenArgs = {"BorrowingComparisons/"+args[1]+"/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Input.xml","1","BorrowingComparisons/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Output.xml"};
+		String[] langSeqGenArgs = {"BorrowingComparisons/"+args[1]+"/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Input.xml","1","BorrowingComparisons/"+args[1]+"/"+args[1]+"_Borrow_" + rate + "_"+args[2]+"_Output.xml"};
 		LanguageSequenceGen.main(langSeqGenArgs);
 
 		// Replace constraints.

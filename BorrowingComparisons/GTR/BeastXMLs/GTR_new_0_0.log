@@ -25,29 +25,30 @@
 #        </prior>
 #        <distribution id="Constraint_1.prior" spec="beast.math.distributions.MRCAPrior" tree="@Tree.t:GTR1">
 #            <taxonset id="Constraint_1" spec="beast.evolution.alignment.TaxonSet">
-#                <taxon id="52" spec="beast.evolution.alignment.Taxon"/>
-#                <taxon id="58" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="46" spec="beast.evolution.alignment.Taxon"/>
 #                <taxon id="71" spec="beast.evolution.alignment.Taxon"/>
-#                <taxon id="78" spec="beast.evolution.alignment.Taxon"/>
-#                <taxon id="17" spec="beast.evolution.alignment.Taxon"/>
-#                <taxon id="68" spec="beast.evolution.alignment.Taxon"/>
-#                <taxon id="15" spec="beast.evolution.alignment.Taxon"/>
-#                <taxon id="22" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="69" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="56" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="12" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="5" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="1" spec="beast.evolution.alignment.Taxon"/>
 #            </taxonset>
-#            <Uniform id="Uniform.01" lower="2279.0" name="distr" upper="2787.0"/>
+#            <Uniform id="Uniform.01" lower="2783.0" name="distr" upper="3402.0"/>
 #        </distribution>
 #        <distribution id="Constraint_2.prior" spec="beast.math.distributions.MRCAPrior" tree="@Tree.t:GTR1">
 #            <taxonset id="Constraint_2" spec="beast.evolution.alignment.TaxonSet">
-#                <taxon id="75" spec="beast.evolution.alignment.Taxon"/>
-#                <taxon id="46" spec="beast.evolution.alignment.Taxon"/>
-#                <taxon id="12" spec="beast.evolution.alignment.Taxon"/>
-#                <taxon id="24" spec="beast.evolution.alignment.Taxon"/>
-#                <taxon id="37" spec="beast.evolution.alignment.Taxon"/>
-#                <taxon id="25" spec="beast.evolution.alignment.Taxon"/>
-#                <taxon id="26" spec="beast.evolution.alignment.Taxon"/>
-#                <taxon id="18" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="39" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="29" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="47" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="61" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="36" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="78" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="34" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="17" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="13" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="15" spec="beast.evolution.alignment.Taxon"/>
 #            </taxonset>
-#            <Uniform id="Uniform.02" lower="2526.0" name="distr" upper="3089.0"/>
+#            <Uniform id="Uniform.02" lower="2765.0" name="distr" upper="3381.0"/>
 #        </distribution>
 #    </distribution>
 #    <distribution id="likelihood" spec="beast.core.util.CompoundDistribution">
@@ -64,4 +65,3 @@
 #</input>
 #
 Sample	posterior	likelihood	prior	treeLikelihood	TreeHeight	YuleModel	birthRate	mutationRate	monophyletic(Constraint_1)	logP(mrca(Constraint_1))	mrcatime(Constraint_1)	clockRate	monophyletic(Constraint_2)	logP(mrca(Constraint_2))	mrcatime(Constraint_2)	
-0	-583617.5530846377	-570186.6964260786	-13430.856658559147	-570186.6964260786	2705.829056482198	-13393.060197778821	1.0	1.0	1	-6.230481447578482	2632.1452019634044	1.3223531166509886E-4	1	-6.333279628139691	2705.7625761559166	
