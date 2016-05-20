@@ -23,7 +23,7 @@ public class BatchXMLAnalysis {
 
 	protected HashMap<String, AnalysisObject> analysisObjects = new HashMap<String, AnalysisObject>();
 
-	public BatchXMLAnalysis(String logFileDir, String treeFileDir, String inputFileDir) {
+	public BatchXMLAnalysis(String logFileDir, String treeFileDir, String inputFileDir, String prefix) {
 		String[] dirs = {logFileDir, treeFileDir, inputFileDir}; 
 		System.out.println("Reading in files.");
 		for (String dir : dirs) {
@@ -46,20 +46,20 @@ public class BatchXMLAnalysis {
 		for (int rate : BORROWRATES) {
 			analysisObjects = new HashMap<String,AnalysisObject>();
 			for (int i = 0; i < 100; i++) {
-				File log = logs.get("GTR_new_"+rate+"_"+i+".log");
-				File tree = trees.get("GTR_new_"+rate+"_"+i+".trees");
-				File input = inputs.get("GTR_Borrow_"+rate+"_"+i+"_Input.xml");
+				File log = logs.get(prefix+"_new_"+rate+"_"+i+".log");
+				File tree = trees.get(prefix+"_new_"+rate+"_"+i+".trees");
+				File input = inputs.get(prefix+"_Borrow_"+rate+"_"+i+"_Input.xml");
 				if (log != null && tree != null && input != null) {
 					System.out.println("Create:" + rate +"_"+i);
 					analysisObjects.put(""+i, new AnalysisObject(log, tree, input));
 				}
 			}
-			analyseTopology("C:/Users/Stuart/Downloads/BorrowingComparisons/Results",rate);
-			analyseHeights("C:/Users/Stuart/Downloads/BorrowingComparisons/Results",rate);
+			analyseTopology("C:/Users/Stuart/Downloads/"+prefix+"/Results",rate);
+			analyseHeights("C:/Users/Stuart/Downloads/"+prefix+"/Results",rate);
 		}
 
-		listToCSV(heightPercentageDifferences, "C:/Users/Stuart/Dropbox/Results/heights.csv");
-		listToCSV(topologyDifferences, "C:/Users/Stuart/Dropbox/Results/quartet.csv");
+		listToCSV(heightPercentageDifferences, "C:/Users/Stuart/Dropbox/Results/heights_"+prefix+".csv");
+		listToCSV(topologyDifferences, "C:/Users/Stuart/Dropbox/Results/quartet_"+prefix+".csv");
 	}
 
 	protected void analyseHeights(String loc, int rate) {
@@ -197,6 +197,6 @@ public class BatchXMLAnalysis {
 	}
 
 	public static void main(String[] args) { 
-		BatchXMLAnalysis analysis = new BatchXMLAnalysis("C:/Users/Stuart/Downloads/BorrowingComparisons/BeastXMLs", "C:/Users/Stuart/Downloads/BorrowingComparisons/BeastXMLs","C:/Users/Stuart/Downloads/BorrowingComparisons");
+		BatchXMLAnalysis analysis = new BatchXMLAnalysis("C:/Users/Stuart/Downloads/SD/BeastXMLs", "C:/Users/Stuart/Downloads/SD/BeastXMLs","C:/Users/Stuart/Downloads/SD", "SD");
 	}
 }
