@@ -464,14 +464,14 @@ public class BeastBorrowingPluginTest {
 	}
 
 	private static void SeqGenTest() throws Exception {
-		String[] args = {
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/SD_Borrow_10_Input.xml",
-				"1",
-				"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/SD_Borrow_10_Output.xml" };
 		//String[] args = {
-			//	"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/SD_Borrow_0_Input.xml",
+			//	"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/SD_Borrow_10_Input.xml",
 				//"1",
-				//"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/Outputs/SD_Borrow_0_Output.xml"};
+				//"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/BorrowingMisspec/Outputs/SD_Borrow_10_Output.xml" };
+		String[] args = {
+				"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/SD_Borrow_5_Input.xml",
+				"1",
+				"/home/stuart/Code/Beast2-plugin/Beast-Borrowing-Plugin/examples/BorrowingMisspec/Outputs/SD_Borrow_5_Output.xml"};
 		
 		Long startTime = System.nanoTime();
 		LanguageSequenceGen.main(args);

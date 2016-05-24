@@ -229,7 +229,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		}
 		probs[0] = (numberOfLangs * getB()) / totalRate; // Birth
 		probs[1] = (death) / totalRate; // Death
-		probs[2] = (borrowRate * bo) / totalRate; // Borrow
+		probs[2] = (borrowRate * getD() * bo) / totalRate; // Borrow
 		return probs;
 	}
 
@@ -250,7 +250,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 			deathSum += getD() * n;
 			borrowSum += n;
 		}
-		return birthRate + deathSum + (getBorrowRate()*borrowSum);
+		return birthRate + deathSum + (getBorrowRate()*getD()*borrowSum);
 	}
 
 	/*
