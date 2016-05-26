@@ -54,12 +54,12 @@ public class BatchXMLAnalysis {
 					analysisObjects.put(""+i, new AnalysisObject(log, tree, input));
 				}
 			}
-			analyseTopology("C:/Users/Stuart/Downloads/"+prefix+"/Results",rate);
-			analyseHeights("C:/Users/Stuart/Downloads/"+prefix+"/Results",rate);
+			analyseTopology(inputFileDir+"/Results",rate);
+			analyseHeights(inputFileDir+prefix+"/Results",rate);
 		}
 
-		listToCSV(heightPercentageDifferences, "C:/Users/Stuart/Dropbox/Results/heights_"+prefix+".csv");
-		listToCSV(topologyDifferences, "C:/Users/Stuart/Dropbox/Results/quartet_"+prefix+".csv");
+		listToCSV(heightPercentageDifferences, inputFileDir+prefix+".csv");
+		listToCSV(topologyDifferences, inputFileDir+prefix+".csv");
 	}
 
 	protected void analyseHeights(String loc, int rate) {
@@ -193,8 +193,9 @@ public class BatchXMLAnalysis {
 	}
 
 	public static void main(String[] args) { 
-		BatchXMLAnalysis analysis = new BatchXMLAnalysis("F:/Downloads/COV/BeastXMLs", "F:/Downloads/COV/BeastXMLs","F:/Downloads/COV", "COV");
-		BatchXMLAnalysis analysis1 = new BatchXMLAnalysis("F:/Downloads/SD/BeastXMLs", "F:/Downloads/SD/BeastXMLs","F:/Downloads/SD", "SD");
-		BatchXMLAnalysis analysis2 = new BatchXMLAnalysis("F:/Downloads/GTR/BeastXMLs", "F:/Downloads/GTR/BeastXMLs","F:/Downloads/GTR", "GTR");
+		//BatchXMLAnalysis analysis = new BatchXMLAnalysis("F:/Downloads/COV/BeastXMLs", "F:/Downloads/COV/BeastXMLs","F:/Downloads/COV", "COV");
+		BatchXMLAnalysis analysis = new BatchXMLAnalysis(args[0], args[1],args[2], args[3]);
+		//BatchXMLAnalysis analysis1 = new BatchXMLAnalysis("F:/Downloads/SD/BeastXMLs", "F:/Downloads/SD/BeastXMLs","F:/Downloads/SD", "SD");
+		//BatchXMLAnalysis analysis2 = new BatchXMLAnalysis("F:/Downloads/GTR/BeastXMLs", "F:/Downloads/GTR/BeastXMLs","F:/Downloads/GTR", "GTR");
 	}
 }
