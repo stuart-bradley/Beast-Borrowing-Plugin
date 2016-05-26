@@ -54,12 +54,12 @@ public class BatchXMLAnalysis {
 					analysisObjects.put(""+i, new AnalysisObject(log, tree, input));
 				}
 			}
-			analyseTopology(inputFileDir+"/Results",rate);
-			analyseHeights(inputFileDir+prefix+"/Results",rate);
+			analyseTopology(inputFileDir+"/"+prefix+"/Results",rate);
+			analyseHeights(inputFileDir+"/"+prefix+"/Results",rate);
 		}
 
-		listToCSV(heightPercentageDifferences, inputFileDir+prefix+".csv");
-		listToCSV(topologyDifferences, inputFileDir+prefix+".csv");
+		listToCSV(heightPercentageDifferences, inputFileDir+"/heights_"+prefix+".csv");
+		listToCSV(topologyDifferences, inputFileDir+"/quartet_"+prefix+".csv");
 	}
 
 	protected void analyseHeights(String loc, int rate) {
