@@ -31,10 +31,15 @@ speed_sd_a2 <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimu
 missing_lang <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/missing_lang.csv", quote="\"")
 missing_mc <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/missing_mc.csv", quote="\"")
 
-gtr_quart <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/gtr_quart.csv", header=FALSE)
 
-heights <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/heights_gtr.csv", stringsAsFactors=FALSE)
-quartet <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/quartet_gtr.csv", stringsAsFactors=FALSE)
+heights_gtr <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/heights_gtr.csv", stringsAsFactors=FALSE)
+quartet_gtr <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/quartet_gtr.csv", stringsAsFactors=FALSE)
+
+quartet_SD <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/quartet_SD.csv", stringsAsFactors=FALSE)
+heights_SD <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/heights_SD.csv", stringsAsFactors=FALSE)
+
+quartet_COV <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/quartet_COV.csv", stringsAsFactors=FALSE)
+heights_COV <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/heights_COV.csv", stringsAsFactors=FALSE)
 
 # GTR Lineage Validation
 plot(density(rbinom(100000,20,0.5), adjust=10), col="green",lwd=2, 
@@ -121,9 +126,23 @@ plot(diffs, type="l", xaxt="n", main="Differences in tree height under various l
 axis(1, at=1:9, labels=c(0,1,5,10,15,20,30,40,50))
 
 # Height and Quartet Differences
-quartet <- data.matrix(quartet)
-heights <- data.matrix(heights)
-boxplot(quartet, main="Quartet Distance under various levels of GTR borrowing", ylab="Quartet Distance", xlab="Borrowing Rate (%)", xaxt="n")
+quartet_GTR <- data.matrix(quartet_GTR)
+heights_GTR <- data.matrix(heights_GTR)
+boxplot(quartet_GTR, main="Quartet Distance under various levels of GTR borrowing", ylab="Quartet Distance", xlab="Borrowing Rate (%)", xaxt="n")
 axis(1, at=1:9, labels=c(0,1,5,10,15,20,30,40,50))
-boxplot(heights, main="Height differentials under various levels of GTR borrowing", ylab="Difference (%)", xlab="Borrowing Rate (%)", xaxt="n")
+boxplot(heights_GTR, main="Height differentials under various levels of GTR borrowing", ylab="Difference (%)", xlab="Borrowing Rate (%)", xaxt="n")
+axis(1, at=1:9, labels=c(0,1,5,10,15,20,30,40,50))
+
+quartet_SD <- data.matrix(quartet_SD)
+heights_SD <- data.matrix(heights_SD)
+boxplot(quartet_SD, main="Quartet Distance under various levels of SD borrowing (GTR Inference)", ylab="Quartet Distance", xlab="Borrowing Rate (%)", xaxt="n")
+axis(1, at=1:9, labels=c(0,1,5,10,15,20,30,40,50))
+boxplot(heights_SD, main="Height differentials under various levels of SD borrowing (GTR Inference)", ylab="Difference (%)", xlab="Borrowing Rate (%)", xaxt="n")
+axis(1, at=1:9, labels=c(0,1,5,10,15,20,30,40,50))
+
+quartet_COV <- data.matrix(quartet_COV)
+heights_COV <- data.matrix(heights_COV)
+boxplot(quartet_COV, main="Quartet Distance under various levels of SD borrowing (Covarion Inference)", ylab="Quartet Distance", xlab="Borrowing Rate (%)", xaxt="n")
+axis(1, at=1:9, labels=c(0,1,5,10,15,20,30,40,50))
+boxplot(heights_COV, main="Height differentials under various levels of SD borrowing (Covarion Inference)", ylab="Difference (%)", xlab="Borrowing Rate (%)", xaxt="n")
 axis(1, at=1:9, labels=c(0,1,5,10,15,20,30,40,50))

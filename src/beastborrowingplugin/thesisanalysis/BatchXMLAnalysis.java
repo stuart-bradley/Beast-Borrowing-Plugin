@@ -67,15 +67,12 @@ public class BatchXMLAnalysis {
 		rateHeights.add((double) rate);
 		//iterating over values only
 		for (AnalysisObject a : analysisObjects.values()) {
-			Double totalNumber = 0.0;
 			Double totalDiff  = 0.0;
 			Double startingTreeHeight = a.startingTreeHeight;
 			for (Double treeHeight : a.heights) {
-				totalNumber++;
 				totalDiff += startingTreeHeight - treeHeight;
-
 			}
-			rateHeights.add((totalDiff/totalNumber) /startingTreeHeight);
+			rateHeights.add((totalDiff/a.heights.size()) /startingTreeHeight);
 		}
 		heightPercentageDifferences.add(rateHeights);
 	}
@@ -96,9 +93,8 @@ public class BatchXMLAnalysis {
 			File startPath = new File(resFolder.getPath()+"/startTree_"+entry.getKey()+".tree");
 			createTreeFile(startPath.getPath(), entry.getValue().startingTree);
 			List<String> resTrees = entry.getValue().trees;
-			Collections.shuffle(resTrees);
 			Double totalDiff = 0.0;
-			for (int i = 0; i < 300; i++) {
+			for (int i = 0; i < resTrees.size(); i++) {
 				try {
 					String t = resTrees.get(i);
 					File treePath = new File(resFolder.getPath()+"/tree_"+entry.getKey()+"_"+i+".tree");
@@ -197,6 +193,8 @@ public class BatchXMLAnalysis {
 	}
 
 	public static void main(String[] args) { 
-		BatchXMLAnalysis analysis = new BatchXMLAnalysis("C:/Users/Stuart/Downloads/SD/BeastXMLs", "C:/Users/Stuart/Downloads/SD/BeastXMLs","C:/Users/Stuart/Downloads/SD", "SD");
+		BatchXMLAnalysis analysis = new BatchXMLAnalysis("F:/Downloads/COV/BeastXMLs", "F:/Downloads/COV/BeastXMLs","F:/Downloads/COV", "COV");
+		BatchXMLAnalysis analysis1 = new BatchXMLAnalysis("F:/Downloads/SD/BeastXMLs", "F:/Downloads/SD/BeastXMLs","F:/Downloads/SD", "SD");
+		BatchXMLAnalysis analysis2 = new BatchXMLAnalysis("F:/Downloads/GTR/BeastXMLs", "F:/Downloads/GTR/BeastXMLs","F:/Downloads/GTR", "GTR");
 	}
 }
