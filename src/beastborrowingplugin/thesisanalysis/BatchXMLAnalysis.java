@@ -54,8 +54,8 @@ public class BatchXMLAnalysis {
 					analysisObjects.put(""+i, new AnalysisObject(log, tree, input));
 				}
 			}
-			analyseTopology(inputFileDir+"/"+prefix+"/Results",rate);
-			analyseHeights(inputFileDir+"/"+prefix+"/Results",rate);
+			analyseTopology(inputFileDir+"/Results",rate);
+			analyseHeights(inputFileDir+"/Results",rate);
 		}
 
 		listToCSV(heightPercentageDifferences, inputFileDir+"/heights_"+prefix+".csv");
