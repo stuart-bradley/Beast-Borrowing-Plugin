@@ -11,7 +11,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class BatchXMLAnalysis {
 	protected HashMap<String, File> logs = new HashMap<String, File>();
@@ -24,6 +23,7 @@ public class BatchXMLAnalysis {
 	protected HashMap<String, AnalysisObject> analysisObjects = new HashMap<String, AnalysisObject>();
 
 	public BatchXMLAnalysis(String logFileDir, String treeFileDir, String inputFileDir, String prefix) {
+		System.out.println("Calculating: " + prefix);
 		String[] dirs = {logFileDir, treeFileDir, inputFileDir}; 
 		System.out.println("Reading in files.");
 		for (String dir : dirs) {
@@ -41,85 +41,78 @@ public class BatchXMLAnalysis {
 				}
 			}
 		}
-
-		System.out.println("Creating Analysis Objects.");
 		for (int rate : BORROWRATES) {
-			analysisObjects = new HashMap<String,AnalysisObject>();
-			for (int i = 0; i < 100; i++) {
+			System.out.println("Calculating Rate: " + rate);
+			System.out.println();
+			ArrayList<Double> rateHeights = new ArrayList<Double>();
+			rateHeights.add((double) rate);
+			ArrayList<Double> rateTopologies = new ArrayList<Double>();
+			rateTopologies.add((double) rate);
+			
+			File resFolder = new File(inputFileDir+"/Results"+"/Tmp");
+			File qtDist = new File("qDist/quartet_dist.exe");
+			resFolder.mkdir();
+			
+			for (int i = 1; i < 101; i++) {
+				System.out.println("Calculating Node: " + i);
 				File log = logs.get(prefix+"_new_"+rate+"_"+i+".log");
 				File tree = trees.get(prefix+"_new_"+rate+"_"+i+".trees");
 				File input = inputs.get(prefix+"_Borrow_"+rate+"_"+i+"_Input.xml");
 				if (log != null && tree != null && input != null) {
-					System.out.println("Create:" + rate +"_"+i);
-					analysisObjects.put(""+i, new AnalysisObject(log, tree, input));
+					AnalysisObject a = new AnalysisObject(log, tree, input);
+					rateHeights.add(analyseHeight(a));
+					rateTopologies.add(analyseTopology(a, i, resFolder, qtDist));
 				}
 			}
-			analyseTopology(inputFileDir+"/Results",rate);
-			analyseHeights(inputFileDir+"/Results",rate);
+			topologyDifferences.add(rateTopologies);
+			heightPercentageDifferences.add(rateHeights);
+			try {
+				delete(resFolder);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 
 		listToCSV(heightPercentageDifferences, inputFileDir+"/heights_"+prefix+".csv");
 		listToCSV(topologyDifferences, inputFileDir+"/quartet_"+prefix+".csv");
 	}
 
-	protected void analyseHeights(String loc, int rate) {
-		ArrayList<Double> rateHeights = new ArrayList<Double>();
-		rateHeights.add((double) rate);
-		//iterating over values only
-		for (AnalysisObject a : analysisObjects.values()) {
-			Double totalDiff  = 0.0;
-			Double startingTreeHeight = a.startingTreeHeight;
-			for (Double treeHeight : a.heights) {
-				totalDiff += startingTreeHeight - treeHeight;
-			}
-			rateHeights.add((totalDiff/a.heights.size()) /startingTreeHeight);
+
+	protected Double analyseHeight(AnalysisObject a) {
+		Double totalDiff  = 0.0;
+		Double startingTreeHeight = a.startingTreeHeight;
+		List<Double> heights = a.heights;
+		for (int i = 0; i < heights.size(); i++) {
+			Double treeHeight = heights.get(i);
+			totalDiff += startingTreeHeight - treeHeight;
 		}
-		heightPercentageDifferences.add(rateHeights);
+		return ((totalDiff/heights.size()) /startingTreeHeight);
 	}
 
-	protected void analyseTopology(String loc, int rate) {
-		File resFolder = new File(loc+"/Tmp");
-		File qtDist = new File("qDist/quartet_dist.exe");
-		resFolder.mkdir();
-		System.out.println("Analysing rate: " + rate);
-		ArrayList<Double> rateTopologies = new ArrayList<Double>();
-		rateTopologies.add((double) rate);
-
-		int num = 1;
-		int totalNum = analysisObjects.keySet().size();
-		for (Map.Entry<String, AnalysisObject> entry : analysisObjects.entrySet()) {
-			System.out.println("Analysing object: " + num +"/"+totalNum);
-			num++;
-			File startPath = new File(resFolder.getPath()+"/startTree_"+entry.getKey()+".tree");
-			createTreeFile(startPath.getPath(), entry.getValue().startingTree);
-			List<String> resTrees = entry.getValue().trees;
-			Double totalDiff = 0.0;
-			for (int i = 0; i < resTrees.size(); i++) {
-				try {
-					String t = resTrees.get(i);
-					File treePath = new File(resFolder.getPath()+"/tree_"+entry.getKey()+"_"+i+".tree");
-					createTreeFile(treePath.getPath(), t);
-					ProcessBuilder builder = new ProcessBuilder(
-							"cmd.exe", "/c", qtDist.getAbsolutePath(), "-v", "\""+startPath.getAbsolutePath()+"\"", "\""+treePath.getAbsolutePath()+"\"");
-					builder.redirectErrorStream(true);
-					Process p = builder.start();
-					BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
-					String line;
-					while ((line = r.readLine()) != null) {
-						totalDiff  += Double.parseDouble(line.split("\t")[3]);
-					}
-				} catch (Exception e) {}
+	protected Double analyseTopology(AnalysisObject a, int num, File resFolder, File qtDist) {
+		File startPath = new File(resFolder.getPath()+"/startTree_"+num+".tree");
+		createTreeFile(startPath.getPath(), a.startingTree);
+		List<String> resTrees = a.trees;
+		Double totalDiff = 0.0;
+		for (int i = 0; i < resTrees.size(); i++) {
+			try {
+				String t = resTrees.get(i);
+				File treePath = new File(resFolder.getPath()+"/tree_"+num+"_"+i+".tree");
+				createTreeFile(treePath.getPath(), t);
+				ProcessBuilder builder = new ProcessBuilder(
+						"cmd.exe", "/c", qtDist.getAbsolutePath(), "-v", "\""+startPath.getAbsolutePath()+"\"", "\""+treePath.getAbsolutePath()+"\"");
+				builder.redirectErrorStream(true);
+				Process p = builder.start();
+				BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+				String line;
+				while ((line = r.readLine()) != null) {
+					totalDiff  += Double.parseDouble(line.split("\t")[3]);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			rateTopologies.add(totalDiff/resTrees.size());
 		}
-		topologyDifferences.add(rateTopologies);
-
-		try {
-			System.out.println();
-			delete(resFolder);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		return (totalDiff/resTrees.size());
 	}
 
 	private void createTreeFile(String fileName, String tree) {

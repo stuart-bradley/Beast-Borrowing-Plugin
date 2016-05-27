@@ -126,6 +126,7 @@ public class AnalysisObject {
 	}
 
 	private String convertTree (String treeOld, HashMap<String, String> conv) {
+		treeOld = treeOld.replaceAll("\\[(.*?)\\]", "");
 		Pattern pattern = Pattern.compile("\\(\\d+:|,\\d+:");
 		Matcher matcher = pattern.matcher(treeOld);
 		int offset = 0;
