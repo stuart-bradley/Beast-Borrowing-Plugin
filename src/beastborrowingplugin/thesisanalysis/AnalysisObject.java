@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -27,8 +28,12 @@ public class AnalysisObject {
 
 	public AnalysisObject(File log, File tree, File input) {
 		trees = processTreeFile(tree);
+		Collections.shuffle(trees);
+		trees = trees.subList(0, 300);
 		startingTree = getStartingTree(input);
 		heights = processLogFile(log);
+		Collections.shuffle(heights);
+		heights = heights.subList(0, 300);
 		startingTreeHeight = getStartingTreeHeight();
 	}
 

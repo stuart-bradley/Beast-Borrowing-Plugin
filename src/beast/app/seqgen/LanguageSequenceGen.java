@@ -78,7 +78,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 			}
 		}
 		newSeqs = removeEmptyColumns(newSeqs);
-		newSeqs = m_missingModel.generateMissingData(newSeqs);
+		newSeqs = m_missingModel.generateMissingData(newSeqs, meaningClasses);
 		cognateSet = new Alignment();
 		cognateSet.dataTypeInput.setValue("binary", cognateSet);
 		cognateSet.setID(m_subModel.toString());

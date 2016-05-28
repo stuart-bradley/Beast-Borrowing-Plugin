@@ -6,11 +6,15 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+
+import beast.evolution.tree.Tree;
 
 public class BatchXMLAnalysis {
 	protected HashMap<String, File> logs = new HashMap<String, File>();
@@ -50,7 +54,7 @@ public class BatchXMLAnalysis {
 			rateTopologies.add((double) rate);
 			
 			File resFolder = new File(inputFileDir+"/Results"+"/Tmp");
-			File qtDist = new File("qDist/quartet_dist.exe");
+			File qtDist = new File("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator"+"/qDist/quartet_dist.exe");
 			resFolder.mkdir();
 			
 			for (int i = 1; i < 101; i++) {
@@ -60,17 +64,12 @@ public class BatchXMLAnalysis {
 				File input = inputs.get(prefix+"_Borrow_"+rate+"_"+i+"_Input.xml");
 				if (log != null && tree != null && input != null) {
 					AnalysisObject a = new AnalysisObject(log, tree, input);
-					rateHeights.add(analyseHeight(a));
-					rateTopologies.add(analyseTopology(a, i, resFolder, qtDist));
+					rateHeights.addAll(analyseHeight(a));
+					rateTopologies.addAll(analyseTopology(a, i, resFolder, qtDist));
 				}
 			}
 			topologyDifferences.add(rateTopologies);
 			heightPercentageDifferences.add(rateHeights);
-			try {
-				delete(resFolder);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
 		}
 
 		listToCSV(heightPercentageDifferences, inputFileDir+"/heights_"+prefix+".csv");
@@ -78,22 +77,22 @@ public class BatchXMLAnalysis {
 	}
 
 
-	protected Double analyseHeight(AnalysisObject a) {
-		Double totalDiff  = 0.0;
+	protected ArrayList<Double> analyseHeight(AnalysisObject a) {
+		ArrayList<Double> Diffs  = new ArrayList<Double>();
 		Double startingTreeHeight = a.startingTreeHeight;
 		List<Double> heights = a.heights;
 		for (int i = 0; i < heights.size(); i++) {
 			Double treeHeight = heights.get(i);
-			totalDiff += startingTreeHeight - treeHeight;
+			Diffs.add((startingTreeHeight - treeHeight)/startingTreeHeight);
 		}
-		return ((totalDiff/heights.size()) /startingTreeHeight);
+		return Diffs;
 	}
 
-	protected Double analyseTopology(AnalysisObject a, int num, File resFolder, File qtDist) {
+	protected ArrayList<Double> analyseTopology(AnalysisObject a, int num, File resFolder, File qtDist) {
 		File startPath = new File(resFolder.getPath()+"/startTree_"+num+".tree");
 		createTreeFile(startPath.getPath(), a.startingTree);
 		List<String> resTrees = a.trees;
-		Double totalDiff = 0.0;
+		ArrayList<Double> totalDiff = new ArrayList<Double>();
 		for (int i = 0; i < resTrees.size(); i++) {
 			try {
 				String t = resTrees.get(i);
@@ -106,16 +105,18 @@ public class BatchXMLAnalysis {
 				BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
 				String line;
 				while ((line = r.readLine()) != null) {
-					totalDiff  += Double.parseDouble(line.split("\t")[3]);
+					totalDiff.add(Double.parseDouble(line.split("\t")[3]));
 				}
+				treePath.delete();
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
 		}
-		return (totalDiff/resTrees.size());
+		startPath.delete();
+		return totalDiff;
 	}
 
-	private void createTreeFile(String fileName, String tree) {
+	private static void createTreeFile(String fileName, String tree) {
 		FileWriter fW = null;
 
 		try {
@@ -184,11 +185,46 @@ public class BatchXMLAnalysis {
 			}
 		}
 	}
+	
+	public static void createRandomTreeDifferences() throws Exception {
+		ArrayList<Double> randQuart = new ArrayList<Double>();
+		ArrayList<Double> randHeight = new ArrayList<Double>();
+		File qtDist = new File("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator"+"/qDist/quartet_dist.exe");
+		
+		for (int i = 0; i < 3000; i++) {
+			System.out.println(i);
+			Tree t1 = BorrowingComparisonTests.randomYuleTree(80, 0.00055);
+			Tree t2 = BorrowingComparisonTests.randomYuleTree(80, 0.00055);
+			File t1File = new File("BorrowingComparisons/t1.tree");
+			createTreeFile(t1File.getPath(), t1.toString()+";");
+			File t2File = new File("BorrowingComparisons/t2.tree");
+			createTreeFile(t2File.getPath(), t2.toString()+";");
+			
+			randHeight.add(t1.getRoot().getHeight() - t2.getRoot().getHeight());
+			
+			ProcessBuilder builder = new ProcessBuilder(
+					"cmd.exe", "/c", qtDist.getAbsolutePath(), "-v", "\""+t1File.getAbsolutePath()+"\"", "\""+t2File.getAbsolutePath()+"\"");
+			builder.redirectErrorStream(true);
+			Process p = builder.start();
+			BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
+			String line;
+			while ((line = r.readLine()) != null) {
+				randQuart.add(Double.parseDouble(line.split("\t")[3]));
+			}
+			
+			t1File.delete();
+			t2File.delete();
+		}
+		listToCSV(randQuart, "BorrowingComparisons/randQuart.csv");
+		listToCSV(randHeight, "BorrowingComparisons/randHeight.csv");
+	}
 
-	public static void main(String[] args) { 
+	public static void main(String[] args) throws Exception { 
+		
+		createRandomTreeDifferences();
 		//BatchXMLAnalysis analysis = new BatchXMLAnalysis("F:/Downloads/COV/BeastXMLs", "F:/Downloads/COV/BeastXMLs","F:/Downloads/COV", "COV");
-		BatchXMLAnalysis analysis = new BatchXMLAnalysis(args[0], args[1],args[2], args[3]);
-		//BatchXMLAnalysis analysis1 = new BatchXMLAnalysis("F:/Downloads/SD/BeastXMLs", "F:/Downloads/SD/BeastXMLs","F:/Downloads/SD", "SD");
 		//BatchXMLAnalysis analysis2 = new BatchXMLAnalysis("F:/Downloads/GTR/BeastXMLs", "F:/Downloads/GTR/BeastXMLs","F:/Downloads/GTR", "GTR");
+		//BatchXMLAnalysis analysis1 = new BatchXMLAnalysis("F:/Downloads/SD/BeastXMLs", "F:/Downloads/SD/BeastXMLs","F:/Downloads/SD", "SD");
+		//BatchXMLAnalysis analysis = new BatchXMLAnalysis(args[0], args[1],args[2], args[3]);
 	}
 }

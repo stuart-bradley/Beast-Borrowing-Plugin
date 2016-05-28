@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import beast.core.Description;
 import beast.core.Input;
 import beast.evolution.alignment.Sequence;
+import beast.evolution.substitutionmodel.LanguageSubsitutionModel;
 import beast.util.Randomizer;
 
 /*
@@ -36,10 +37,11 @@ public class MissingLanguageModel extends MissingDataModel {
 		this.rate = rateInput.get();
 	}
 
+	/*
 	@Override
-	public ArrayList<Sequence> generateMissingData(ArrayList<Sequence> a) throws Exception {
+	public ArrayList<Sequence> generateMissingData(ArrayList<Sequence> a, String meaningClasses) throws Exception {
 		// Last Sequence is Meaning Classes (ignored in this model).
-		for (int i = 0; i < a.size() - 1; i++) {
+		for (int i = 0; i < a.size(); i++) {
 			if (Randomizer.nextDouble() <= rate) {
 				a.set(i, languageToUnknown(a.get(i)));
 			}
@@ -47,13 +49,6 @@ public class MissingLanguageModel extends MissingDataModel {
 		return a;
 	}
 
-	/*
-	 * Converts a language to a series of '?'
-	 * 
-	 * @param s Sequence to convert.
-	 * 
-	 * @return Sequence of '?'.
-	 */
 	private Sequence languageToUnknown(Sequence s) throws Exception {
 		String taxa = s.getTaxon();
 		String seq = s.getData();
@@ -62,6 +57,27 @@ public class MissingLanguageModel extends MissingDataModel {
 			unknown += "?";
 		}
 		return new Sequence(taxa, unknown);
+	}
+	*/
+	
+	@Override
+	public ArrayList<Sequence> generateMissingData(ArrayList<Sequence> a, String meaningClasses) throws Exception {
+		for (int i = 0; i < a.size(); i++) {
+			
+			a.set(i, languageToUnknown(a.get(i)));
+		}
+		return a;
+	}
+
+	private Sequence languageToUnknown(Sequence s) throws Exception {
+		String taxa = s.getTaxon();
+		String seq = s.getData();
+		int missingEvents = binomalDraw(seq.length(), rate);
+		int[] randPos = Randomizer.shuffled(seq.length());
+		for (int i = 0; i < missingEvents; i++) {
+			seq = LanguageSubsitutionModel.replaceCharAt(seq, randPos[i], "?");
+		}
+		return new Sequence(taxa, seq);
 	}
 
 	public double getRate() {

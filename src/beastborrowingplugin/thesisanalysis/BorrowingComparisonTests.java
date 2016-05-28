@@ -105,7 +105,6 @@ public class BorrowingComparisonTests {
 		while (true) {
 			try {
 				BeastMain.main(beastArgs);
-				break;
 			} catch (Exception e) {}
 		}
 	}
@@ -195,7 +194,7 @@ public class BorrowingComparisonTests {
 		return constraintNodes;
 	}
 
-	private static Tree randomYuleTree (int nodes, double l) throws Exception {
+	static Tree randomYuleTree (int nodes, double l) throws Exception {
 		Tree tr = new Tree();
 		ArrayList<Node> nodeList = new ArrayList<Node>();
 		double t = 0.0;

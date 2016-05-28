@@ -56,11 +56,11 @@ public class BeastBorrowingPluginTest {
 		//GTRTreeBorrowingValidationThreeLanguages();
 		//SDTreeBorrowingValidation();
 		// NoEmptyTraitTest();
-		// MissingLanguageValidation();
-		// MissingMeaningClassesValidation();
+		MissingLanguageValidation();
+		//MissingMeaningClassesValidation();
 		// SpeedTestNonBorrowing();
 
-		 SeqGenTest(); 
+		 //SeqGenTest(); 
 	//misspecGeneration();
 		// randomTreeTest();
 
@@ -189,7 +189,7 @@ public class BeastBorrowingPluginTest {
 
 	private static void GTRTreeValidation() throws Exception {
 		ArrayList<Integer> births = new ArrayList<Integer>();
-		for (int i = 0; i < 100000; i++) {
+		for (int i = 0; i < 10000; i++) {
 			System.out.println(i);
 			ExplicitBinaryGTR gtr_mod = new ExplicitBinaryGTR(0.5, 0.0, 0.0, false);
 			String seq = "";
@@ -197,7 +197,7 @@ public class BeastBorrowingPluginTest {
 				seq += Integer.toString(Randomizer.nextInt(2));
 			}
 			Sequence l = new Sequence("", seq);
-			Tree tree = randomYuleTree(8, 0.6);
+			Tree tree = randomYuleTree(8, 0.001);
 			tree.getRoot().setMetaData("lang", l);
 			tree = gtr_mod.mutateOverTree(tree);
 			for (Node n : tree.getExternalNodes()) {
@@ -216,12 +216,12 @@ public class BeastBorrowingPluginTest {
 	private static void SDTreeValidation() throws Exception {
 		ArrayList<Integer> births = new ArrayList<Integer>();
 
-		for (int i = 0; i < 1; i++) {
+		for (int i = 0; i < 10000; i++) {
 			System.out.println(i);
 			ExplicitBinaryStochasticDollo sd_mod = new ExplicitBinaryStochasticDollo(0.5, 0.5, 0.0, 0.0, false);
 			String seq = "";
 			Sequence l = new Sequence("", seq);
-			Tree tree = randomYuleTree(2, 0.01);
+			Tree tree = randomYuleTree(8, 0.01);
 			tree.getRoot().setMetaData("lang", l);
 			tree = sd_mod.mutateOverTreeBorrowing(tree);
 			for (Node n : tree.getExternalNodes()) {
@@ -566,13 +566,13 @@ public class BeastBorrowingPluginTest {
 				test.add(l);
 
 			}
-			test.add(new Sequence("mc", "0 10 20 30 40 50 60 70 80 90"));
 
 			ArrayList<Sequence> tmp = new ArrayList<Sequence>();
-			tmp = model_mc.generateMissingData(test);
+			tmp = model_mc.generateMissingData(test, "0 10 20 30 40 50 60 70 80 90");
 
 			int missingMC = 0;
 			char[] seqArray = tmp.get(0).getData().toCharArray();
+			System.out.println(tmp.get(0).getData());
 			for (int j = 0; j < 100; j += 10) {
 				if (seqArray[j] == '?') {
 					missingMC += 1;
@@ -600,12 +600,13 @@ public class BeastBorrowingPluginTest {
 				testLang.add(l);
 
 			}
-			testLang.add(new Sequence("mc", "0 10 20 30 40 50 60 70 80 90"));
 			System.out.println(i);
 			ArrayList<Sequence> tmpLang = new ArrayList<Sequence>();
-			tmpLang = model_lang.generateMissingData(testLang);
+			tmpLang = model_lang.generateMissingData(testLang, "0 10 20 30 40 50 60 70 80 90");
 			int missingLang = 0;
 			for (Sequence t : tmpLang) {
+
+				System.out.println(t.getData());
 				if (t.getData().contains("?")) {
 					missingLang += 1;
 				}

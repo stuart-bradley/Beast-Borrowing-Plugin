@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import beast.core.CalculationNode;
 import beast.core.Description;
 import beast.evolution.alignment.Sequence;
+import beast.util.Randomizer;
 
 /*
  * MissingDataModel Abstract Class
@@ -32,6 +33,17 @@ public abstract class MissingDataModel extends CalculationNode {
 	 */
 	public abstract void initAndValidate();
 
-	public abstract ArrayList<Sequence> generateMissingData(ArrayList<Sequence> a) throws Exception;
+	public abstract ArrayList<Sequence> generateMissingData(ArrayList<Sequence> a, String meaningClasses) throws Exception;
 
-}
+	protected int binomalDraw(int n, double p) {
+		int x = 0;
+		for(int i = 0; i < n; i++) {
+			if(Randomizer.nextDouble() < p) {
+				x++;
+			}
+		}
+		return x;
+	}
+
+
+	}
