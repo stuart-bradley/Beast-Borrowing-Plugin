@@ -1,7 +1,6 @@
 package beast.evolution.substitutionmodel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import beast.core.Description;
@@ -183,7 +182,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 						stringAliveNodes[idx] = replaceCharAt(stringAliveNodes[idx], ind, Integer.toString(0));
 						traits[idx]--;
 					}
-				// Borrowing.
+					// Borrowing.
 				} else if (choice == 2) {
 					if (aliveNodes.size() > 1) {
 						// Pick two distinct languages at random.
@@ -191,7 +190,7 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 
 						if (localDist(aliveNodes.get(bN[0]), aliveNodes.get(bN[1]))) {
 							// Randomly iterate through language and find a 1.
-								ind = getRandomBirthIndex(stringAliveNodes[bN[0]], traits[bN[0]]);
+							ind = getRandomBirthIndex(stringAliveNodes[bN[0]], traits[bN[0]]);
 							// If recieving language is going 0 -> 1.
 							if (ind > 1 && stringAliveNodes[bN[1]].charAt(ind) == '0') {
 								traits[bN[1]]++;
@@ -284,7 +283,16 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 			n.setMetaData("lang", newNodeLang);
 		}
 	}
-	
+
+	/*
+	 * Adds a 0 cognate to every sequence not at idx.
+	 * 
+	 * @param aliveNodes, string matrix of nodes
+	 * 
+	 * @param idx, position of language to ignore
+	 * 
+	 * @return aliveNodes+0
+	 */
 	protected String[] addEmptyTrait(String[] aliveNodes, int idx) throws Exception {
 		for (int i = 0; i < aliveNodes.length; i++) {
 			if (i == idx) {
@@ -294,8 +302,18 @@ public class ExplicitBinaryStochasticDollo extends LanguageSubsitutionModel {
 		}
 		return aliveNodes;
 	}
-	
 
+	/*
+	 * Picks a node to die based on the number of aliveTraits.
+	 * 
+	 * @param aliveNodes, string matrix of nodes
+	 * 
+	 * @param traits, list of number of alive traits in each language
+	 * 
+	 * @param numberOfLangs, aliveNodes.length
+	 * 
+	 * @return single position of language to lose a trait
+	 */
 	protected int getDeathNode(String[] aliveNodes, int[] traits, int numberOfLangs) {
 		double totalCognates = 0.0;
 		for (int n : traits) {

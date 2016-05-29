@@ -69,8 +69,8 @@ The BEAST file outlines how to produce the synthetic data. An example is provide
     * `ExplicitBinaryGTR` evolves the `root` via a Generalised Time-Reversible model. This model has a single `rate` parameter which defines the rate at which traits both can be birthed, and die. 
     * `ExplicitBinaryStochasticDollo` evolves the `root` via a Stochastic-Dollo model of sequence evolution, which has both a `birth` rate of traits, and a separate `death` rate. 
   * `missingModel` defines the model used to simulate missing data in the final alignment. Currently, this is non-optional and to not use it `rate` should be set to `0`.
-    * `MissingLanguageModel` - Languages are picked in a random binomal fashion at some `rate` to be converted to unknown date.
-    * `MissingMeaningClassModel` - Individual meaning classes are picked in a random binomal fashion at some `rate` which are converted to unknown data across all languages. 
+    * `MissingLanguageModel` - Each language has a random binomial number of missing events, which convert random cognates in the language to `?`.
+    * `MissingMeaningClassModel` - Each meaning class has a random binomial number of missing events, which convert random cognates in the meaning class to `?`.
 
 ### The Output file
 

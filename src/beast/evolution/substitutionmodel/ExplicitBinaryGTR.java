@@ -1,8 +1,6 @@
 package beast.evolution.substitutionmodel;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 import beast.core.Description;
@@ -184,7 +182,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 					} else {
 						traits[idx]--;
 					}
-					
+
 					// Borrow.
 				} else if (choice == 1) {
 					if (aliveNodes.size() > 1) {
@@ -249,7 +247,7 @@ public class ExplicitBinaryGTR extends LanguageSubsitutionModel {
 		}
 		return rate * (numberOfLangs * seq_length) + borrowRate * rate * borrowSum;
 	}
-	
+
 	public void setBirthRate(Double r) {
 		this.rate = r;
 	}

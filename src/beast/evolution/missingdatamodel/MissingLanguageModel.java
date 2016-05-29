@@ -17,6 +17,9 @@ import beast.util.Randomizer;
  * @author Stuart Bradley (sbra886@aucklanduni.ac.nz)
  * @version 1.0
  * 
+ * This class was inspired
+ * by the Hunns and their lack of
+ * vocabulary
  */
 @Description("Class for sythesis of missing languages")
 public class MissingLanguageModel extends MissingDataModel {
@@ -36,39 +39,27 @@ public class MissingLanguageModel extends MissingDataModel {
 	public void initAndValidate() {
 		this.rate = rateInput.get();
 	}
-
 	/*
-	@Override
-	public ArrayList<Sequence> generateMissingData(ArrayList<Sequence> a, String meaningClasses) throws Exception {
-		// Last Sequence is Meaning Classes (ignored in this model).
-		for (int i = 0; i < a.size(); i++) {
-			if (Randomizer.nextDouble() <= rate) {
-				a.set(i, languageToUnknown(a.get(i)));
-			}
-		}
-		return a;
-	}
-
-	private Sequence languageToUnknown(Sequence s) throws Exception {
-		String taxa = s.getTaxon();
-		String seq = s.getData();
-		String unknown = "";
-		for (int i = 0; i < seq.length(); i++) {
-			unknown += "?";
-		}
-		return new Sequence(taxa, unknown);
-	}
-	*/
-	
+	 * (non-Javadoc)
+	 * @see beast.evolution.missingdatamodel.MissingDataModel#generateMissingData(java.util.ArrayList, java.lang.String)
+	 * 
+	 * Generates missing data on a per language basis.
+	 */
 	@Override
 	public ArrayList<Sequence> generateMissingData(ArrayList<Sequence> a, String meaningClasses) throws Exception {
 		for (int i = 0; i < a.size(); i++) {
-			
 			a.set(i, languageToUnknown(a.get(i)));
 		}
 		return a;
 	}
 
+	/*
+	 * Randomly sets cognates as missing according to a binomial distribution.
+	 * 
+	 * @param s, sequence
+	 * 
+	 * @return Sequence with missing data
+	 */
 	private Sequence languageToUnknown(Sequence s) throws Exception {
 		String taxa = s.getTaxon();
 		String seq = s.getData();

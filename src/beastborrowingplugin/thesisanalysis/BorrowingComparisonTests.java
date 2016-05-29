@@ -12,19 +12,35 @@ import beast.util.Randomizer;
 import org.w3c.dom.*;
 import javax.xml.parsers.*;
 import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import java.io.*;
-
+/*
+ * BorrowingComparisonTests
+ * 
+ * Generates XML with random data from random Yule trees
+ * for examining the effects of borrowing rates
+ * 
+ * @author Stuart Bradley (sbra886@aucklanduni.ac.nz)
+ * @version 1.0
+ * 
+ * It's a real shame that
+ * BEAST2 could not loop over 
+ * the borrowing rates
+ */
 public class BorrowingComparisonTests {
 	static final double TREERATE = 0.00055;
 	static final int POPSIZE = 80;
 	static final int[] BORROWRATES = {0,1,5,10,15,20,30,40,50};
 
+	/*
+	 * Entry Point. 
+	 * 
+	 * Runs the system for a specific borrowing rate.
+	 */
 	public static void main(String[] args) throws Exception {
 		String fileLoc = args[0];
 		String rate = args[3];
@@ -109,7 +125,13 @@ public class BorrowingComparisonTests {
 		}
 	}
 
-
+	/*
+	 * Creates a copy of an XML document tree.
+	 * 
+	 * @param doc, XML Document object
+	 * 
+	 * @return doc, copy
+	 */
 	private static Document documentCopy (Document doc) throws Exception {
 		TransformerFactory tfactory = TransformerFactory.newInstance();
 		Transformer tx = tfactory.newTransformer();
@@ -119,6 +141,13 @@ public class BorrowingComparisonTests {
 		return (Document)result.getNode();
 	}
 
+	/*
+	 * Writes XML to file.
+	 * 
+	 * @param doc, XML Document Object
+	 * 
+	 * @param file location
+	 */
 	private static void writeXML (Document doc, String loc) throws Exception {
 		TransformerFactory transformerFactory = TransformerFactory.newInstance();
 		Transformer transformer = transformerFactory.newTransformer();
@@ -128,6 +157,15 @@ public class BorrowingComparisonTests {
 		transformer.transform(source, result);
 	}
 
+	/*
+	 * Generates two tree constraints and creates an XML for injection.
+	 * 
+	 * @param tree, Tree to generate constraints from
+	 * 
+	 * @param minConstrantHeight, minimum height constraints can be created from
+	 * 
+	 * @return XML document containing constraints
+	 */
 	private static Document generateConstraints (Tree tree, double minConstraintHeight) throws Exception {
 		DocumentBuilderFactory dbFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder dBuilder = dbFactory.newDocumentBuilder();
@@ -170,6 +208,15 @@ public class BorrowingComparisonTests {
 		return doc;
 	}
 
+	/*
+	 * Gets leaf nodes related to a particular constraint.
+	 * 
+	 * @param tree, Tree of nodes.
+	 * 
+	 * @param minConstrantHeight, minimum height constraints can be created from
+	 * 
+	 * @return list of Nodes that are related to constraints.
+	 */
 	private static List<Node> getConstraintNodes (Tree tree, double minConstraintHeight) {
 		List<Node> constraintNodes = new ArrayList<Node>();
 		List<Node> possibleConstraintNodes = new ArrayList<Node>();
@@ -194,6 +241,10 @@ public class BorrowingComparisonTests {
 		return constraintNodes;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see test.beast.app.seqgen.BeastBorrowingPluginTest#randomYuleTree(int, double)
+	 */
 	static Tree randomYuleTree (int nodes, double l) throws Exception {
 		Tree tr = new Tree();
 		ArrayList<Node> nodeList = new ArrayList<Node>();

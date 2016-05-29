@@ -21,6 +21,19 @@ import beast.evolution.tree.Tree;
 import beast.util.XMLParser;
 import beast.util.XMLProducer;
 
+/*
+ * LanguageSequenceGen main class 
+ * 
+ * Designed similarly to the BEAST2 SeqGen class, 
+ * but uses LangSeqGen language models.
+ * 
+ * @author Stuart Bradley (sbra886@aucklanduni.ac.nz)
+ * @version 1.0
+ * 
+ * Honestly surprised
+ * I've made it this far, not much
+ * left to finish off
+ */
 public class LanguageSequenceGen extends beast.core.Runnable {
 	public Input<Sequence> m_rootInput = new Input<Sequence>("root", "inital language", Validate.REQUIRED);
 	public Input<LanguageSubsitutionModel> m_subModelInput = new Input<LanguageSubsitutionModel>("subModel",
@@ -39,6 +52,14 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 	public void initAndValidate() {
 	}
 
+	/*
+	 * Simulates the alignment.
+	 * 
+	 * @param numMeaningClasses, number of meaning classes defined 
+	 * by the user.
+	 * 
+	 * @return Generated alignment and positions of meaning classes.
+	 */
 	public HashMap<Alignment, String> simulate(Integer numMeaningClasses) throws Exception {
 		Alignment cognateSet = new Alignment();
 		ArrayList<Sequence> newSeqs = new ArrayList<Sequence>();
@@ -90,6 +111,13 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 		return result;
 	}
 
+	/*
+	 * Removes 0 columns from language matrix.
+	 * 
+	 * @param language matrix.
+	 * 
+	 * @return language matrix.
+	 */
 	private static ArrayList<Sequence> removeEmptyColumns(ArrayList<Sequence> oldS) throws Exception {
 		ArrayList<Sequence> newS = new ArrayList<Sequence>();
 		ArrayList<Integer> emptyColumns = new ArrayList<Integer>();

@@ -3,8 +3,6 @@ package beast.evolution.substitutionmodel;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
-import java.util.List;
 
 import beast.core.CalculationNode;
 import beast.core.Description;
@@ -23,6 +21,9 @@ import beast.util.Randomizer;
  * @author Stuart Bradley (sbra886@aucklanduni.ac.nz)
  * @version 1.0
  * 
+ * Now other people
+ * can build new models, which is
+ * very exciting
  */
 @Description("Abstract class for language mutation models")
 public abstract class LanguageSubsitutionModel extends CalculationNode {
@@ -310,7 +311,7 @@ public abstract class LanguageSubsitutionModel extends CalculationNode {
 		int tmp;
 		int[] indices = new int[s.length()]; 
 		for (int i = 0; i < s.length(); ++i) indices[i] = i;
-		
+
 		for (int i = 0; i < s.length(); i++) {
 			int j = Randomizer.nextInt(indices.length - i) + i;
 			if (j != i) { // swap to shuffle

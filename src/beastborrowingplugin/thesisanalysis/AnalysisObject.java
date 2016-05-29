@@ -20,12 +20,28 @@ import org.w3c.dom.Element;
 
 import beast.evolution.tree.Tree;
 
+/*
+ * AnalysisObject Class
+ * 
+ * Processes .log, .tree and .xml input files into heights, trees, 
+ * and true trees.
+ * 
+ * @author Stuart Bradley (sbra886@aucklanduni.ac.nz)
+ * @version 1.0
+ * 
+ * These objects are quite
+ * slow. However, they create
+ * some convenience 
+ */
 public class AnalysisObject {
 	protected List<String> trees = new ArrayList<String>();
 	protected String startingTree;
 	protected List<Double> heights;
 	protected Double startingTreeHeight;
 
+	/*
+	 * Constructor.
+	 */
 	public AnalysisObject(File log, File tree, File input) {
 		trees = processTreeFile(tree);
 		Collections.shuffle(trees);
@@ -37,6 +53,11 @@ public class AnalysisObject {
 		startingTreeHeight = getStartingTreeHeight();
 	}
 
+	/*
+	 * Gets the height of the starting tree.
+	 * 
+	 * @return starting tree height
+	 */
 	private Double getStartingTreeHeight() {
 		Tree startingTreeBeast;
 		try {
@@ -48,12 +69,19 @@ public class AnalysisObject {
 		return 0.0;
 	}
 
+	/*
+	 * Processes the log file to grab heights
+	 * 
+	 * @param log file
+	 * 
+	 * @return list of heights
+	 */
 	private List<Double> processLogFile(File log) {
 		ArrayList<Double> heights = new ArrayList<Double>();
 		BufferedReader br = null;
 		String line = "";
 		String cvsSplitBy = "\t";
-		
+
 		try {
 
 			br = new BufferedReader(new FileReader(log));
@@ -81,6 +109,13 @@ public class AnalysisObject {
 		return heights;
 	}
 
+	/*
+	 * Gets starting tree.
+	 * 
+	 * @param input file
+	 * 
+	 * @return Newick string of starting tree.
+	 */
 	private String getStartingTree(File input) {
 		String inputTree = "";
 		try {
@@ -96,6 +131,13 @@ public class AnalysisObject {
 		return inputTree;
 	}
 
+	/*
+	 * Processes the tree file by into a list.
+	 * 
+	 * @param tree file
+	 * 
+	 * @return List of Newick String Trees
+	 */
 	private List<String> processTreeFile(File treeFile) {
 		ArrayList<String> newickTrees = new ArrayList<String>();
 		HashMap<String, String> conv = new HashMap<String, String>();
@@ -130,6 +172,15 @@ public class AnalysisObject {
 		return newickTrees;
 	}
 
+	/*
+	 * Converts a tree using the translation in the .tree file.
+	 * 
+	 * @param untranslated tree
+	 * 
+	 * @param hashmap of conversions
+	 * 
+	 * @return translated tree
+	 */
 	private String convertTree (String treeOld, HashMap<String, String> conv) {
 		treeOld = treeOld.replaceAll("\\[(.*?)\\]", "");
 		Pattern pattern = Pattern.compile("\\(\\d+:|,\\d+:");
