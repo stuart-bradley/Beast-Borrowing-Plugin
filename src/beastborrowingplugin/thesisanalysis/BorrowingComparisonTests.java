@@ -88,10 +88,11 @@ public class BorrowingComparisonTests {
 		Element dataElem = (Element) seqs.getElementsByTagName("data").item(0);
 		dataElem.setAttribute("id", "GTR1");
 		dataElem.setAttribute("name", "alignment");
+		dataElem.setAttribute("datatype", "twoStateCovarion");
 		NodeList sequences = seqs.getElementsByTagName("sequence");
 		for (int i = 0; i < sequences.getLength(); i++) {
 			Element s = (Element) sequences.item(i);
-			s.setAttribute("totalcount", "2");
+			//s.setAttribute("totalcount", "2");
 			s.setAttribute("id", "Sequence.0"+i);
 		}
 
