@@ -1,0 +1,89 @@
+#
+#model:
+#
+#<?xml version="1.0" encoding="UTF-8" standalone="no"?><input id="posterior" spec="beast.core.util.CompoundDistribution">
+#    <distribution id="prior" spec="beast.core.util.CompoundDistribution">
+#        <distribution id="YuleModel.t:GTR1" spec="beast.evolution.speciation.YuleModel">
+#            <parameter id="birthRate.t:GTR1" name="birthDiffRate">1.0</parameter>
+#            <tree id="Tree.t:GTR1">
+#                <taxonset id="TaxonSet.GTR1" spec="beast.evolution.alignment.TaxonSet">
+#                </taxonset>
+#            </tree>
+#        </distribution>
+#        <prior id="YuleBirthRatePrior.t:GTR1" name="distribution" x="@birthRate.t:GTR1">
+#            <LogNormal id="LogNormalDistributionModel.0" name="distr">
+#                <parameter estimate="false" id="RealParameter.0" name="M">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter.01" lower="0.0" name="S" upper="5.0">1.25</parameter>
+#            </LogNormal>
+#        </prior>
+#        <prior id="ClockPrior.c:GTR1" name="distribution">
+#            <parameter id="clockRate.c:GTR1" name="x">1.0E-4</parameter>
+#            <LogNormal id="LogNormalDistributionModel.01" name="distr">
+#                <parameter estimate="false" id="RealParameter.02" name="M">1.0</parameter>
+#                <parameter estimate="false" id="RealParameter.03" lower="0.0" name="S" upper="5.0">1.25</parameter>
+#            </LogNormal>
+#        </prior>
+#        <distribution id="Constraint_1.prior" spec="beast.math.distributions.MRCAPrior" tree="@Tree.t:GTR1">
+#            <taxonset id="Constraint_1" spec="beast.evolution.alignment.TaxonSet">
+#                <taxon id="2" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="40" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="33" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="16" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="7" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="12" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="38" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="74" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="66" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="24" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="76" spec="beast.evolution.alignment.Taxon"/>
+#            </taxonset>
+#            <Uniform id="Uniform.01" lower="2282.0" name="distr" upper="2790.0"/>
+#        </distribution>
+#        <distribution id="Constraint_2.prior" spec="beast.math.distributions.MRCAPrior" tree="@Tree.t:GTR1">
+#            <taxonset id="Constraint_2" spec="beast.evolution.alignment.TaxonSet">
+#                <taxon id="61" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="58" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="30" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="50" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="60" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="5" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="72" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="70" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="64" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="44" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="34" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="36" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="79" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="27" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="18" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="80" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="10" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="49" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="53" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="78" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="20" spec="beast.evolution.alignment.Taxon"/>
+#                <taxon id="48" spec="beast.evolution.alignment.Taxon"/>
+#            </taxonset>
+#            <Uniform id="Uniform.02" lower="2778.0" name="distr" upper="3396.0"/>
+#        </distribution>
+#    </distribution>
+#    <distribution id="likelihood" spec="beast.core.util.CompoundDistribution">
+#        <distribution data="@GTR1" id="treeLikelihood.GTR1" spec="beast.evolution.likelihood.TreeLikelihood" tree="@Tree.t:GTR1">
+#            <siteModel gammaCategoryCount="1" id="SiteModel.s:GTR1" spec="beast.evolution.sitemodel.SiteModel">
+#                <parameter id="mutationRate.s:GTR1" name="mutationRate">1.0</parameter>
+#                <parameter estimate="false" id="gammaShape.s:GTR1" name="shape">1.0</parameter>
+#                <parameter estimate="false" id="proportionInvariant.s:GTR1" lower="0.0" name="proportionInvariant" upper="1.0">0.0</parameter>
+#                <substModel id="covarion" spec="beast.evolution.substitutionmodel.BinaryCovarion">
+#                    <parameter id="bcov_alpha.s:GTR1" lower="1.0E-4" name="alpha" upper="1.0">0.5</parameter>
+#                    <parameter id="bcov_s.s:GTR1" lower="1.0E-4" name="switchRate" upper="Infinity">0.5</parameter>
+#                    <parameter dimension="2" id="frequencies.s:GTR1" lower="0.0" name="vfrequencies" upper="1.0">0.5 0.5</parameter>
+#                    <parameter dimension="2" id="hiddenfrequencies.s:GTR1" lower="0.0" name="hfrequencies" upper="1.0">0.5 0.5</parameter>
+#                    <frequencies data="@GTR1" estimate="false" id="dummyfrequencies.s:GTR1" spec="beast.evolution.substitutionmodel.Frequencies"/>
+#                </substModel>
+#            </siteModel>
+#            <branchRateModel clock.rate="@clockRate.c:GTR1" id="StrictClock.c:GTR1" spec="beast.evolution.branchratemodel.StrictClockModel"/>
+#        </distribution>
+#    </distribution>
+#</input>
+#
+Sample	posterior	likelihood	prior	treeLikelihood	TreeHeight	YuleModel	birthRate	mutationRate	monophyletic(Constraint_1)	logP(mrca(Constraint_1))	mrcatime(Constraint_1)	clockRate	monophyletic(Constraint_2)	logP(mrca(Constraint_2))	mrcatime(Constraint_2)	
