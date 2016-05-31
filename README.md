@@ -10,6 +10,8 @@ The plugin is not currently in a very exportable format, as it is a work in prog
 
 Simply import the project into Eclipse, along with a copy of the [BEAST2 project](https://github.com/CompEvol/beast2), from here the plugin can be run two different ways.
 
+Alternately, a prepackaged `jar` is provided to provide the same command line interface, without cloning the entire project. This can be found in: `Jar/LangSeqGen.jar`.
+
 ### Command Line
 
 Like the original `seqgen`, this plugin uses the same format for command line runs:
@@ -23,15 +25,13 @@ java LanguageSequenceGen <beast file> <nr of instantiations> [<output file>]
 
 * If an `<output file>` is not provided, the output will be written to `std.out`. 
 
-Alternately, a prepackaged `jar` is provided to provide the same command line interface, without cloning the entire project. 
-
 ### BeastBorrowingPluginTest
 
 Like most BEAST2 plugins, this plugin has its own testing suite defined in `BeastBorrowingPluginTest`. In this class, the `SeqGenTest()` runs the plugin using arguments defined within the function: 
 
 ```Java
 private static void SeqGenTest() {
-		String[] args = {"C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/testSeqLangGen.xml","2","C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/examples/output.xml"};
+		String[] args = {"examples/testSeqLangGen.xml","2","examples/output.xml"};
 		LanguageSequenceGen.main(args);
 }
 ```
@@ -97,8 +97,6 @@ The Output file is a simple BEAST2 `alignment` piped to `xml`. An example from `
 </beast>
 
 ```
-
-The first `sequence` is the root defined by `root` in the BEAST file, and the last `sequence` defines the positions of the first cognate in each meaning class. 
 
 ## The Thesis Analysis Package
 

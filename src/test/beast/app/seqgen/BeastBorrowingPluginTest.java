@@ -77,8 +77,8 @@ public class BeastBorrowingPluginTest {
 		//GTRTreeBorrowingValidationTwoLanguages();
 		//GTRTreeBorrowingValidationThreeLanguages();
 		//SDTreeBorrowingValidation();
-		//MissingLanguageValidation();
-		//MissingMeaningClassesValidation();
+		MissingLanguageValidation();
+		MissingMeaningClassesValidation();
 		//SpeedTestNonBorrowing();
 
 		//SeqGenTest(); 
@@ -560,7 +560,7 @@ public class BeastBorrowingPluginTest {
 	 */
 	private static void MissingMeaningClassesValidation() throws Exception {
 		ArrayList<Integer> missingMCs = new ArrayList<Integer>();
-		MissingMeaningClassModel model_mc = new MissingMeaningClassModel(0.5);
+		MissingMeaningClassModel model_mc = new MissingMeaningClassModel(0.01);
 		for (int i = 0; i < 100000; i++) {
 			System.out.println(i);
 			ArrayList<Sequence> test = new ArrayList<Sequence>();
@@ -580,7 +580,6 @@ public class BeastBorrowingPluginTest {
 
 			int missingMC = 0;
 			char[] seqArray = tmp.get(0).getData().toCharArray();
-			System.out.println(tmp.get(0).getData());
 			for (int j = 0; j < 100; j += 10) {
 				if (seqArray[j] == '?') {
 					missingMC += 1;
@@ -588,7 +587,7 @@ public class BeastBorrowingPluginTest {
 			}
 			missingMCs.add(missingMC);
 		}
-		listToCSV(missingMCs, "Utilities/Thesis Graph Generation/missing_mc2.csv");
+		listToCSV(missingMCs, "Utilities/Thesis Graph Generation/missing_mc.csv");
 	}
 
 	/*
@@ -605,20 +604,17 @@ public class BeastBorrowingPluginTest {
 				seq += "1";
 			}
 
-			for (int j = 0; j < 10; j++) {
-				Sequence l = new Sequence(Integer.toString(j), seq);
-				testLang.add(l);
+			Sequence l = new Sequence(Integer.toString(0), seq);
+			testLang.add(l);
 
-			}
 			System.out.println(i);
 			ArrayList<Sequence> tmpLang = new ArrayList<Sequence>();
 			tmpLang = model_lang.generateMissingData(testLang, "0 10 20 30 40 50 60 70 80 90");
 			int missingLang = 0;
-			for (Sequence t : tmpLang) {
-
-				System.out.println(t.getData());
-				if (t.getData().contains("?")) {
-					missingLang += 1;
+			String s = tmpLang.get(0).getData();
+			for (char a : s.toCharArray()) {
+				if (a=='?') {
+					missingLang ++;
 				}
 			}
 			missingLangs.add(missingLang);

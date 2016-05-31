@@ -107,7 +107,7 @@ name="alignment">
 <map name="OneOnX" >beast.math.distributions.OneOnX</map>
 
 
-<run id="mcmc" spec="MCMC" chainLength="20000000" numInitializationAttempts="100" preBurnin="2000000">
+<run id="mcmc" spec="MCMC" chainLength="40000000" numInitializationAttempts="100" preBurnin="4000000">
     <state id="state" storeEvery="50000">
         <tree id="Tree.t:GTR1" name="stateNode">
             <taxonset id="TaxonSet.GTR1" spec="TaxonSet">
@@ -233,7 +233,7 @@ name="alignment">
 
     <operator id='frequenciesDelta.s:GTR1' spec='DeltaExchangeOperator' delta="0.01" weight="0.1" parameter="@frequencies.s:GTR1"/> 
 
-    <logger id="tracelog" fileName="GTR_0.log" logEvery="10000" model="@posterior" sanitiseHeaders="true" sort="smart">
+    <logger id="tracelog" fileName="GTR_0.log" logEvery="20000" model="@posterior" sanitiseHeaders="true" sort="smart">
         <log idref="posterior"/>
         <log idref="likelihood"/>
         <log idref="prior"/>
@@ -254,7 +254,7 @@ name="alignment">
         <log idref="prior"/>
     </logger>
 
-    <logger id="treelog.t:GTR1" fileName="GTR_0.trees" logEvery="10000" mode="tree">
+    <logger id="treelog.t:GTR1" fileName="GTR_0.trees" logEvery="20000" mode="tree">
         <log id="TreeWithMetaDataLogger.t:GTR1" spec="beast.evolution.tree.TreeWithMetaDataLogger" tree="@Tree.t:GTR1"/>
     </logger>
 

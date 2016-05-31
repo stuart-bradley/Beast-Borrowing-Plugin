@@ -57,15 +57,14 @@ lines(density(sd$V1, adjust=10), col="blue", lwd=2)
 legend('topright',c("Poisson Distribution","SD Algorithm"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
 
 # GTR/SD Simple Tree Validation
-par(mfrow=c(2, 1))
+par(mfrow=c(1, 2))
 plot(density(rbinom(80000,20,0.5), adjust=10), col="green",lwd=2, 
-     main="Simulation of 100,000 whole tree evolutions under the GTR model", xlab="Number of cogantes", xlim=range(0:20))
+     main=NA, xlab="Number of cogantes", xlim=range(0:20))
 lines(density(gtrtree$V1, adjust=10), col="blue", lwd=2)
-legend('topright',c("Binomial Distribution","GTR Algorithm"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
 plot(density(rpois(80000,(0.5/0.5)), adjust=10), col="green",lwd=2, 
-     main="Simulation of 100,000 whole tree evolutions under the Stochastic-Dollo model", xlab="Number of birthed traits", xlim=range(0:20))
+     main=NA, xlab="Number of birthed traits", xlim=range(0:20))
 lines(density(sdtree$V1, adjust=10), col="blue", lwd=2)
-legend('topright',c("Poisson Distribution","SD Algorithm"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
+title("Simulation of 100,000 whole tree evolutions under the GTR model", outer=TRUE,line = -2)
 par(mfrow=c(1, 1))
 
 # GTR Whole Tree Borrowing Validation (2 Languages)
@@ -105,15 +104,14 @@ legend('topright',c("Simple Tree","Borrowing set to 0.0"), lty=c(1,1), lwd=c(2,2
 par(mfrow=c(1, 1))
 
 # Missing Language Validation.
-par(mfrow=c(2, 1))
-plot(density(rbinom(100000,10,0.5), adjust=10), col="green",lwd=2, 
-     main="Simulation of 100,000 missing language models", xlab="Number of missing languages", xlim=range(0:20))
+par(mfrow=c(1, 2))
+plot(density(rbinom(100000,100,0.5), adjust=10), col="green",lwd=2, 
+     main=NA, xlab="Number of missing languages", xlim=range(0:100))
 lines(density(missing_lang$V1, adjust=10), col="blue", lwd=2)
-legend('topright',c("Binomial Distribution","Missing Languages Algorithm"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
-plot(density(rbinom(100000,10,0.5), adjust=10), col="green",lwd=2, 
-     main="Simulation of 100,000 missing meaning class models", xlab="Number of missing meaning classes", xlim=range(0:20))
+plot(density(rbinom(100000,100,0.5), adjust=10), col="green",lwd=2, 
+     main=NA, xlab="Number of missing meaning classes", xlim=range(0:100))
 lines(density(missing_mc$V1, adjust=10), col="blue", lwd=2)
-legend('topright',c("Binomial Distribution","Missing Meaning Classes Algorithm"), lty=c(1,1), lwd=c(2,2),col=c("green","blue"))
+title("Simulation of 100,000 missing language and missing meaning class models", outer=TRUE,line = -2)
 par(mfrow=c(1, 1))
 
 # GTR Quartet
