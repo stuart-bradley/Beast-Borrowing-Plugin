@@ -262,10 +262,10 @@ public class BatchXMLAnalysis {
 	 */
 	public static void main(String[] args) throws Exception { 
 
-		createRandomTreeDifferences();
+		//createRandomTreeDifferences();
 		//BatchXMLAnalysis analysis = new BatchXMLAnalysis("F:/Downloads/COV/BeastXMLs", "F:/Downloads/COV/BeastXMLs","F:/Downloads/COV", "COV");
 		//BatchXMLAnalysis analysis2 = new BatchXMLAnalysis("F:/Downloads/GTR/BeastXMLs", "F:/Downloads/GTR/BeastXMLs","F:/Downloads/GTR", "GTR");
 		//BatchXMLAnalysis analysis1 = new BatchXMLAnalysis("F:/Downloads/SD/BeastXMLs", "F:/Downloads/SD/BeastXMLs","F:/Downloads/SD", "SD");
-		//BatchXMLAnalysis analysis = new BatchXMLAnalysis(args[0], args[1],args[2], args[3]);
+		BatchXMLAnalysis analysis = new BatchXMLAnalysis(args[0], args[1],args[2], args[3]);
 	}
 }
