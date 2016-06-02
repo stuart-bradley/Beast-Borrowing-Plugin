@@ -74,8 +74,8 @@ public class BatchXMLAnalysis {
 				File input = inputs.get(prefix+"_Borrow_"+rate+"_"+i+"_Input.xml");
 				if (log != null && tree != null && input != null) {
 					AnalysisObject a = new AnalysisObject(log, tree, input);
-					rateHeights.addAll(analyseHeight(a));
-					rateTopologies.addAll(analyseTopology(a, i, resFolder, qtDist));
+					rateHeights.add(analyseHeight(a));
+					rateTopologies.add(analyseTopology(a, i, resFolder, qtDist));
 				}
 			}
 			topologyDifferences.add(rateTopologies);
@@ -93,15 +93,15 @@ public class BatchXMLAnalysis {
 	 * 
 	 * @return List of heights
 	 */
-	protected ArrayList<Double> analyseHeight(AnalysisObject a) {
-		ArrayList<Double> Diffs  = new ArrayList<Double>();
+	protected Double analyseHeight(AnalysisObject a) {
+		Double Diffs = 0.0;
 		Double startingTreeHeight = a.startingTreeHeight;
 		List<Double> heights = a.heights;
 		for (int i = 0; i < heights.size(); i++) {
 			Double treeHeight = heights.get(i);
-			Diffs.add((startingTreeHeight - treeHeight)/startingTreeHeight);
+			Diffs+=(startingTreeHeight - treeHeight)/startingTreeHeight;
 		}
-		return Diffs;
+		return Diffs/heights.size();
 	}
 
 	/*
@@ -117,11 +117,11 @@ public class BatchXMLAnalysis {
 	 * 
 	 * @return list of quartet distances
 	 */
-	protected ArrayList<Double> analyseTopology(AnalysisObject a, int num, File resFolder, File qtDist) {
+	protected Double analyseTopology(AnalysisObject a, int num, File resFolder, File qtDist) {
 		File startPath = new File(resFolder.getPath()+"/startTree_"+num+".tree");
 		createTreeFile(startPath.getPath(), a.startingTree);
 		List<String> resTrees = a.trees;
-		ArrayList<Double> totalDiff = new ArrayList<Double>();
+		Double totalDiff = 0.0;
 		for (int i = 0; i < resTrees.size(); i++) {
 			try {
 				String t = resTrees.get(i);
@@ -134,7 +134,7 @@ public class BatchXMLAnalysis {
 				BufferedReader r = new BufferedReader(new InputStreamReader(p.getInputStream()));
 				String line;
 				while ((line = r.readLine()) != null) {
-					totalDiff.add(Double.parseDouble(line.split("\t")[3]));
+					totalDiff+=(Double.parseDouble(line.split("\t")[3]));
 				}
 				treePath.delete();
 			} catch (Exception e) {
@@ -142,7 +142,7 @@ public class BatchXMLAnalysis {
 			}
 		}
 		startPath.delete();
-		return totalDiff;
+		return totalDiff/resTrees.size();
 	}
 
 	/*
@@ -265,7 +265,7 @@ public class BatchXMLAnalysis {
 		//createRandomTreeDifferences();
 		//BatchXMLAnalysis analysis = new BatchXMLAnalysis("F:/Downloads/COV/BeastXMLs", "F:/Downloads/COV/BeastXMLs","F:/Downloads/COV", "COV");
 		//BatchXMLAnalysis analysis2 = new BatchXMLAnalysis("F:/Downloads/GTR/BeastXMLs", "F:/Downloads/GTR/BeastXMLs","F:/Downloads/GTR", "GTR");
-		//BatchXMLAnalysis analysis1 = new BatchXMLAnalysis("F:/Downloads/SD/BeastXMLs", "F:/Downloads/SD/BeastXMLs","F:/Downloads/SD", "SD");
-		BatchXMLAnalysis analysis = new BatchXMLAnalysis(args[0], args[1],args[2], args[3]);
+		BatchXMLAnalysis analysis1 = new BatchXMLAnalysis("F:/Downloads/SD/BeastXMLs", "F:/Downloads/SD/BeastXMLs","F:/Downloads/SD", "SD");
+		//BatchXMLAnalysis analysis = new BatchXMLAnalysis(args[0], args[1],args[2], args[3]);
 	}
 }

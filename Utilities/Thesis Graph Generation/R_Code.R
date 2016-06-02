@@ -34,12 +34,18 @@ missing_mc <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimul
 
 heights_GTR <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/heights_GTR.csv", stringsAsFactors=FALSE)
 quartet_GTR <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/quartet_GTR.csv", stringsAsFactors=FALSE)
-
 quartet_SD <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/quartet_SD.csv", stringsAsFactors=FALSE)
 heights_SD <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/heights_SD.csv", stringsAsFactors=FALSE)
-
 quartet_COV <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/quartet_COV.csv", stringsAsFactors=FALSE)
 heights_COV <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/heights_COV.csv", stringsAsFactors=FALSE)
+
+heights_GTR <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/heights_GTR_avg.csv", stringsAsFactors=FALSE)
+quartet_GTR <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/quartet_GTR_avg.csv", stringsAsFactors=FALSE)
+quartet_SD <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/quartet_SD_avg.csv", stringsAsFactors=FALSE)
+heights_SD <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/heights_SD_avg.csv", stringsAsFactors=FALSE)
+quartet_COV <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/quartet_COV_avg.csv", stringsAsFactors=FALSE)
+heights_COV <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/heights_COV_avg.csv", stringsAsFactors=FALSE)
+
 
 randHeight <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/randHeight.csv", quote="\"", stringsAsFactors=FALSE)
 
@@ -114,17 +120,6 @@ lines(density(missing_mc$V1, adjust=10), col="blue", lwd=2)
 title("Simulation of 100,000 missing language and missing meaning class models", outer=TRUE,line = -2)
 par(mfrow=c(1, 1))
 
-# GTR Quartet
-gtr_quart <- data.matrix(gtr_quart)
-plot(gtr_quart[1:9,], xaxt="n", main="Quartet Distances under various levels of GTR borrowing", xlab="Borrowing (%)", ylab="Quartet Distance")
-axis(1, at=1:9, labels=c(0,1,5,10,15,20,30,40,50))
-# GTR Height
-gtr_heights <- data.matrix(gtr_heights)
-diff_fun <- function(x) abs(7080.7-x)
-diffs <- sapply(gtr_heights[,2], diff_fun)
-plot(diffs, type="l", xaxt="n", main="Differences in tree height under various levels of GTR borrowing", xlab="Borrowing (%)", ylab="Height Difference (years)")
-axis(1, at=1:9, labels=c(0,1,5,10,15,20,30,40,50))
-
 # Height and Quartet Differences
 quartet_GTR <- data.matrix(quartet_GTR)
 heights_GTR <- data.matrix(heights_GTR)
@@ -146,3 +141,50 @@ boxplot(quartet_COV, main="Quartet Distance under various levels of SD borrowing
 axis(1, at=1:9, labels=c(0,1,5,10,15,20,30,40,50))
 boxplot(heights_COV, main="Height differentials under various levels of SD borrowing (Covarion Inference)", ylab="Difference (%)", xlab="Borrowing Rate (%)", xaxt="n", outline=FALSE)
 axis(1, at=1:9, labels=c(0,1,5,10,15,20,30,40,50))
+
+# Discussion Attempt 2
+library(coda)
+minMax <- function(data) {
+  data <- data.matrix(data)
+  lower = ceiling(min(data, na.rm=TRUE)/0.1)*0.1
+  upper = ceiling(max(data, na.rm=TRUE)/0.1)*0.1
+  return (c(lower,upper))
+}
+
+createStripChart <- function(data, mainLabel, yLabel, xLabel) {
+  stripchart(data[,1:9], vertical=TRUE,method="jitter",pch=1, jitter=0.25, main=mainLabel, ylab=yLabel, xlab=xLabel, xaxt="n", ylim=minMax(data))
+  axis(1, at=1:9, labels=c(0,1,5,10,15,20,30,40,50))
+  for (i in c(1:9)) {
+    int = HPDinterval(as.mcmc(as.numeric(data[,i])), prob=0.95)
+    lower = int[,1]
+    upper = int[,2]
+    segments(i,lower, x1=i,y1=upper,col='red',lwd=2)
+    points(i,mean(as.numeric(data[,i]),na.rm=TRUE),pch=15,col='red')
+  }
+}
+
+printMeanAndHPD <- function(data,i) {
+  int = HPDinterval(as.mcmc(as.numeric(data[,i])), prob=0.95)
+  lower = int[,1]
+  lower = format(round(lower, 3), nsmall = 3)
+  upper = int[,2]
+  upper = format(round(upper, 3), nsmall = 3)
+  m = mean(as.numeric(data[,i]),na.rm=TRUE)
+  m = format(round(m, 3), nsmall = 3)
+  cat("Mean: ", m,"\n", sep="")
+  cat("HPD: [", lower,",",upper,"]",sep="")
+}
+
+
+# GTR
+createStripChart(quartet_GTR, "Quartet Distance under various levels of GTR borrowing","Quartet Distance","Borrowing Rate (%)")
+createStripChart(heights_GTR, "Height differentials under various levels of GTR borrowing", "Difference (%)", "Borrowing Rate (%)")
+# SD 
+quartet_SD$X50.0[quartet_SD$X50.0 > 0.6] <- NA
+quartet_SD$X20.0[quartet_SD$X20.0 > 0.25] <- NA
+
+createStripChart(quartet_SD, "Quartet Distance under various levels of SD borrowing (GTR inference)","Quartet Distance","Borrowing Rate (%)")
+createStripChart(heights_SD, "Height differentials under various levels of SD borrowing (GTR inference)", "Difference (%)", "Borrowing Rate (%)")
+# COV
+createStripChart(quartet_COV, "Quartet Distance under various levels of SD borrowing (Covarion inference)","Quartet Distance","Borrowing Rate (%)")
+createStripChart(heights_COV, "Height differentials under various levels of SD borrowing (Covarion inference)", "Difference (%)", "Borrowing Rate (%)")
