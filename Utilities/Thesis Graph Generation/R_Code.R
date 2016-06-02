@@ -39,12 +39,13 @@ heights_SD <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulat
 quartet_COV <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/quartet_COV.csv", stringsAsFactors=FALSE)
 heights_COV <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/heights_COV.csv", stringsAsFactors=FALSE)
 
-heights_GTR <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/heights_GTR_avg.csv", stringsAsFactors=FALSE)
-quartet_GTR <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/quartet_GTR_avg.csv", stringsAsFactors=FALSE)
-quartet_SD <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/quartet_SD_avg.csv", stringsAsFactors=FALSE)
-heights_SD <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/heights_SD_avg.csv", stringsAsFactors=FALSE)
-quartet_COV <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/quartet_COV_avg.csv", stringsAsFactors=FALSE)
-heights_COV <- read.csv("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/heights_COV_avg.csv", stringsAsFactors=FALSE)
+
+heights_GTR <- read.csv("heights_GTR_avg.csv", stringsAsFactors=FALSE)
+quartet_GTR <- read.csv("quartet_GTR_avg.csv", stringsAsFactors=FALSE)
+quartet_SD <- read.csv("quartet_SD_avg.csv", stringsAsFactors=FALSE)
+heights_SD <- read.csv("heights_SD_avg.csv", stringsAsFactors=FALSE)
+quartet_COV <- read.csv("quartet_COV_avg.csv", stringsAsFactors=FALSE)
+heights_COV <- read.csv("heights_COV_avg.csv", stringsAsFactors=FALSE)
 
 
 randHeight <- read.table("C:/Users/Stuart/workspace/Beast2BorrowingSequenceSimulator/Utilities/Thesis Graph Generation/randHeight.csv", quote="\"", stringsAsFactors=FALSE)
@@ -152,7 +153,19 @@ minMax <- function(data) {
 }
 
 createStripChart <- function(data, mainLabel, yLabel, xLabel) {
-  stripchart(data[,1:9], vertical=TRUE,method="jitter",pch=1, jitter=0.25, main=mainLabel, ylab=yLabel, xlab=xLabel, xaxt="n", ylim=minMax(data))
+  stripchart(data[,1:9], vertical=TRUE,method="jitter",pch=1, jitter=0.25, main=mainLabel, ylab=yLabel, xlab=xLabel, xaxt="n", ylim=minMax(data), col=rgb(0,0,0,0.6))
+  axis(1, at=1:9, labels=c(0,1,5,10,15,20,30,40,50))
+  for (i in c(1:9)) {
+    int = HPDinterval(as.mcmc(as.numeric(data[,i])), prob=0.95)
+    lower = int[,1]
+    upper = int[,2]
+    segments(i,lower, x1=i,y1=upper,col='red',lwd=2)
+    points(i,mean(as.numeric(data[,i]),na.rm=TRUE),pch=15,col='red')
+  }
+}
+
+createStripChartQuartet <- function(data, mainLabel, yLabel, xLabel) {
+  stripchart(data[,1:9], vertical=TRUE,method="jitter",pch=1, jitter=0.25, main=mainLabel, ylab=yLabel, xlab=xLabel, xaxt="n", col=rgb(0,0,0,0.6))
   axis(1, at=1:9, labels=c(0,1,5,10,15,20,30,40,50))
   for (i in c(1:9)) {
     int = HPDinterval(as.mcmc(as.numeric(data[,i])), prob=0.95)
@@ -177,14 +190,14 @@ printMeanAndHPD <- function(data,i) {
 
 
 # GTR
-createStripChart(quartet_GTR, "Quartet Distance under various levels of GTR borrowing","Quartet Distance","Borrowing Rate (%)")
+createStripChartQuartet(quartet_GTR, "Quartet Distance under various levels of GTR borrowing","Quartet Distance","Borrowing Rate (%)")
 createStripChart(heights_GTR, "Height differentials under various levels of GTR borrowing", "Difference (%)", "Borrowing Rate (%)")
 # SD 
 quartet_SD$X50.0[quartet_SD$X50.0 > 0.6] <- NA
 quartet_SD$X20.0[quartet_SD$X20.0 > 0.25] <- NA
 
-createStripChart(quartet_SD, "Quartet Distance under various levels of SD borrowing (GTR inference)","Quartet Distance","Borrowing Rate (%)")
+createStripChartQuartet(quartet_SD, "Quartet Distance under various levels of SD borrowing (GTR inference)","Quartet Distance","Borrowing Rate (%)")
 createStripChart(heights_SD, "Height differentials under various levels of SD borrowing (GTR inference)", "Difference (%)", "Borrowing Rate (%)")
 # COV
-createStripChart(quartet_COV, "Quartet Distance under various levels of SD borrowing (Covarion inference)","Quartet Distance","Borrowing Rate (%)")
+createStripChartQuartet(quartet_COV, "Quartet Distance under various levels of SD borrowing (Covarion inference)","Quartet Distance","Borrowing Rate (%)")
 createStripChart(heights_COV, "Height differentials under various levels of SD borrowing (Covarion inference)", "Difference (%)", "Borrowing Rate (%)")
