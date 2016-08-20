@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import beast.app.seqgen.LanguageSequenceGen;
+import beast.app.seqgen.LanguageSequenceGenInterface;
 import beast.core.parameter.RealParameter;
 import beast.evolution.alignment.Alignment;
 import beast.evolution.alignment.Sequence;
@@ -20,6 +21,7 @@ import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeUtils;
 import beast.evolution.tree.coalescent.ConstantPopulation;
 import beast.util.Randomizer;
+import cern.colt.Arrays;
 
 /*
  * BeastBorrowingPluginTest class
@@ -77,8 +79,8 @@ public class BeastBorrowingPluginTest {
 		//GTRTreeBorrowingValidationTwoLanguages();
 		//GTRTreeBorrowingValidationThreeLanguages();
 		//SDTreeBorrowingValidation();
-		MissingLanguageValidation();
-		MissingMeaningClassesValidation();
+		//MissingLanguageValidation();
+		//MissingMeaningClassesValidation();
 		//SpeedTestNonBorrowing();
 
 		//SeqGenTest(); 
@@ -525,10 +527,9 @@ public class BeastBorrowingPluginTest {
 	 * Basic whole program test for single runs. 
 	 */
 	private static void SeqGenTest() throws Exception {
-		String[] args = {"examples/BorrowingMisspec/SD_Borrow_10_Input.xml", "1", "examples/BorrowingMisspec/Outputs/SD_Borrow_10_Output.xml"};
-
+		String[] args = {"-input", "examples/BorrowingMisspec/GTR_Borrow_15_Input.xml","-meaningClasses" , "1", "-output", "examples/BorrowingMisspec/Outputs/GTR_Borrow_15_Output.xml"};
 		Long startTime = System.nanoTime();
-		LanguageSequenceGen.main(args);
+		LanguageSequenceGenInterface.main(args);
 		Long endTime = System.nanoTime();
 		System.out.println();
 		System.out.println("Time: "+ (endTime - startTime) / 1000000);

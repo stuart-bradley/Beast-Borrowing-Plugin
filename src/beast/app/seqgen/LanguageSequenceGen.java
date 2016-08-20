@@ -182,7 +182,6 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 				sXML += fin.readLine();
 			}
 			fin.close();
-
 			// parse the xml
 			XMLParser parser = new XMLParser();
 			BEASTInterface plugin = parser.parseFragment(sXML, true);
