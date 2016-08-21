@@ -21,7 +21,6 @@ import beast.evolution.tree.Tree;
 import beast.evolution.tree.TreeUtils;
 import beast.evolution.tree.coalescent.ConstantPopulation;
 import beast.util.Randomizer;
-import cern.colt.Arrays;
 
 /*
  * BeastBorrowingPluginTest class

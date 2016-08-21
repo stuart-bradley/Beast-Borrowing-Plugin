@@ -1,7 +1,6 @@
 package beast.app.seqgen;
 
 import java.io.File;
-import java.util.Arrays;
 
 import beast.app.util.Application;
 import beast.core.Input;

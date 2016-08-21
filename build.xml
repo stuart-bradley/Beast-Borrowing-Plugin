@@ -1,5 +1,5 @@
 <!-- Build LanguageSequenceGen model -->
-<project basedir="." default="build_jar_all_LanguageSequenceGen_NoJUnitTest" name="BUILD_LanguageSequenceGen">
+<project basedir="." default="build_jar_all_LanguageSequenceGen" name="BUILD_LanguageSequenceGen">
 	<description>
  	Build LanguageSequenceGen.
  	JUnit test is available for this build.
@@ -15,16 +15,22 @@
 	<property name="libBeast2" location="${beast2path}/lib" />
 	<property name="srcBeast2" location="${beast2path}/src" />
 	<property name="beast2classpath" location="${beast2path}/build" />
+	<property name="BEASTLabsclasspath" location="../BEASTLabs/build" />
 	<property name="Add_on_dir" value="${release_dir}/package" />
+
 	<import file="${beast2path}/build.xml" />
+
 	<property name="main_class_BEAST" value="beast.app.BeastMCMC" />
-	<property name="main_class_LanguageSequenceGen" value="beast.app.seqgen.LanguageSequenceGen" />
+	<property name="main_class_LanguageSequenceGen" value="beast.app.seqgen.LanguageSequenceGenInterface" />
 	<property name="report" value="${buildLanguageSequenceGen}/junitreport"/>
+
+
 	<path id="classpath">
 		<pathelement path="${buildLanguageSequenceGen}"/>
-		<fileset dir="${libBeast2}" includes="junit-4.8.2.jar"/>
 		<pathelement path="${beast2classpath}"/>
+		<pathelement path="${BEASTLabsclasspath}"/>
 	</path>
+
 	<!-- start -->
 	<target name="initLanguageSequenceGen">
 		<echo message="${ant.project.name}: ${ant.file}" />
@@ -51,6 +57,7 @@
 		<property name="myclasspath" refid="classpath"/>
 		<!-- Emit the property to the ant console -->
 		<echo message="Classpath = ${myclasspath}"/>
+		
 		<mkdir dir="${buildLanguageSequenceGen}" />
 		<!-- Compile the java code from ${srcLanguageSequenceGen} into ${buildLanguageSequenceGen} /bin -->
 		<javac srcdir="${srcLanguageSequenceGen}" destdir="${buildLanguageSequenceGen}" classpathref="classpath" fork="true" memoryinitialsize="256m" memorymaximumsize="256m">
@@ -73,6 +80,9 @@
 			</manifest>
 			<fileset dir="${buildLanguageSequenceGen}">
 				<include name="beast/**/*.class" />
+			</fileset>
+			<fileset dir="${BEASTLabsclasspath}">
+							<include name="**/*.class"/>
 			</fileset>
 			<fileset dir="${beast2classpath}">
 				<include name="beast/**/*.class" />
