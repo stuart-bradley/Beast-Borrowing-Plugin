@@ -2,22 +2,16 @@
 
 This repository is home to the BEAST2 language generation plugin, which, similar to the `seqgen` (for DNA) module in BEAST2, generates synthetic language data.
 
-**Please note: This plugin is not yet feature complete, and it is in no way guaranteed to work as expected or intended.** 
-
 ## Quick Start 
 
-The plugin is not currently in a very exportable format, as it is a work in progress. Inside the repository, you will find all the files to run the plugin in its current state (quirks included).
-
-Simply import the project into Eclipse, along with a copy of the [BEAST2 project](https://github.com/CompEvol/beast2), from here the plugin can be run two different ways.
-
-Alternately, a prepackaged `jar` is provided to provide the same command line interface, without cloning the entire project. This can be found in: `Jar/LangSeqGen.jar`.
+Simply import the project into Eclipse, along with a copy of the [BEAST2 project](https://github.com/CompEvol/beast2), and [BeastLabs project](https://github.com/BEAST2-Dev/BEASTLabs). An ant `build.xml` file is provided to produce the required Jar file: `LanguageSequenceGen.jar`.
 
 ### Command Line
 
 Like the original `seqgen`, this plugin uses the same format for command line runs:
 
 ```
-java LanguageSequenceGen <beast file> <nr of instantiations> [<output file>]
+java LanguageSequenceGenInterface -input <beast file> -meaningClasses <nr of instantiations> [-output <output file>]
 ```
 * The `<beast file>` is an `xml` file that specifics the initial input parameters. An example is provided below. 
 
@@ -63,6 +57,7 @@ The BEAST file outlines how to produce the synthetic data. An example is provide
 ```
 
 * The `tree` takes a newick formatted tree with both branch distances and taxon node names. 
+  * The tree can also be a randomly generated Yule or Coalsecent tree using standard BEAST format.
 * The `run` initiates the plugin using the `tree` defined above. It also has a number of interior parameters:
   * `root` is the sequence to be placed at the root of the tree. It should consist of present (1) or absent traits (0). The plugin does not handle missing or unknown traits. The `taxon` does not need to be *root*.
   * `subModel` defines the model used to simulate evolution down the tree. All models have a `borrowrate` parameter, which defines the rate of global borrowing; `borrowzrate` defines the distance of local borrowing; note: if `borrowzrate` is set to `0.0`, the plugin assumes an infinite distance. Currently there are two models:
@@ -104,19 +99,7 @@ Included in the repository is a number of classes inside `beastborrowingplugin/t
 
 These classes are not required for the main running of the program, but may be useful if batch analysis is needed.
 
-## Current and Future Features
-
-### Current Features
-
-* Single language mutation.
-* Whole tree mutation.
-  * GTR model.
-  * Stochastic-Dollo model.
-* Whole tree mutation with borrowing.
-  * Local borrowing.
-* Meaning classes.
-  * No empty trait flag.
-* Missing data sythesis.
+The [Morph Models](https://github.com/CompEvol/morph-models) and [Babel](https://github.com/rbouckaert/Babel) packages are required for the running of these classes. 
 
 ## About and Contact
 

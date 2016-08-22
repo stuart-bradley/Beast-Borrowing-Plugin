@@ -151,7 +151,7 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 
 	public static void printUsageAndExit() {
 		System.out.println("Usage: java " + SequenceSimulator.class.getName()
-				+ " <beast file> <nr of instantiations> [<output file>]");
+				+ " -input <beast file> -meaningClasses <nr of instantiations> [-output <output file>]");
 		System.out.println("Produces an alignment of languages simulated from a tree, and a root language.");
 		System.out.println("<beast file> is name of the path beast file containing the treelikelihood.");
 		System.out.println(
