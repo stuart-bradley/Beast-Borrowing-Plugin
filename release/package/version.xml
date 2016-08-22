@@ -1,9 +1,9 @@
 <addon name='LanguageSequenceGen' version='0.1'>
 	<depends on='beast2' atleast='2.4.0'/>
-	<depends on="BEASTLabs" atleast="1.5.2"/>
+	<depends on="BEASTLabs" atleast="1.6.0"/>
 
 <addonapp description="LanguageSequenceGen"
-              class="beast.app.seqgen.LanguageSequenceGen"
+              class="beast.app.seqgen.LanguageSequenceGenInterface"
               args=""
             />
 </addon>
