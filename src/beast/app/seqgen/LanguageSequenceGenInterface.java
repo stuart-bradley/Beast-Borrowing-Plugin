@@ -9,10 +9,10 @@ import beast.core.Input.Validate;
 
 public class LanguageSequenceGenInterface extends Runnable {
 	File file = null;
-	public Input<File> fileInput = new Input<>("input", "BEAST xml for sequence generation", Validate.REQUIRED);
+	public Input<beast.app.util.XMLFile> fileInput = new Input<>("input", "BEAST xml for sequence generation", Validate.REQUIRED);
 	public Input<Integer> numberOfMeaningClassesInput = new Input<>("meaningClasses",
 			"Number of meaning classes (default 1 [No classes])", 1, Validate.REQUIRED);
-	public Input<File> fileOutput = new Input<>("output", "Name of output file");
+	public Input<beast.app.util.OutFile> fileOutput = new Input<>("output", "Name of output file");
 	
 	@Override
 	public void initAndValidate() {
