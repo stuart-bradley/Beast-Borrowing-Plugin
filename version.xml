@@ -3,7 +3,7 @@
 	<depends on="BEASTLabs" atleast="1.6.0"/>
 
 <addonapp description="LanguageSequenceGen"
-              class="beast.app.seqgen.LanguageSequenceGen"
+              class="beast.app.seqgen.LanguageSequenceGenInterface"
               args=""
             />
 </addon>
