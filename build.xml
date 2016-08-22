@@ -73,7 +73,7 @@
 		<!-- Create the distribution directory -->
 		<mkdir dir="${distLanguageSequenceGen}" />
 		<!-- Put everything in ${buildLanguageSequenceGen} into the beast.jar file -->
-		<jar jarfile="${distLanguageSequenceGen}/LanguageSequenceGen.jar">
+		<jar jarfile="${distLanguageSequenceGen}/LanguageSequenceGen.v0.1.0.jar">
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
 				<attribute name="Main-Class" value="${main_class_LanguageSequenceGen}" />
@@ -92,14 +92,14 @@
 				<include name="org/**/*.class" />
 			</fileset>
 		</jar>
-		<jar jarfile="${distLanguageSequenceGen}/LanguageSequenceGen.src.jar">
+		<jar jarfile="${distLanguageSequenceGen}/LanguageSequenceGen.src.v0.1.0.jar">
 			<fileset dir="${srcLanguageSequenceGen}">
 				<include name="beast/**/*.java" />
 				<include name="beast/**/*.png" />
 				<include name="beast/**/*.xsl" />
 			</fileset>
 		</jar>
-		<jar jarfile="${distLanguageSequenceGen}/LanguageSequenceGen.addon.jar">
+		<jar jarfile="${distLanguageSequenceGen}/LanguageSequenceGen.addon.v0.1.0.jar">
 			<manifest>
 				<attribute name="Built-By" value="${user.name}" />
 			</manifest>
@@ -112,7 +112,7 @@
 
 	<!-- run beast.jar -->
 	<target name="run_LanguageSequenceGen">
-		<java jar="${distLanguageSequenceGen}/LanguageSequenceGen.jar" fork="true" />
+		<java jar="${distLanguageSequenceGen}/LanguageSequenceGen.v0.1.0.jar" fork="true" />
 	</target>
 
 	<!-- JUnit test -->
@@ -153,15 +153,18 @@
 		<mkdir dir="${Add_on_dir}/lib" />
 		<mkdir dir="${Add_on_dir}/examples" />
 		<copy todir="${Add_on_dir}/lib">
-			<fileset dir="${distLanguageSequenceGen}" includes="LanguageSequenceGen.addon.jar" />
+			<fileset dir="${distLanguageSequenceGen}" includes="LanguageSequenceGen.addon.v0.1.0.jar" />
 		</copy>
 		<copy todir="${Add_on_dir}">
-			<fileset dir="${distLanguageSequenceGen}" includes="LanguageSequenceGen.src.jar" />
+			<fileset dir="${distLanguageSequenceGen}" includes="LanguageSequenceGen.src.v0.1.0.jar" />
 		</copy>
 		<copy todir="${Add_on_dir}">
 			<fileset file="version.xml" />
 		</copy>
-		<jar jarfile="${distLanguageSequenceGen}/LanguageSequenceGen.addon.zip">
+		<copy todir="${Add_on_dir}/examples">
+			<fileset dir="examples" includes="**"/>
+		</copy>
+		<jar jarfile="${distLanguageSequenceGen}/LanguageSequenceGen.addon.v0.1.0.zip">
 			<fileset dir="${Add_on_dir}">
 				<include name="**/*" />
 			</fileset>

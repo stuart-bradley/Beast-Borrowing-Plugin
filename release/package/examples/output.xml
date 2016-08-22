@@ -1,0 +1,18 @@
+<beast version='2.0'>
+<data id='SD' dataType='binary'>
+    <sequence taxon='english' value='111111111111111111111111'/>
+
+    <sequence taxon='german' value='111111111111111111111111'/>
+
+    <sequence taxon='french' value='111111111111111111111111'/>
+
+    <sequence taxon='spanish' value='111111111111111111111111'/>
+
+    <sequence taxon='italian' value='111111111111111111011111'/>
+
+    <sequence taxon='irish' value='111111111111111101101111'/>
+</data>
+
+<!-- Meaning Classes: 0 -->
+<!-- Created at: 2016-04-26 15:09:16.506 -->
+</beast>

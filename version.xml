@@ -1,4 +1,4 @@
-<addon name='LanguageSequenceGen' version='0.1'>
+<addon name='LanguageSequenceGen' version='0.1.0'>
 	<depends on='beast2' atleast='2.4.0'/>
 	<depends on="BEASTLabs" atleast="1.6.0"/>
 
