@@ -208,6 +208,11 @@ public class LanguageSequenceGen extends beast.core.Runnable {
 			out.println("<!-- Meaning Classes: " + meaningClasses + " -->");
 			out.println("<!-- Created at: " + timestamp + " -->");
 			out.println("</beast>");
+			
+			if (args.length == 3) {
+				System.out.println("XML successfully created! Location: " + args[2]);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
